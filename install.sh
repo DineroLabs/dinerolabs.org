@@ -181,14 +181,24 @@ sleep 30
 
 note "Node status:"
 
+# The packaged-service install puts datadir at /var/lib/dinero, so dinero-cli
+# must be told where to find the RPC cookie — bare `dinero-cli` looks in
+# $HOME/.dinero and won't find it when run as root or any non-service user.
+DATADIR=/var/lib/dinero
+
 if command -v dinerod >/dev/null 2>&1; then
-  VERSION_LINE="$(dinerod --version 2>/dev/null | head -1 || true)"
-  [ -n "$VERSION_LINE" ] && printf '  %s\n' "$VERSION_LINE"
+  # dinerod emits non-version log noise before the version line on some builds
+  # ("[INFO] [AutoReg] Mining extras..."), so filter to lines that look like
+  # version output rather than blindly taking the first line.
+  VERSION_LINE="$(dinerod --version 2>/dev/null | grep -E '^(dinerod|version|commit)' | head -3 || true)"
+  if [ -n "$VERSION_LINE" ]; then
+    while IFS= read -r line; do printf '  %s\n' "$line"; done <<<"$VERSION_LINE"
+  fi
 fi
 
 if command -v dinero-cli >/dev/null 2>&1; then
   INFO_FILE="$TMP/netinfo.json"
-  if dinero-cli getnetworkinfo >"$INFO_FILE" 2>/dev/null; then
+  if dinero-cli -datadir="$DATADIR" getnetworkinfo >"$INFO_FILE" 2>/dev/null; then
     python3 - "$INFO_FILE" <<'PYEOF'
 import json, sys
 d = json.load(open(sys.argv[1]))
@@ -212,8 +222,8 @@ cat <<MSG
   Useful commands:
     systemctl status ${SERVICE_UNIT}
     journalctl -u ${SERVICE_UNIT} -f
-    dinero-cli getnetworkinfo
-    dinero-cli getblockchaininfo
+    dinero-cli -datadir=${DATADIR} getnetworkinfo
+    dinero-cli -datadir=${DATADIR} getblockchaininfo
 
   Ports:
     P2P  ${P2P_PORT}/tcp  — open to internet (if you have a NAT, also forward this port)
