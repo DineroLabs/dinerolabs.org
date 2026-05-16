@@ -3,82 +3,1060 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="0; url=https://dinero-coin.com/">
-  <link rel="canonical" href="https://dinero-coin.com/">
-  <title>Dinero Labs</title>
+  <title>Dinero Labs · Dinero (DIN)</title>
+  <meta name="description" content="Dinero Labs ships Dinero (DIN). Download wallets and Core node software for macOS, Windows, and Linux. Verify official releases, run a node in one command.">
+  <meta property="og:title" content="Dinero Labs · Dinero (DIN)">
+  <meta property="og:description" content="Dinero Labs — building Dinero (DIN). Wallets, Core node, fast-sync downloads, and one-command install.">
+  <meta property="og:url" content="https://dinerolabs.org/">
+  <meta property="og:image" content="https://github.com/DineroLabs.png?size=320">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://dinerolabs.org/">
+  <meta name="theme-color" content="#111827">
+  <link rel="icon" href="https://github.com/DineroLabs.png?size=64">
   <style>
     :root {
       color-scheme: light;
-      --ink: #111827;
-      --muted: #5b6472;
-      --line: #d9dee8;
+      --ink: #151719;
+      --muted: #68707d;
+      --quiet: #f6f4ef;
+      --panel: #ffffff;
+      --panel-soft: #fbfaf7;
+      --line: #ddd7ca;
+      --line-strong: #cfc6b8;
+      --gold: #9b6b20;
+      --green: #1f6f54;
+      --blue: #315c88;
+      --red: #b42318;
+      --shadow: 0 22px 60px rgba(24, 25, 27, 0.11);
+      --shadow-soft: 0 10px 30px rgba(24, 25, 27, 0.07);
+      --radius: 8px;
     }
 
     * { box-sizing: border-box; }
-
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--ink);
-      background: #f7f8fb;
+      background: var(--panel-soft);
       line-height: 1.5;
-    }
-
-    main {
-      width: min(620px, calc(100% - 40px));
-      padding: 28px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fff;
-      text-align: center;
-      box-shadow: 0 18px 46px rgba(17, 24, 39, 0.12);
-    }
-
-    img {
-      width: 64px;
-      height: 64px;
-      border-radius: 12px;
-    }
-
-    h1 {
-      margin: 18px 0 8px;
-      font-size: 34px;
       letter-spacing: 0;
     }
 
-    p {
-      margin: 0 auto 18px;
-      color: var(--muted);
-      max-width: 440px;
+    a { color: inherit; }
+    .wrap { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(251, 250, 247, 0.92);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--line);
     }
 
-    a {
+    .nav {
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      font-weight: 760;
+      font-size: 18px;
+    }
+
+    .brand img {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+    }
+
+    .navlinks {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 620;
+    }
+
+    .navlinks a {
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .navlinks a:hover { color: var(--ink); }
+
+    .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       min-height: 42px;
-      padding: 10px 15px;
+      padding: 10px 17px;
       border: 1px solid var(--ink);
-      border-radius: 8px;
-      background: var(--ink);
-      color: #fff;
+      border-radius: var(--radius);
       text-decoration: none;
       font-weight: 730;
+      font-size: 14px;
+      background: var(--ink);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(24, 25, 27, 0.18);
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(24, 25, 27, 0.2);
+    }
+
+    .button.secondary {
+      background: #fff;
+      color: var(--ink);
+      box-shadow: none;
+    }
+
+    .button.ghost {
+      border-color: var(--line);
+      background: transparent;
+      color: var(--ink);
+      box-shadow: none;
+    }
+
+    .hero {
+      position: relative;
+      padding: 72px 0 34px;
+      overflow: hidden;
+      background: #f3f0e8;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 54px;
+      right: max(40px, calc((100vw - 1180px) / 2));
+      width: 360px;
+      height: 360px;
+      background: url("https://github.com/DineroLabs.png?size=460") center / contain no-repeat;
+      opacity: 0.22;
+      filter: saturate(0.82) contrast(0.96);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.76);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(330px, 0.48fr);
+      gap: 56px;
+      align-items: center;
+      min-height: 500px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.62);
+      border-radius: 999px;
+      color: #5c5144;
+      font-size: 13px;
+      font-weight: 680;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(46px, 7vw, 92px);
+      line-height: 0.94;
+      max-width: 790px;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      margin: 24px 0 0;
+      max-width: 700px;
+      color: #3f4247;
+      font-size: 19px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .quick {
+      display: grid;
+      gap: 0;
+      align-self: center;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(221, 215, 202, 0.92);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .quick-card {
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      padding: 18px;
+      box-shadow: none;
+    }
+
+    .quick-card:last-child { border-bottom: 0; }
+    .quick-card strong { display: block; font-size: 15px; margin-bottom: 5px; }
+    .quick-card span { color: var(--muted); font-size: 14px; }
+
+    section { padding: 66px 0; }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+
+    h2 {
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.08;
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      max-width: 530px;
+      color: var(--muted);
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .download-card:first-child {
+      grid-column: span 1;
+      border-color: var(--line-strong);
+      box-shadow: var(--shadow);
+      background: #fffdfa;
+    }
+
+    .download-card:first-child .platform { font-size: 26px; }
+
+    .explorer-card {
+      background: #171819;
+      color: #f8fafc;
+      border-color: #2a2b2d;
+      overflow: hidden;
+    }
+
+    .explorer-card .meta { color: #aeb7c6; }
+
+    .explorer-ticker {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .ticker-cell {
+      min-height: 88px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      padding: 13px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .ticker-label {
+      color: #8b95a7;
+      font-size: 12px;
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .ticker-value {
+      margin-top: 8px;
+      color: #89dfc7;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: clamp(18px, 3vw, 28px);
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .ticker-value a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .ticker-value a:hover { text-decoration: underline; }
+
+    .ticker-sub {
+      margin-top: 5px;
+      color: #8b95a7;
+      font-size: 13px;
+    }
+
+    .explorer-card .button.secondary {
+      background: transparent;
+      border-color: rgba(255, 255, 255, 0.26);
+      color: #fff;
+    }
+
+    .live-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #66e7cf;
+      font-size: 13px;
+      font-weight: 780;
+    }
+
+    .live-dot::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #89dfc7;
+      box-shadow: 0 0 0 5px rgba(137, 223, 199, 0.12);
+    }
+
+    .download-card {
+      min-height: 334px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tag-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .platform {
+      font-size: 23px;
+      font-weight: 780;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #eef6f1;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .pill.preview { background: #eef2f5; color: var(--blue); }
+    .pill.operator { background: #f8efd9; color: #775112; }
+
+    .filename {
+      min-height: 55px;
+      padding: 10px;
+      background: var(--quiet);
+      border: 1px solid #ebe5d8;
+      border-radius: var(--radius);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+      color: #1f2937;
+      margin: 14px 0;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0 0 16px;
+    }
+
+    .actions {
+      display: grid;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .list {
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .list li {
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .list li::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      position: absolute;
+      left: 0;
+      top: 10px;
+    }
+
+    .verify-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 14px;
+    }
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      overflow-x: auto;
+      background: #171819;
+      color: #f8fafc;
+      border-radius: var(--radius);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: table;
+    }
+
+    th, td {
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      padding: 13px;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      background: #f2eee7;
+      font-size: 12px;
+      color: #4b5563;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .status-band {
+      background: #171819;
+      color: #fff;
+      padding: 28px 0;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .status-grid div {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+
+    .status-grid strong { display: block; font-size: 20px; }
+    .status-grid span { color: #cbd5e1; font-size: 13px; }
+
+    footer {
+      padding: 36px 0;
+      border-top: 1px solid var(--line);
+      background: #fffdfa;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a { color: var(--muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--ink); }
+
+    @media (max-width: 920px) {
+      .hero-grid, .download-grid, .two-col, .verify-grid, .status-grid, .explorer-ticker {
+        grid-template-columns: 1fr;
+      }
+
+      .hero { padding-top: 34px; }
+      .hero-grid { min-height: auto; }
+      .hero::before {
+        right: -80px;
+        top: 28px;
+        width: 280px;
+        height: 280px;
+        opacity: 0.18;
+      }
+      .section-head { display: block; }
+      .section-head p { margin-top: 12px; }
+      .navlinks a:not(.button) { display: none; }
+    }
+
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 28px, 1180px); }
+      .nav { height: 62px; }
+      .brand span { display: none; }
+      .download-card { min-height: auto; }
+      .hero::before {
+        width: 220px;
+        height: 220px;
+        right: -112px;
+        top: 58px;
+        opacity: 0.12;
+      }
+      .hero-actions .button { width: 100%; }
+      th, td { display: block; width: 100%; }
+      th { display: none; }
+      td { border-bottom: 0; padding: 10px 13px; }
+      tr { display: block; border-bottom: 1px solid var(--line); }
     }
   </style>
 </head>
 <body>
-  <main>
-    <img src="https://github.com/DineroLabs.png?size=128" alt="Dinero Labs logo">
-    <h1>Dinero Labs</h1>
-    <p>Redirecting to the official Dinero downloads, explorer, and operator guide.</p>
-    <a href="https://dinero-coin.com/">Open dinero-coin.com</a>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="Dinero Labs home">
+        <img src="https://github.com/DineroLabs.png?size=96" alt="Dinero Labs logo">
+        <span>Dinero Labs</span>
+      </a>
+      <nav class="navlinks" aria-label="Primary">
+        <a href="#downloads">Downloads</a>
+        <a href="https://explorer.dinero-coin.com/">Explorer</a>
+        <a href="#verify">Verify</a>
+        <a href="#nodes">Run a node</a>
+        <a href="https://github.com/DineroLabs/dinero-v8">Source</a>
+        <a href="https://github.com/DineroLabs/dinero-v8/releases">Release archive</a>
+        <a class="button" href="#downloads">Get Dinero</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">Dinero Labs — building Dinero (DIN)</div>
+          <h1 id="hero-title">Choose the right Dinero download.</h1>
+          <p class="lead">Wallets for desktop users, Core packages for node operators, and snapshot assets for fast sync. This page shows only the current recommended software so users do not have to dig through GitHub release history.</p>
+          <div class="hero-actions">
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc6/Dinero-8.0.0-rc6-windows-x86_64-Setup.exe">Download for Windows</a>
+            <a class="button secondary" href="#downloads">View all downloads</a>
+          </div>
+        </div>
+        <div class="quick" aria-label="Current recommendations">
+          <div class="quick-card">
+            <strong>Windows users</strong>
+            <span>Use the v8.0.0-rc6 one-click installer. A server-only build is in the operator section below.</span>
+          </div>
+          <div class="quick-card">
+            <strong>macOS users</strong>
+            <span>Use the signed and Apple-notarized v8.0.0-rc5 wallet (.dmg or .app zip) — rc6 mac rebuild pending.</span>
+          </div>
+          <div class="quick-card">
+            <strong>Linux users</strong>
+            <span>Use the v8.0.0-rc6 AppImage for the GUI wallet, or the dinero-core .deb / tarball for a headless node.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="downloads" aria-labelledby="downloads-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="downloads-title">Current downloads</h2>
+          <p>These are the recommended artifacts. Older release candidates remain available in the archive for provenance, but should not be used unless you know exactly why.</p>
+        </div>
+
+        <div class="download-grid">
+          <article class="card download-card">
+            <div class="tag-row">
+              <div class="platform">Windows Wallet</div>
+              <span class="pill preview">v8 Preview</span>
+            </div>
+            <p class="meta">Best choice for Windows desktop users. Bundles the Qt6 wallet, daemon stack, Qt runtime, OpenSSL/curl DLLs, and window icon. Installs to Program Files and preserves wallet data in <code>%APPDATA%\Dinero</code>.</p>
+            <div class="filename">Dinero-8.0.0-rc6-windows-x86_64-Setup.exe</div>
+            <div class="actions">
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc6/Dinero-8.0.0-rc6-windows-x86_64-Setup.exe">Download installer</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.0-rc6">Read rc6 notes</a>
+            </div>
+          </article>
+
+          <article class="card download-card">
+            <div class="tag-row">
+              <div class="platform">macOS Wallet</div>
+              <span class="pill preview">v8 RC</span>
+            </div>
+            <p class="meta">Signed and Apple-notarized Apple Silicon desktop wallet. Drag to Applications and launch — no SmartScreen-style warnings. Currently at rc5; an rc6 mac rebuild is pending.</p>
+            <div class="filename">Dinero-v8.0.0-rc5-macOS-arm64-signed.dmg</div>
+            <div class="actions">
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc5/Dinero-v8.0.0-rc5-macOS-arm64-signed.dmg">Download .dmg</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc5/Dinero-v8.0.0-rc5-macOS-arm64-qt-signed.zip">.app zip</a>
+            </div>
+          </article>
+
+          <article class="card download-card">
+            <div class="tag-row">
+              <div class="platform">Linux Wallet</div>
+              <span class="pill preview">v8 Preview</span>
+            </div>
+            <p class="meta">Self-contained AppImage with the Qt6 wallet plus the bundled daemon. <code>chmod +x</code> and run; needs <code>libfuse2</code> on most distros. Works on any glibc 2.35+ system (Ubuntu 22.04+).</p>
+            <div class="filename">dinero-v8.0.0-rc6-linux-x86_64.AppImage</div>
+            <div class="actions">
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc6/dinero-v8.0.0-rc6-linux-x86_64.AppImage">Download AppImage</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.0-rc6">Read rc6 notes</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="section-head" style="margin-top: 28px;">
+          <h2>Operators &amp; servers</h2>
+          <p>Headless node packaging. dinerod runs as a service / daemon — no Qt GUI, no <code>dinero-solo-miner</code>.</p>
+        </div>
+
+        <div class="two-col" style="margin-top: 14px;">
+          <article class="card">
+            <h3>Windows Server installer</h3>
+            <p class="meta">NSIS install to <code>C:\Program Files\Dinero-Server\</code>. Registers <code>dinerod</code> as a Windows Service (auto-start, datadir under <code>C:\ProgramData\Dinero</code>, failure-restart policy). No Start Menu shortcuts. Wallets + chain data survive uninstall.</p>
+            <div class="filename">Dinero-Server-8.0.0-rc6-windows-x86_64-Setup.exe</div>
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc6/Dinero-Server-8.0.0-rc6-windows-x86_64-Setup.exe">Download server installer</a>
+          </article>
+
+          <article class="card">
+            <h3>Windows raw daemon ZIP</h3>
+            <p class="meta">Raw daemon stack for power users — six binaries + LICENSE + README + SHA256SUMS. Does NOT bundle the runtime DLLs (<code>libcurl.dll</code> + OpenSSL); use the user installer or server installer above instead unless you know what you're doing.</p>
+            <div class="filename">dinero-v8.0.0-rc6-windows-x86_64-msvc.zip</div>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc6/dinero-v8.0.0-rc6-windows-x86_64-msvc.zip">Download raw zip</a>
+          </article>
+        </div>
+
+        <article class="card" style="margin-top: 14px;">
+          <h3>Ubuntu one-command install</h3>
+          <p class="meta">Lowest-friction Linux path. Fetches the signed <code>dinero-core</code> .deb (below), verifies its SHA256 against the digest GitHub publishes for the asset, installs via <code>apt</code>, enables <code>dinero.service</code>, opens P2P port <code>20999/tcp</code> on <code>ufw</code> when active, then waits for first peer connection. Ubuntu 24.04+ amd64, ~90 seconds end-to-end. Read it before piping to <code>sudo</code> — source linked below.</p>
+          <div class="filename">curl -fsSL https://dinerolabs.org/install.sh | sudo bash</div>
+          <a class="button" href="https://github.com/DineroLabs/dinerolabs.org/blob/main/install.sh">View source</a>
+        </article>
+
+        <div class="two-col" style="margin-top: 14px;">
+          <article class="card">
+            <h3>Linux <code>dinero-core</code> .deb</h3>
+            <p class="meta">Ubuntu 22.04+ packaged-service node. Installs <code>dinerod</code> + <code>dinero-cli</code> via <code>apt</code>, ships a systemd unit (NOT auto-enabled), dedicated <code>dinero</code> system user, FHS datadir <code>/var/lib/dinero</code>. No Qt, no GPU mining, no gRPC, no hardware-wallet HID.</p>
+            <div class="filename">dinero-core_8.0.0.rc6-1_amd64.deb</div>
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc6/dinero-core_8.0.0.rc6-1_amd64.deb">Download .deb</a>
+          </article>
+
+          <article class="card">
+            <h3>Linux operator tarball</h3>
+            <p class="meta">x86_64 daemon-only tarball. Static-linked against vendored OpenSSL 3.3.2 — no system OpenSSL or libcurl required. Manual install (no systemd unit). For non-Ubuntu distros or operators who don't want apt-managed install.</p>
+            <div class="filename">dinero-v8.0.0-rc6-linux-x86_64.tar.gz</div>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc6/dinero-v8.0.0-rc6-linux-x86_64.tar.gz">Download tarball</a>
+          </article>
+        </div>
+
+        <div class="section-head" style="margin-top: 28px;">
+          <h2>Linux GUI alternatives</h2>
+          <p>If the AppImage doesn't work on your distro (no <code>libfuse2</code>, locked-down glibc, etc.), use one of these instead.</p>
+        </div>
+
+        <div class="two-col" style="margin-top: 14px;">
+          <article class="card">
+            <h3>Linux Qt tarball</h3>
+            <p class="meta">Same payload as the AppImage but as a plain tarball with bundled Qt6 libs + AppRun wrapper. Extract anywhere, run <code>./AppRun</code>.</p>
+            <div class="filename">dinero-v8.0.0-rc6-linux-x86_64-qt.tar.gz</div>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc6/dinero-v8.0.0-rc6-linux-x86_64-qt.tar.gz">Download .qt.tar.gz</a>
+          </article>
+
+          <article class="card">
+            <h3>Linux GUI .deb</h3>
+            <p class="meta">apt-managed alternative to the AppImage. Depends on system Qt6 (<code>libqt6widgets6</code> etc.) so the .deb stays small (~14 MB). Independent of dinero-core — installing the GUI does NOT enable the systemd packaged-service node.</p>
+            <div class="filename">dinero-qt-desktop_8.0.0.rc6-1_amd64.deb</div>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc6/dinero-qt-desktop_8.0.0.rc6-1_amd64.deb">Download .deb</a>
+          </article>
+        </div>
+
+        <article class="card" style="margin-top: 14px;">
+          <h3>Fast-sync snapshot</h3>
+          <p class="meta">h=13000 snapshot and manifest for Core operators. Snapshot data is not an app, and is version-line agnostic.</p>
+          <div class="filename">utxo-snapshot-13000.dat + manifest</div>
+          <a class="button secondary" href="https://github.com/DineroLabs/dinero-releases/releases/tag/v2.2.5-rc3">Open snapshot release</a>
+        </article>
+
+        <article class="card explorer-card" style="margin-top: 14px;" aria-labelledby="explorer-title">
+          <div class="tag-row">
+            <h3 id="explorer-title" style="margin: 0;">Live block ticker</h3>
+            <span class="live-dot" id="explorerLiveStatus">Connecting</span>
+          </div>
+          <p class="meta">Pulled from the same public RPC feed as Dinero Explorer. Updates automatically so visitors can see the chain moving before they download anything.</p>
+          <div class="explorer-ticker" id="explorerTicker">
+            <div class="ticker-cell">
+              <div class="ticker-label">Latest height</div>
+              <div class="ticker-value" id="tickerHeight">--</div>
+              <div class="ticker-sub" id="tickerAge">waiting for block</div>
+            </div>
+            <div class="ticker-cell">
+              <div class="ticker-label">Latest block</div>
+              <div class="ticker-value" id="tickerHash">--</div>
+              <div class="ticker-sub">click through for full details</div>
+            </div>
+            <div class="ticker-cell">
+              <div class="ticker-label">Hashrate</div>
+              <div class="ticker-value" id="tickerHashrate">--</div>
+              <div class="ticker-sub" id="tickerDifficulty">difficulty --</div>
+            </div>
+            <div class="ticker-cell">
+              <div class="ticker-label">Supply</div>
+              <div class="ticker-value" id="tickerSupply">--</div>
+              <div class="ticker-sub">DIN circulating</div>
+            </div>
+          </div>
+          <div class="actions">
+            <a class="button secondary" href="https://explorer.dinero-coin.com/">Open explorer.dinero-coin.com</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="status-band" aria-label="Release status">
+      <div class="wrap status-grid">
+        <div><strong>Windows</strong><span>v8.0.0-rc6 bundled installer + Server installer</span></div>
+        <div><strong>macOS</strong><span>v8.0.0-rc5 notarized RC (rc6 pending)</span></div>
+        <div><strong>Linux</strong><span>v8.0.0-rc6 AppImage / dinero-core .deb</span></div>
+        <div><strong>Snapshot</strong><span>h=13000 fast-sync assets</span></div>
+      </div>
+    </section>
+
+    <section id="verify" aria-labelledby="verify-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="verify-title">Verify before running</h2>
+          <p>Preview software should be checked before launch. Windows artifacts are not Authenticode-signed yet, so SmartScreen may warn until the signing path is complete.</p>
+        </div>
+
+        <div class="verify-grid">
+          <div class="card">
+            <h3>Windows user installer</h3>
+            <pre><code>certutil -hashfile Dinero-8.0.0-rc6-windows-x86_64-Setup.exe SHA256
+# Expected:
+fb27dd968f696b14681d0934dff9560adc03a5161bcf53e32b094544f8889485</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>Windows Server installer</h3>
+            <pre><code>certutil -hashfile Dinero-Server-8.0.0-rc6-windows-x86_64-Setup.exe SHA256
+# Expected:
+3adc687dabd4a92d5adebeab4d6732f577ac2d6f6a6b65a09256f672633b2136</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>Windows daemon ZIP</h3>
+            <pre><code>certutil -hashfile dinero-v8.0.0-rc6-windows-x86_64-msvc.zip SHA256
+# Expected:
+36cab185a05c9a2059cb7b08b5cfaeaa387e0927757dd13e9f54bf97fefaeb81</code></pre>
+          </div>
+        </div>
+
+        <div class="verify-grid" style="margin-top: 14px;">
+          <div class="card">
+            <h3>Linux AppImage</h3>
+            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc6/dinero-v8.0.0-rc6-linux-x86_64.AppImage
+sha256sum dinero-v8.0.0-rc6-linux-x86_64.AppImage
+# Expected:
+dde302f88aff628f11d5dac7e01f51c7294cfbc198845b0382d08546c73bc868</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>Linux dinero-core .deb</h3>
+            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc6/dinero-core_8.0.0.rc6-1_amd64.deb
+sha256sum dinero-core_8.0.0.rc6-1_amd64.deb
+# Expected:
+67ef3680fcbd4bcfb89a05d0b4bf291ce1dd62f0e4b663f722d0231187078b0f</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>Linux operator tarball</h3>
+            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc6/dinero-v8.0.0-rc6-linux-x86_64.tar.gz
+sha256sum dinero-v8.0.0-rc6-linux-x86_64.tar.gz
+# Expected:
+d37ffc99ca89f929969c32f71c796874ef3f9c48ba7958df06e3b090eb647e6b</code></pre>
+          </div>
+        </div>
+
+        <div class="verify-grid" style="margin-top: 14px;">
+          <div class="card">
+            <h3>Linux Qt tarball</h3>
+            <pre><code>sha256sum dinero-v8.0.0-rc6-linux-x86_64-qt.tar.gz
+# Expected:
+00bd51d5e2f80cdcaa80866f24a7e79d193d5af676a3d7994e606f304b25a1d6</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>Linux GUI .deb</h3>
+            <pre><code>sha256sum dinero-qt-desktop_8.0.0.rc6-1_amd64.deb
+# Expected:
+9af8beba71543cffc184dc366ccd22008434b2414127474de16af317e3bd24c8</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>macOS notarization</h3>
+            <pre><code>spctl -a -t exec -vv Dinero-Qt.app
+# Expected:
+accepted
+source=Notarized Developer ID</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="nodes" aria-labelledby="nodes-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="nodes-title">Run a node</h2>
+          <p>Datadirs follow the native convention for each install mode. Linux manual-user mode intentionally keeps the standard dot-directory path.</p>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Platform / mode</th>
+              <th>Default datadir</th>
+              <th>Use case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Windows desktop / Core zip</td>
+              <td><code>%APPDATA%\Dinero</code></td>
+              <td>Windows application-data convention</td>
+            </tr>
+            <tr>
+              <td>macOS desktop</td>
+              <td><code>~/Library/Application Support/Dinero</code></td>
+              <td>macOS application-data convention</td>
+            </tr>
+            <tr>
+              <td>Windows Server installer</td>
+              <td><code>C:\ProgramData\Dinero</code></td>
+              <td>Windows Service convention; survives uninstall</td>
+            </tr>
+            <tr>
+              <td>Linux <code>dinero-core</code> .deb</td>
+              <td><code>/var/lib/dinero</code></td>
+              <td>FHS/systemd daemon under the dinero service user</td>
+            </tr>
+            <tr>
+              <td>Linux operator tarball / developer</td>
+              <td><code>~/.dinero</code></td>
+              <td>Standard Linux CLI/daemon dot-directory convention</td>
+            </tr>
+            <tr>
+              <td>Linux GUI (AppImage / Qt tarball / dinero-qt-desktop .deb)</td>
+              <td><code>~/.dinero</code></td>
+              <td>GUI auto-starts the bundled daemon in the user's home</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="two-col" style="margin-top: 14px;">
+          <article class="card">
+            <h3>Linux <code>dinero-core</code> .deb quick start</h3>
+            <pre><code>sudo dpkg -i dinero-core_8.0.0.rc6-1_amd64.deb
+sudo systemctl enable --now dinero
+sudo -u dinero dinero-cli -datadir=/var/lib/dinero getblockchaininfo</code></pre>
+          </article>
+          <article class="card">
+            <h3>Linux operator tarball quick start</h3>
+            <pre><code>tar -xzf dinero-v8.0.0-rc6-linux-x86_64.tar.gz
+cd dinero-v8.0.0-rc6-linux-x86_64
+sha256sum -c SHA256SUMS.txt
+./bin/dinerod                          # mainnet, ~/.dinero
+./bin/dinero-cli getblockchaininfo</code></pre>
+          </article>
+        </div>
+
+        <div class="two-col" style="margin-top: 14px;">
+          <article class="card">
+            <h3>Linux AppImage quick start</h3>
+            <pre><code>chmod +x dinero-v8.0.0-rc6-linux-x86_64.AppImage
+./dinero-v8.0.0-rc6-linux-x86_64.AppImage    # GUI auto-starts the bundled daemon
+
+# If libfuse2 is missing: sudo apt install libfuse2
+# Or extract + run without FUSE:
+./dinero-v8.0.0-rc6-linux-x86_64.AppImage --appimage-extract
+squashfs-root/AppRun</code></pre>
+          </article>
+          <article class="card">
+            <h3>What is not stable yet</h3>
+            <ul class="list">
+              <li>Windows v8 installers (user + server) are not yet Authenticode-signed — SmartScreen may warn. Verify the SHA256 above and click "More info" → "Run anyway".</li>
+              <li>Windows + Linux are at v8.0.0-rc6 with real UPnP / NAT-PMP runtime support; macOS is still at v8.0.0-rc5 (rc6 mac rebuild pending). The rc5 mac assets remain Apple-notarized and safe to run; they just lack the rc6-side port-mapping linkage.</li>
+              <li><code>dinero-gpu-miner</code> ships on Windows but its OpenCL runtime path is not yet validated on MSVC; treat as experimental. Not shipped on Linux for rc5 (CUDA toolkit unavailable in the build environment).</li>
+              <li>Stable promotion waits for the next final-release ceremony.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <footer>
+    <div class="wrap footer-grid">
+      <div>Dinero. Real Money For Free People.</div>
+      <div class="footer-links">
+        <a href="https://github.com/DineroLabs">GitHub</a>
+        <a href="https://github.com/DineroLabs/dinero-v8/releases">Releases</a>
+        <a href="https://explorer.dinero-coin.com/">Explorer</a>
+        <a href="https://github.com/DineroLabs/dinero-v8/security/policy">Security</a>
+      </div>
+    </div>
+  </footer>
   <script>
-    window.location.replace("https://dinero-coin.com/");
+    const EXPLORER_RPC_URL = "https://rpc.dinero-coin.com";
+    const EXPLORER_URL = "https://explorer.dinero-coin.com/";
+    const TICKER_REFRESH_MS = 30000;
+
+    function tickerText(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    }
+
+    function tickerHtml(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = value;
+    }
+
+    function shortHash(hash) {
+      if (!hash || hash.length < 18) return hash || "--";
+      return `${hash.slice(0, 10)}...${hash.slice(-8)}`;
+    }
+
+    function formatHashrate(value) {
+      if (!Number.isFinite(value)) return "--";
+      if (value >= 1e12) return `${(value / 1e12).toFixed(2)} TH/s`;
+      if (value >= 1e9) return `${(value / 1e9).toFixed(2)} GH/s`;
+      if (value >= 1e6) return `${(value / 1e6).toFixed(2)} MH/s`;
+      return `${Math.round(value).toLocaleString()} H/s`;
+    }
+
+    function formatAge(unixSeconds) {
+      if (!unixSeconds) return "latest block";
+      const diff = Math.max(0, Math.floor(Date.now() / 1000) - Number(unixSeconds));
+      if (diff < 60) return `${diff}s ago`;
+      if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+      if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+      return `${Math.floor(diff / 86400)}d ago`;
+    }
+
+    async function explorerRpc(method, params = []) {
+      const response = await fetch(EXPLORER_RPC_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const body = await response.json();
+      if (body.error) throw new Error(body.error.message || "RPC error");
+      if (body.result && typeof body.result === "object" && body.result.error) {
+        throw new Error(String(body.result.error));
+      }
+      return body.result;
+    }
+
+    async function updateExplorerTicker() {
+      const live = document.getElementById("explorerLiveStatus");
+      try {
+        const [info, mining] = await Promise.all([
+          explorerRpc("blockchain.getblockchaininfo"),
+          explorerRpc("blockchain.getmininginfo").catch(() => ({})),
+        ]);
+        const height = Number(info.blocks ?? 0);
+        const hash = info.bestblockhash || await explorerRpc("blockchain.getblockhash", [height]);
+        const block = await explorerRpc("blockchain.getblock", [hash, 1]).catch(() => ({}));
+        const hashrate = Number(mining.networkhashps ?? info.networkhashps);
+        const supply = Number.parseFloat(info.moneysupply);
+
+        tickerText("tickerHeight", height.toLocaleString());
+        tickerText("tickerAge", formatAge(block.time));
+        tickerHtml("tickerHash", `<a href="${EXPLORER_URL}#/block/${hash}">${shortHash(hash)}</a>`);
+        tickerText("tickerHashrate", formatHashrate(hashrate));
+        tickerText("tickerDifficulty", `difficulty ${Number(info.difficulty || 0).toLocaleString()}`);
+        tickerText("tickerSupply", Number.isFinite(supply)
+          ? supply.toLocaleString(undefined, { maximumFractionDigits: 0 })
+          : "--");
+        if (live) live.textContent = "Live";
+      } catch (error) {
+        if (live) live.textContent = "Offline";
+        tickerText("tickerAge", "explorer RPC unavailable");
+      }
+    }
+
+    updateExplorerTicker();
+    setInterval(updateExplorerTicker, TICKER_REFRESH_MS);
   </script>
 </body>
 </html>

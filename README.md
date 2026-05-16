@@ -1,11 +1,17 @@
 # Dinero Labs
 
-GitHub Pages redirect site for `dinerolabs.org`.
+Main public site for **Dinero Labs**, the organization behind Dinero
+(DIN). Hosted on GitHub Pages at `https://dinerolabs.org/`.
 
-The main public product/download site is:
+This site is the canonical landing for:
 
-https://dinero-coin.com/
+- Wallet and Core node downloads (mirrors current
+  [`DineroLabs/dinero-v8`](https://github.com/DineroLabs/dinero-v8)
+  releases — see `index.html` for the current recommended set)
+- The one-command Ubuntu install script (`install.sh`) for headless
+  v8 nodes
+- Links into the source, release archive, and explorer
 
-This repository intentionally keeps `dinerolabs.org` lightweight so the
-organization domain points users to the canonical Dinero website without
-duplicating release instructions.
+The sister domain `https://dinero-coin.com/` is a soft redirect to
+this site, kept alive so existing bookmarks and outbound links don't
+break. End users may reach the page from either URL.
