@@ -540,6 +540,24 @@
     .footer-links a { color: var(--muted); text-decoration: none; }
     .footer-links a:hover { color: var(--ink); }
 
+    .footer-contact {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 13.5px;
+      color: var(--muted);
+    }
+    .footer-contact strong { color: var(--ink); font-weight: 600; }
+    .footer-contact a { color: var(--muted); text-decoration: none; }
+    .footer-contact a:hover { color: var(--ink); }
+    .footer-contact code {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.95em;
+    }
+
     @media (max-width: 920px) {
       .hero-grid, .download-grid, .two-col, .verify-grid, .status-grid, .explorer-ticker {
         grid-template-columns: 1fr;
@@ -965,13 +983,20 @@ squashfs-root/AppRun</code></pre>
   </main>
 
   <footer>
-    <div class="wrap footer-grid">
-      <div>Dinero. Real Money For Free People.</div>
-      <div class="footer-links">
-        <a href="https://github.com/DineroLabs">GitHub</a>
-        <a href="https://github.com/DineroLabs/dinero-v8/releases">Releases</a>
-        <a href="https://explorer.dinero-coin.com/">Explorer</a>
-        <a href="/security/">Security</a>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>Dinero. Real Money For Free People.</div>
+        <div class="footer-links">
+          <a href="https://github.com/DineroLabs">GitHub</a>
+          <a href="https://github.com/DineroLabs/dinero-v8/releases">Releases</a>
+          <a href="https://explorer.dinero-coin.com/">Explorer</a>
+          <a href="/security/">Security</a>
+        </div>
+      </div>
+      <div class="footer-contact">
+        <span><strong>Team:</strong> <a href="mailto:team@dinerolabs.org"><code>team@dinerolabs.org</code></a></span>
+        <span><strong>Contact:</strong> <a href="mailto:contact@dinerolabs.org"><code>contact@dinerolabs.org</code></a></span>
+        <span><strong>Security disclosures:</strong> <a href="mailto:security@dinerolabs.org"><code>security@dinerolabs.org</code></a></span>
       </div>
     </div>
   </footer>
