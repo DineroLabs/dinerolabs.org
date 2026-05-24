@@ -17,8 +17,8 @@
 #
 # Source:   https://github.com/DineroLabs/dinerolabs.org/blob/main/install.sh
 # Releases: https://github.com/DineroLabs/dinero-v8/releases
-# Network:  Dinero is a small new network — fewer than 10 nodes as of mid-May
-#           2026. Running yours helps it grow.
+# Network:  Dinero is a young network. Running a node helps it move from
+#           bootstrap infrastructure toward broad community peer discovery.
 
 set -euo pipefail
 
@@ -33,6 +33,12 @@ SERVICE_UNIT="dinero.service"
 
 # Set INCLUDE_PRERELEASE=0 once a stable v8.0.0 ships and you want only stables.
 INCLUDE_PRERELEASE="${INCLUDE_PRERELEASE:-1}"
+
+# Safety guard: do not silently install an older Linux .deb when the current
+# release has not published a Linux package yet. Operators can override this
+# intentionally, but the public one-liner should not drift users back to an
+# older release.
+ALLOW_OLDER_LINUX_DEB="${ALLOW_OLDER_LINUX_DEB:-0}"
 
 # Override-able for mirrors / air-gapped installs (advanced).
 RELEASE_API="${RELEASE_API:-https://api.github.com/repos/${RELEASE_REPO}/releases}"
@@ -124,6 +130,24 @@ ASSET_DIGEST="${PICKED[3]:-}"
 [ -n "$TAG" ] && [ -n "$ASSET_URL" ] || fail "Could not resolve release/asset from GitHub API"
 note "Selected release: $TAG"
 note "Asset:            $ASSET_NAME"
+
+LATEST_TAG="$(python3 - "$RELEASES_JSON" <<'PYEOF'
+import json, os, sys
+data = json.load(open(sys.argv[1]))
+include_pre = os.environ.get("INCLUDE_PRERELEASE", "1") == "1"
+for rel in data:
+    if rel.get("draft"):
+        continue
+    if rel.get("prerelease") and not include_pre:
+        continue
+    print(rel["tag_name"])
+    break
+PYEOF
+)"
+
+if [ -n "$LATEST_TAG" ] && [ "$TAG" != "$LATEST_TAG" ] && [ "$ALLOW_OLDER_LINUX_DEB" != "1" ]; then
+  fail "Latest release is ${LATEST_TAG}, but the newest Linux .deb asset found is ${TAG}. Linux packaging for the current release is pending; refusing to install an older node. To intentionally install the older .deb, rerun with ALLOW_OLDER_LINUX_DEB=1."
+fi
 
 # ---------------------------------------------------------------------------
 # Download + hash-verify
@@ -229,8 +253,8 @@ cat <<MSG
     P2P  ${P2P_PORT}/tcp  — open to internet (if you have a NAT, also forward this port)
     RPC  ${RPC_PORT}/tcp  — localhost only by default; do NOT expose
 
-  The Dinero v8 network is small (<10 nodes as of mid-May 2026). Your node
-  helps it grow. To check peer count later: dinero-cli getnetworkinfo
+  Dinero is a young network. Your node helps it grow beyond the bootstrap
+  fleet. To check peer count later: dinero-cli getnetworkinfo
 
   Issues:   https://github.com/${RELEASE_REPO}/issues
 ────────────────────────────────────────────────────────────────────────────
