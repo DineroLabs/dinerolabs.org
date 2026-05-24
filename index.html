@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dinero Labs · Dinero (DIN)</title>
-  <meta name="description" content="Dinero Labs ships Dinero (DIN). Download wallets and Core node software for macOS, Windows, and Linux. Verify official releases, run a node in one command.">
+  <meta name="description" content="Dinero Labs ships Dinero (DIN). Download the current v8.0.0-rc17 wallet and node software for macOS and Windows, verify official releases, and help grow the peer-to-peer network.">
   <meta property="og:title" content="Dinero Labs · Dinero (DIN)">
-  <meta property="og:description" content="Dinero Labs — building Dinero (DIN). Wallets, Core node, fast-sync downloads, and one-command install.">
+  <meta property="og:description" content="Dinero Labs — building Dinero (DIN). v8.0.0-rc17 desktop wallets, Core node software, relay/NAT traversal, and Dynamic P2P.">
   <meta property="og:url" content="https://dinerolabs.org/">
   <meta property="og:image" content="https://github.com/DineroLabs.png?size=320">
   <meta property="og:type" content="website">
@@ -620,26 +620,27 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="wrap hero-grid">
         <div>
-          <div class="eyebrow">Dinero Labs — building Dinero (DIN)</div>
-          <h1 id="hero-title">Choose the right Dinero download.</h1>
-          <p class="lead">Wallets for desktop users, Core packages for node operators, and snapshot assets for fast sync. This page shows only the current recommended software so users do not have to dig through GitHub release history.</p>
+          <div class="eyebrow">Dinero v8.0.0-rc17 — Dynamic P2P release candidate</div>
+          <h1 id="hero-title">Run Dinero. Help the network.</h1>
+          <p class="lead">Dinero is moving from a small fleet of bootstrap servers toward a self-healing peer-to-peer network. rc17 ships the current desktop wallets, relay/NAT traversal work, Dynamic P2P visibility, and the node dashboard pieces that let users see how their node participates.</p>
           <div class="hero-actions">
-            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc7/Dinero-8.0.0-rc7-windows-x86_64-Setup.exe">Download for Windows</a>
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc17/Dinero-v8.0.0-rc17-macOS-arm64.dmg">Download for macOS</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc17/Dinero-8.0.0-rc17-windows-x86_64-Setup.exe">Download for Windows</a>
             <a class="button secondary" href="#downloads">View all downloads</a>
           </div>
         </div>
         <div class="quick" aria-label="Current recommendations">
           <div class="quick-card">
-            <strong>Windows users</strong>
-            <span>Use the v8.0.0-rc7 one-click installer. A server-only build is in the operator section below.</span>
+            <strong>Desktop users</strong>
+            <span>Use the v8.0.0-rc17 macOS DMG or Windows installer. Both bundle the wallet and embedded daemon.</span>
           </div>
           <div class="quick-card">
-            <strong>macOS users</strong>
-            <span>Use the signed and Apple-notarized v8.0.0-rc5 wallet (.dmg or .app zip) — rc7 mac rebuild pending.</span>
+            <strong>Node operators</strong>
+            <span>Use the Windows Server installer or the macOS headless daemon archive. Linux rc17 public packaging is pending.</span>
           </div>
           <div class="quick-card">
-            <strong>Linux users</strong>
-            <span>Use the v8.0.0-rc7 AppImage for the GUI wallet, or the dinero-core .deb / tarball for a headless node.</span>
+            <strong>Network status</strong>
+            <span>Bootstrap relays run rc17 with Dynamic P2P active. The goal is for normal wallets and miners to become useful peers too.</span>
           </div>
         </div>
       </div>
@@ -649,112 +650,118 @@
       <div class="wrap">
         <div class="section-head">
           <h2 id="downloads-title">Current downloads</h2>
-          <p>These are the recommended artifacts. Older release candidates remain available in the archive for provenance, but should not be used unless you know exactly why.</p>
+          <p>These are the recommended rc17 artifacts. Older release candidates remain available in the archive for provenance, but should not be used unless you know exactly why.</p>
         </div>
 
         <div class="download-grid">
           <article class="card download-card">
             <div class="tag-row">
-              <div class="platform">Windows Wallet</div>
-              <span class="pill preview">v8 Preview</span>
-            </div>
-            <p class="meta">Best choice for Windows desktop users. Bundles the Qt6 wallet, daemon stack, Qt runtime, OpenSSL/curl DLLs, and window icon. Installs to Program Files and preserves wallet data in <code>%APPDATA%\Dinero</code>.</p>
-            <div class="filename">Dinero-8.0.0-rc7-windows-x86_64-Setup.exe</div>
-            <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc7/Dinero-8.0.0-rc7-windows-x86_64-Setup.exe">Download installer</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.0-rc7">Read rc7 notes</a>
-            </div>
-          </article>
-
-          <article class="card download-card">
-            <div class="tag-row">
               <div class="platform">macOS Wallet</div>
-              <span class="pill preview">v8 RC</span>
+              <span class="pill preview">rc17</span>
             </div>
-            <p class="meta">Signed and Apple-notarized Apple Silicon desktop wallet. Drag to Applications and launch — no SmartScreen-style warnings. Currently at rc5; an rc7 mac rebuild is pending.</p>
-            <div class="filename">Dinero-v8.0.0-rc5-macOS-arm64-signed.dmg</div>
+            <p class="meta">Best choice for Apple Silicon Mac users. Signed, Apple-notarized, and stapled. Drag <code>dinero-qt.app</code> to Applications and launch. Bundles the wallet, embedded daemon, CLI tools, seeder, and miner helpers.</p>
+            <div class="filename">Dinero-v8.0.0-rc17-macOS-arm64.dmg</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc5/Dinero-v8.0.0-rc5-macOS-arm64-signed.dmg">Download .dmg</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc5/Dinero-v8.0.0-rc5-macOS-arm64-qt-signed.zip">.app zip</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc17/Dinero-v8.0.0-rc17-macOS-arm64.dmg">Download .dmg</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc17/Dinero-v8.0.0-rc17-macOS-arm64-qt.zip">.app zip</a>
             </div>
           </article>
 
           <article class="card download-card">
             <div class="tag-row">
-              <div class="platform">Linux Wallet</div>
-              <span class="pill preview">v8 Preview</span>
+              <div class="platform">Windows Wallet</div>
+              <span class="pill preview">rc17</span>
             </div>
-            <p class="meta">Self-contained AppImage with the Qt6 wallet plus the bundled daemon. <code>chmod +x</code> and run; needs <code>libfuse2</code> on most distros. Works on any glibc 2.35+ system (Ubuntu 22.04+).</p>
-            <div class="filename">dinero-v8.0.0-rc7-linux-x86_64.AppImage</div>
+            <p class="meta">Best choice for Windows desktop users. Bundles the Qt wallet, embedded daemon stack, runtime DLLs, miner tools, and icon. Installs to Program Files and preserves wallet data in <code>%APPDATA%\Dinero</code>.</p>
+            <div class="filename">Dinero-8.0.0-rc17-windows-x86_64-Setup.exe</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc7/dinero-v8.0.0-rc7-linux-x86_64.AppImage">Download AppImage</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.0-rc7">Read rc7 notes</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc17/Dinero-8.0.0-rc17-windows-x86_64-Setup.exe">Download installer</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.0-rc17">Read rc17 notes</a>
+            </div>
+          </article>
+
+          <article class="card download-card">
+            <div class="tag-row">
+              <div class="platform">Linux</div>
+              <span class="pill operator">pending</span>
+            </div>
+            <p class="meta">The public Linux rc17 desktop and packaged-service artifacts are not published yet. The bootstrap fleet is already running rc17 from source. Linux users should wait for the rc17 Linux package or build from source if they are comfortable operating a node manually.</p>
+            <div class="filename">Linux rc17 AppImage / .deb pending</div>
+            <div class="actions">
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8">Build from source</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.0-rc17">Open rc17 release</a>
             </div>
           </article>
         </div>
 
         <div class="section-head" style="margin-top: 28px;">
           <h2>Operators &amp; servers</h2>
-          <p>Headless node packaging. dinerod runs as a service / daemon — no Qt GUI, no <code>dinero-solo-miner</code>.</p>
+          <p>Headless node packaging. <code>dinerod</code> runs as a service / daemon for operators who want a long-lived public node.</p>
         </div>
 
         <div class="two-col" style="margin-top: 14px;">
           <article class="card">
             <h3>Windows Server installer</h3>
             <p class="meta">NSIS install to <code>C:\Program Files\Dinero-Server\</code>. Registers <code>dinerod</code> as a Windows Service (auto-start, datadir under <code>C:\ProgramData\Dinero</code>, failure-restart policy). No Start Menu shortcuts. Wallets + chain data survive uninstall.</p>
-            <div class="filename">Dinero-Server-8.0.0-rc7-windows-x86_64-Setup.exe</div>
-            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc7/Dinero-Server-8.0.0-rc7-windows-x86_64-Setup.exe">Download server installer</a>
+            <div class="filename">Dinero-Server-8.0.0-rc17-windows-x86_64-Setup.exe</div>
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc17/Dinero-Server-8.0.0-rc17-windows-x86_64-Setup.exe">Download server installer</a>
           </article>
 
           <article class="card">
-            <h3>Windows raw daemon ZIP</h3>
-            <p class="meta">Raw daemon stack for power users — six binaries + LICENSE + README + SHA256SUMS. Does NOT bundle the runtime DLLs (<code>libcurl.dll</code> + OpenSSL); use the user installer or server installer above instead unless you know what you're doing.</p>
-            <div class="filename">dinero-v8.0.0-rc7-windows-x86_64-msvc.zip</div>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc7/dinero-v8.0.0-rc7-windows-x86_64-msvc.zip">Download raw zip</a>
+            <h3>macOS headless daemon</h3>
+            <p class="meta">Apple Silicon operator archive with <code>dinerod</code>, <code>dinero-cli</code>, and <code>dinero-seeder</code>. Use it for headless Mac nodes or local testing without the Qt wallet bundle.</p>
+            <div class="filename">dinerod-8.0.0-rc17-macos-arm64.tar.gz</div>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc17/dinerod-8.0.0-rc17-macos-arm64.tar.gz">Download macOS daemon</a>
           </article>
         </div>
 
         <article class="card" style="margin-top: 14px;">
-          <h3>Ubuntu one-command install</h3>
-          <p class="meta">Lowest-friction Linux path. Fetches the signed <code>dinero-core</code> .deb (below), verifies its SHA256 against the digest GitHub publishes for the asset, installs via <code>apt</code>, enables <code>dinero.service</code>, opens P2P port <code>20999/tcp</code> on <code>ufw</code> when active, then waits for first peer connection. Ubuntu 24.04+ amd64, ~90 seconds end-to-end. Read it before piping to <code>sudo</code> — source linked below.</p>
-          <div class="filename">curl -fsSL https://dinerolabs.org/install.sh | sudo bash</div>
-          <a class="button" href="https://github.com/DineroLabs/dinerolabs.org/blob/main/install.sh">View source</a>
+          <h3>Windows raw daemon ZIP</h3>
+          <p class="meta">Raw Windows daemon stack for power users. Prefer the user or server installer unless you are manually wiring runtime paths and service management yourself.</p>
+          <div class="filename">dinero-v8.0.0-rc17-windows-x86_64-msvc.zip</div>
+          <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc17/dinero-v8.0.0-rc17-windows-x86_64-msvc.zip">Download raw zip</a>
         </article>
 
         <div class="two-col" style="margin-top: 14px;">
           <article class="card">
-            <h3>Linux <code>dinero-core</code> .deb</h3>
-            <p class="meta">Ubuntu 22.04+ packaged-service node. Installs <code>dinerod</code> + <code>dinero-cli</code> via <code>apt</code>, ships a systemd unit (NOT auto-enabled), dedicated <code>dinero</code> system user, FHS datadir <code>/var/lib/dinero</code>. No Qt, no GPU mining, no gRPC, no hardware-wallet HID.</p>
-            <div class="filename">dinero-core_8.0.0.rc7-1_amd64.deb</div>
-            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc7/dinero-core_8.0.0.rc7-1_amd64.deb">Download .deb</a>
+            <h3>Checksums</h3>
+            <p class="meta">The rc17 release publishes SHA256 hashes for the current Mac and Windows artifacts. Verify before running preview software.</p>
+            <div class="filename">SHA256SUMS</div>
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc17/SHA256SUMS">Download SHA256SUMS</a>
           </article>
 
           <article class="card">
-            <h3>Linux operator tarball</h3>
-            <p class="meta">x86_64 daemon-only tarball. Static-linked against vendored OpenSSL 3.3.2 — no system OpenSSL or libcurl required. Manual install (no systemd unit). For non-Ubuntu distros or operators who don't want apt-managed install.</p>
-            <div class="filename">dinero-v8.0.0-rc7-linux-x86_64.tar.gz</div>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc7/dinero-v8.0.0-rc7-linux-x86_64.tar.gz">Download tarball</a>
+            <h3>Release public key</h3>
+            <p class="meta">Use the published release key for provenance checks where applicable. Binary signing coverage varies by platform while v8 remains in release-candidate status.</p>
+            <div class="filename">dinero-core-release.asc</div>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc17/dinero-core-release.asc">Download key</a>
           </article>
         </div>
 
         <div class="section-head" style="margin-top: 28px;">
-          <h2>Linux GUI alternatives</h2>
-          <p>If the AppImage doesn't work on your distro (no <code>libfuse2</code>, locked-down glibc, etc.), use one of these instead.</p>
+          <h2>What changed in rc17</h2>
+          <p>This release candidate is about making Dinero feel less like four main servers and more like a peer network normal users can join.</p>
         </div>
 
         <div class="two-col" style="margin-top: 14px;">
           <article class="card">
-            <h3>Linux Qt tarball</h3>
-            <p class="meta">Same payload as the AppImage but as a plain tarball with bundled Qt6 libs + AppRun wrapper. Extract anywhere, run <code>./AppRun</code>.</p>
-            <div class="filename">dinero-v8.0.0-rc7-linux-x86_64-qt.tar.gz</div>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc7/dinero-v8.0.0-rc7-linux-x86_64-qt.tar.gz">Download .qt.tar.gz</a>
+            <h3>Relay / NAT traversal</h3>
+            <p class="meta">Nodes behind routers that reject direct inbound port mapping can still participate through relay-backed inbound paths. Fleet relays are bootstrap helpers, not the end-state.</p>
+            <ul class="list">
+              <li>Relay-capable peers advertise <code>NODE_RELAY</code>.</li>
+              <li>Wallet/mining mode can signal relay participation to the embedded daemon.</li>
+              <li>Relay hints refresh and expire so stale paths heal instead of lingering forever.</li>
+            </ul>
           </article>
 
           <article class="card">
-            <h3>Linux GUI .deb</h3>
-            <p class="meta">apt-managed alternative to the AppImage. Depends on system Qt6 (<code>libqt6widgets6</code> etc.) so the .deb stays small (~14 MB). Independent of dinero-core — installing the GUI does NOT enable the systemd packaged-service node.</p>
-            <div class="filename">dinero-qt-desktop_8.0.0.rc7-1_amd64.deb</div>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc7/dinero-qt-desktop_8.0.0.rc7-1_amd64.deb">Download .deb</a>
+            <h3>Dynamic P2P visibility</h3>
+            <p class="meta">The daemon now exposes a peer-governor view so users and operators can see how the node discovers, ranks, and rotates peers over time.</p>
+            <ul class="list">
+              <li><code>getnetworkinfo</code> reports Dynamic P2P mode and relay candidates.</li>
+              <li>Fleet nodes run <code>active_slow_churn</code> with relay enabled.</li>
+              <li>The Qt node dashboard consumes the new daemon RPCs.</li>
+            </ul>
           </article>
         </div>
 
@@ -802,10 +809,10 @@
 
     <section class="status-band" aria-label="Release status">
       <div class="wrap status-grid">
-        <div><strong>Windows</strong><span>v8.0.0-rc7 bundled installer + Server installer</span></div>
-        <div><strong>macOS</strong><span>v8.0.0-rc5 notarized RC (rc7 pending)</span></div>
-        <div><strong>Linux</strong><span>v8.0.0-rc7 AppImage / dinero-core .deb</span></div>
-        <div><strong>Snapshot</strong><span>h=13000 fast-sync assets</span></div>
+        <div><strong>Windows</strong><span>v8.0.0-rc17 wallet + Server installer</span></div>
+        <div><strong>macOS</strong><span>v8.0.0-rc17 notarized Apple Silicon DMG</span></div>
+        <div><strong>Linux</strong><span>rc17 public package pending; fleet is already upgraded</span></div>
+        <div><strong>Network</strong><span>Dynamic P2P active, relay bootstrap live</span></div>
       </div>
     </section>
 
@@ -813,76 +820,71 @@
       <div class="wrap">
         <div class="section-head">
           <h2 id="verify-title">Verify before running</h2>
-          <p>Preview software should be checked before launch. Windows artifacts are not Authenticode-signed yet, so SmartScreen may warn until the signing path is complete.</p>
+          <p>Preview software should be checked before launch. macOS artifacts are Developer ID signed and Apple-notarized; Windows artifacts may still trigger SmartScreen while Authenticode signing matures.</p>
         </div>
 
         <div class="verify-grid">
           <div class="card">
             <h3>Windows user installer</h3>
-            <pre><code>certutil -hashfile Dinero-8.0.0-rc7-windows-x86_64-Setup.exe SHA256
+            <pre><code>certutil -hashfile Dinero-8.0.0-rc17-windows-x86_64-Setup.exe SHA256
 # Expected:
-fb27dd968f696b14681d0934dff9560adc03a5161bcf53e32b094544f8889485</code></pre>
+7c3a7c93eeea12d11df23e3315c99aa1520ab0b295a89338a59cf3285f52723b</code></pre>
           </div>
 
           <div class="card">
             <h3>Windows Server installer</h3>
-            <pre><code>certutil -hashfile Dinero-Server-8.0.0-rc7-windows-x86_64-Setup.exe SHA256
+            <pre><code>certutil -hashfile Dinero-Server-8.0.0-rc17-windows-x86_64-Setup.exe SHA256
 # Expected:
-3adc687dabd4a92d5adebeab4d6732f577ac2d6f6a6b65a09256f672633b2136</code></pre>
+b89f35cdb89489aab64f6e6a830589cee6b5ecc047b2bfbcfc29825474b014ae</code></pre>
           </div>
 
           <div class="card">
             <h3>Windows daemon ZIP</h3>
-            <pre><code>certutil -hashfile dinero-v8.0.0-rc7-windows-x86_64-msvc.zip SHA256
+            <pre><code>certutil -hashfile dinero-v8.0.0-rc17-windows-x86_64-msvc.zip SHA256
 # Expected:
-36cab185a05c9a2059cb7b08b5cfaeaa387e0927757dd13e9f54bf97fefaeb81</code></pre>
+339bf2474d49fa849b4515965cbc7dc6b84f0e52f8e7fa86afae9506c5842844</code></pre>
           </div>
         </div>
 
         <div class="verify-grid" style="margin-top: 14px;">
           <div class="card">
-            <h3>Linux AppImage</h3>
-            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc7/dinero-v8.0.0-rc7-linux-x86_64.AppImage
-sha256sum dinero-v8.0.0-rc7-linux-x86_64.AppImage
+            <h3>macOS DMG</h3>
+            <pre><code>shasum -a 256 Dinero-v8.0.0-rc17-macOS-arm64.dmg
 # Expected:
-dde302f88aff628f11d5dac7e01f51c7294cfbc198845b0382d08546c73bc868</code></pre>
+7b6797bc87c5b406191f36cb9460831c192177c78df357ade3a49f0efee8a996</code></pre>
           </div>
 
           <div class="card">
-            <h3>Linux dinero-core .deb</h3>
-            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc7/dinero-core_8.0.0.rc7-1_amd64.deb
-sha256sum dinero-core_8.0.0.rc7-1_amd64.deb
+            <h3>macOS app zip</h3>
+            <pre><code>shasum -a 256 Dinero-v8.0.0-rc17-macOS-arm64-qt.zip
 # Expected:
-67ef3680fcbd4bcfb89a05d0b4bf291ce1dd62f0e4b663f722d0231187078b0f</code></pre>
+ceebe27f2ab3b9b4facce7f8fd19273085648c93b89c440b64433be9dbc32dfb</code></pre>
           </div>
 
           <div class="card">
-            <h3>Linux operator tarball</h3>
-            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc7/dinero-v8.0.0-rc7-linux-x86_64.tar.gz
-sha256sum dinero-v8.0.0-rc7-linux-x86_64.tar.gz
+            <h3>macOS daemon archive</h3>
+            <pre><code>shasum -a 256 dinerod-8.0.0-rc17-macos-arm64.tar.gz
 # Expected:
-d37ffc99ca89f929969c32f71c796874ef3f9c48ba7958df06e3b090eb647e6b</code></pre>
+aecb1d3b5302e00361086747a96f7756cae843f96f4338bdbc13889e29236d14</code></pre>
           </div>
         </div>
 
         <div class="verify-grid" style="margin-top: 14px;">
           <div class="card">
-            <h3>Linux Qt tarball</h3>
-            <pre><code>sha256sum dinero-v8.0.0-rc7-linux-x86_64-qt.tar.gz
-# Expected:
-00bd51d5e2f80cdcaa80866f24a7e79d193d5af676a3d7994e606f304b25a1d6</code></pre>
+            <h3>Full checksum file</h3>
+            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc17/SHA256SUMS
+shasum -a 256 -c SHA256SUMS</code></pre>
           </div>
 
           <div class="card">
-            <h3>Linux GUI .deb</h3>
-            <pre><code>sha256sum dinero-qt-desktop_8.0.0.rc7-1_amd64.deb
-# Expected:
-9af8beba71543cffc184dc366ccd22008434b2414127474de16af317e3bd24c8</code></pre>
+            <h3>Linux rc17 packages</h3>
+            <pre><code># Public Linux rc17 AppImage/.deb artifacts are pending.
+# Until then, Linux operators should build from source.</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS notarization</h3>
-            <pre><code>spctl -a -t exec -vv Dinero-Qt.app
+            <pre><code>spctl --assess --type open --context context:primary-signature -vv Dinero-v8.0.0-rc17-macOS-arm64.dmg
 # Expected:
 accepted
 source=Notarized Developer ID</code></pre>
@@ -895,7 +897,7 @@ source=Notarized Developer ID</code></pre>
       <div class="wrap">
         <div class="section-head">
           <h2 id="nodes-title">Run a node</h2>
-          <p>Datadirs follow the native convention for each install mode. Linux manual-user mode intentionally keeps the standard dot-directory path.</p>
+          <p>Datadirs follow the native convention for each install mode. The important part is simple: run the wallet or daemon, keep it online, and let it participate in peer discovery.</p>
         </div>
 
         <table>
@@ -923,12 +925,12 @@ source=Notarized Developer ID</code></pre>
               <td>Windows Service convention; survives uninstall</td>
             </tr>
             <tr>
-              <td>Linux <code>dinero-core</code> .deb</td>
+              <td>Linux packaged service</td>
               <td><code>/var/lib/dinero</code></td>
-              <td>FHS/systemd daemon under the dinero service user</td>
+              <td>FHS/systemd daemon under the dinero service user; rc17 package pending</td>
             </tr>
             <tr>
-              <td>Linux operator tarball / developer</td>
+              <td>Linux source build / developer</td>
               <td><code>~/.dinero</code></td>
               <td>Standard Linux CLI/daemon dot-directory convention</td>
             </tr>
@@ -942,38 +944,19 @@ source=Notarized Developer ID</code></pre>
 
         <div class="two-col" style="margin-top: 14px;">
           <article class="card">
-            <h3>Linux <code>dinero-core</code> .deb quick start</h3>
-            <pre><code>sudo dpkg -i dinero-core_8.0.0.rc7-1_amd64.deb
-sudo systemctl enable --now dinero
-sudo -u dinero dinero-cli -datadir=/var/lib/dinero getblockchaininfo</code></pre>
+            <h3>macOS daemon quick start</h3>
+            <pre><code>tar -xzf dinerod-8.0.0-rc17-macos-arm64.tar.gz
+cd dinero-operator-v8.0.0-rc17-macOS-arm64
+./bin/dinerod
+./bin/dinero-cli getnetworkinfo</code></pre>
           </article>
           <article class="card">
-            <h3>Linux operator tarball quick start</h3>
-            <pre><code>tar -xzf dinero-v8.0.0-rc7-linux-x86_64.tar.gz
-cd dinero-v8.0.0-rc7-linux-x86_64
-sha256sum -c SHA256SUMS.txt
-./bin/dinerod                          # mainnet, ~/.dinero
-./bin/dinero-cli getblockchaininfo</code></pre>
-          </article>
-        </div>
-
-        <div class="two-col" style="margin-top: 14px;">
-          <article class="card">
-            <h3>Linux AppImage quick start</h3>
-            <pre><code>chmod +x dinero-v8.0.0-rc7-linux-x86_64.AppImage
-./dinero-v8.0.0-rc7-linux-x86_64.AppImage    # GUI auto-starts the bundled daemon
-
-# If libfuse2 is missing: sudo apt install libfuse2
-# Or extract + run without FUSE:
-./dinero-v8.0.0-rc7-linux-x86_64.AppImage --appimage-extract
-squashfs-root/AppRun</code></pre>
-          </article>
-          <article class="card">
-            <h3>What is not stable yet</h3>
+            <h3>What is still release-candidate</h3>
             <ul class="list">
-              <li>Windows v8 installers (user + server) are not yet Authenticode-signed — SmartScreen may warn. Verify the SHA256 above and click "More info" → "Run anyway".</li>
-              <li>Windows + Linux are at v8.0.0-rc7 with real UPnP / NAT-PMP runtime support; macOS is still at v8.0.0-rc5 (rc7 mac rebuild pending). The rc5 mac assets remain Apple-notarized and safe to run; they just lack the rc7-side port-mapping linkage.</li>
-              <li><code>dinero-gpu-miner</code> ships on Windows but its OpenCL runtime path is not yet validated on MSVC; treat as experimental. Not shipped on Linux for rc5 (CUDA toolkit unavailable in the build environment).</li>
+              <li>Windows v8 installers are not yet Authenticode-signed — SmartScreen may warn. Verify the SHA256 above and click "More info" → "Run anyway".</li>
+              <li>Linux rc17 public desktop and packaged-service artifacts are pending. The live bootstrap fleet is already running rc17 from source.</li>
+              <li>Dynamic P2P is active in conservative slow-churn mode. It is designed to improve peer diversity gradually, not churn aggressively.</li>
+              <li>Relay/NAT traversal is useful infrastructure, but the long-term goal is broader community-run peers and relays, not dependence on Dinero Labs bootstrap nodes.</li>
               <li>Stable promotion waits for the next final-release ceremony.</li>
             </ul>
           </article>
