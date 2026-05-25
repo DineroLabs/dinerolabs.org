@@ -34,10 +34,10 @@ SERVICE_UNIT="dinero.service"
 # Set INCLUDE_PRERELEASE=0 once a stable v8.0.0 ships and you want only stables.
 INCLUDE_PRERELEASE="${INCLUDE_PRERELEASE:-1}"
 
-# Safety guard: do not silently install an older Linux .deb when the current
-# release has not published a Linux package yet. Operators can override this
+# Safety guard: do not silently install an older Linux .deb if a future release
+# publishes before its Linux package is ready. Operators can override this
 # intentionally, but the public one-liner should not drift users back to an
-# older release.
+# older node.
 ALLOW_OLDER_LINUX_DEB="${ALLOW_OLDER_LINUX_DEB:-0}"
 
 # Override-able for mirrors / air-gapped installs (advanced).
@@ -146,7 +146,7 @@ PYEOF
 )"
 
 if [ -n "$LATEST_TAG" ] && [ "$TAG" != "$LATEST_TAG" ] && [ "$ALLOW_OLDER_LINUX_DEB" != "1" ]; then
-  fail "Latest release is ${LATEST_TAG}, but the newest Linux .deb asset found is ${TAG}. Linux packaging for the current release is pending; refusing to install an older node. To intentionally install the older .deb, rerun with ALLOW_OLDER_LINUX_DEB=1."
+  fail "Latest release is ${LATEST_TAG}, but the newest Linux .deb asset found is ${TAG}. Refusing to install an older node. To intentionally install the older .deb, rerun with ALLOW_OLDER_LINUX_DEB=1."
 fi
 
 # ---------------------------------------------------------------------------
