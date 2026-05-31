@@ -5,16 +5,22 @@
 #
 # What this does (read before piping to sudo):
 #   1. Verifies you're on Ubuntu 24.04+ x86_64 with root privileges
-#   2. Queries the GitHub API for the latest Dinero v8 release
-#      (includes pre-releases while v8 is still in rcN)
-#   3. Downloads the Linux x86_64 dinerod + dinero-cli tarballs and verifies
-#      each SHA256 against the digest published by GitHub for that asset
-#   4. Installs both binaries to /usr/local/bin
-#   5. Creates the dedicated dinero system user and /var/lib/dinero datadir
-#   6. Writes /etc/systemd/system/dinero.service, enables, and starts it
-#   7. If ufw is active, opens inbound P2P port 20999/tcp; does NOT expose
-#      RPC port 20998 to the internet
-#   8. Waits ~30s and reports node status (version, peer count, local addrs)
+#   2. Queries the GitHub API for the latest Dinero v8 release (currently
+#      includes pre-releases — v8 is still in rcN)
+#   3. Downloads the headless Linux tarballs (dinero-core = daemon, dinero-cli)
+#      and verifies each against the digest GitHub publishes for the asset
+#   4. Installs dinerod + dinero-cli to /usr/local/bin
+#   5. Creates the `dinero` system user + /var/lib/dinero datadir
+#   6. FAST SYNC: if the release ships an AssumeUTXO snapshot, downloads it and
+#      configures the node to bootstrap from it. The node becomes usable in
+#      minutes, verifies forward to the tip, and BACKGROUND-VALIDATES the
+#      pre-snapshot history — the snapshot is checked against a hash compiled
+#      into the binary, so a tampered file is rejected (it falls back to a full
+#      sync from genesis, never hangs). Set DINERO_FAST_SYNC=0 to force a full
+#      validate-from-genesis sync.
+#   7. Writes + enables a dinero.service systemd unit, starts it
+#   8. If ufw is active, opens inbound P2P port 20999/tcp; never exposes RPC
+#   9. Waits ~30s and reports node status (version, peer count, local addrs)
 #
 # Source:   https://github.com/DineroLabs/dinerolabs.org/blob/main/install.sh
 # Releases: https://github.com/DineroLabs/dinero-v8/releases
@@ -27,22 +33,22 @@ set -euo pipefail
 # Configuration
 # ---------------------------------------------------------------------------
 RELEASE_REPO="DineroLabs/dinero-v8"
-CORE_ASSET_PATTERN='^dinero-core-.*-linux-x86_64\.tar\.gz$'
-CLI_ASSET_PATTERN='^dinero-cli-.*-linux-x86_64\.tar\.gz$'
+CORE_PATTERN='^dinero-core-.*-linux-x86_64\.tar\.gz$'
+CLI_PATTERN='^dinero-cli-.*-linux-x86_64\.tar\.gz$'
+SNAPSHOT_PATTERN='^utxo-snapshot-[0-9]+\.dat$'
 P2P_PORT=20999
 RPC_PORT=20998
 SERVICE_UNIT="dinero.service"
-SERVICE_USER="dinero"
-DATADIR="/var/lib/dinero"
-INSTALL_PREFIX="/usr/local/bin"
+DATADIR=/var/lib/dinero
+BINDIR=/usr/local/bin
+RUN_USER=dinero
 
 # Set INCLUDE_PRERELEASE=0 once a stable v8.0.0 ships and you want only stables.
 INCLUDE_PRERELEASE="${INCLUDE_PRERELEASE:-1}"
 
-# Safety guard: do not silently install an older tarball set if a future release
-# publishes before Linux operator tarballs are ready. Operators can override
-# intentionally, but the public one-liner should not drift users back.
-ALLOW_OLDER_LINUX_TARBALLS="${ALLOW_OLDER_LINUX_TARBALLS:-0}"
+# Fast sync via AssumeUTXO snapshot (default on). DINERO_FAST_SYNC=0 forces a
+# full validate-from-genesis sync (no snapshot bootstrap).
+DINERO_FAST_SYNC="${DINERO_FAST_SYNC:-1}"
 
 # Override-able for mirrors / air-gapped installs (advanced).
 RELEASE_API="${RELEASE_API:-https://api.github.com/repos/${RELEASE_REPO}/releases}"
@@ -50,7 +56,7 @@ RELEASE_API="${RELEASE_API:-https://api.github.com/repos/${RELEASE_REPO}/release
 # ---------------------------------------------------------------------------
 # Pretty printers
 # ---------------------------------------------------------------------------
-note() { printf '\033[1;34m==>\033[0m %s\n' "$*" >&2; }
+note() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m!!\033[0m  %s\n' "$*" >&2; }
 fail() { printf '\033[1;31mxx\033[0m  %s\n' "$*" >&2; exit 1; }
 
@@ -76,20 +82,20 @@ if [ "$OS_ID" != "ubuntu" ]; then
 fi
 case "$OS_VER" in
   24.04|24.10|25.04|25.10|26.04) : ;;
-  *) fail "Ubuntu 24.04+ required (detected: $OS_VER). For older Ubuntu, build from source or use the manual tarball release." ;;
+  *) fail "Ubuntu 24.04+ required (detected: $OS_VER). For older Ubuntu, build from source." ;;
 esac
 
 ARCH="$(dpkg --print-architecture 2>/dev/null || echo unknown)"
 if [ "$ARCH" != "amd64" ]; then
-  fail "x86_64 (amd64) required (detected: $ARCH). ARM64 Linux tarballs are not yet published."
+  fail "x86_64 (amd64) required (detected: $ARCH). ARM64 Linux is not yet published."
 fi
 
-for cmd in curl python3 tar install systemctl sha256sum useradd id chown chmod; do
+for cmd in curl python3 tar systemctl sha256sum install; do
   command -v "$cmd" >/dev/null 2>&1 || fail "Missing required command: $cmd"
 done
 
 # ---------------------------------------------------------------------------
-# Discover latest release + matching tarball assets
+# Discover latest release + its Linux tarball assets
 # ---------------------------------------------------------------------------
 note "Querying GitHub for the latest Dinero v8 release"
 TMP="$(mktemp -d -t dinero-install-XXXXXX)"
@@ -99,149 +105,173 @@ RELEASES_JSON="$TMP/releases.json"
 curl -fsSL -H 'Accept: application/vnd.github+json' \
   "${RELEASE_API}?per_page=10" -o "$RELEASES_JSON"
 
+# Pick the newest non-draft release (honoring INCLUDE_PRERELEASE) whose assets
+# contain a Linux core tarball, and emit name/url/digest for each asset of
+# interest (core, cli, snapshot). One line per field; "-" when absent.
 PICK="$TMP/pick.txt"
-CORE_ASSET_PATTERN="$CORE_ASSET_PATTERN" \
-CLI_ASSET_PATTERN="$CLI_ASSET_PATTERN" \
-INCLUDE_PRERELEASE="$INCLUDE_PRERELEASE" \
+CORE_PATTERN="$CORE_PATTERN" CLI_PATTERN="$CLI_PATTERN" \
+SNAPSHOT_PATTERN="$SNAPSHOT_PATTERN" INCLUDE_PRERELEASE="$INCLUDE_PRERELEASE" \
 python3 - "$RELEASES_JSON" >"$PICK" <<'PYEOF'
 import json, os, re, sys
 data = json.load(open(sys.argv[1]))
 include_pre = os.environ.get("INCLUDE_PRERELEASE", "1") == "1"
-core_pattern = re.compile(os.environ["CORE_ASSET_PATTERN"])
-cli_pattern = re.compile(os.environ["CLI_ASSET_PATTERN"])
+core_re = re.compile(os.environ["CORE_PATTERN"])
+cli_re = re.compile(os.environ["CLI_PATTERN"])
+snap_re = re.compile(os.environ["SNAPSHOT_PATTERN"])
+
+def find(assets, rx):
+    for a in assets:
+        if rx.match(a["name"]):
+            return a
+    return None
 
 for rel in data:
     if rel.get("draft"):
         continue
     if rel.get("prerelease") and not include_pre:
         continue
-    core = cli = None
-    for asset in rel.get("assets", []):
-        name = asset["name"]
-        if core is None and core_pattern.match(name):
-            core = asset
-        if cli is None and cli_pattern.match(name):
-            cli = asset
-    if core and cli:
-        print(rel["tag_name"])
-        print(core["name"])
-        print(core["browser_download_url"])
-        print(core.get("digest", ""))
-        print(cli["name"])
-        print(cli["browser_download_url"])
-        print(cli.get("digest", ""))
-        sys.exit(0)
-
-sys.exit("no matching Linux core + CLI tarballs on any recent release")
-PYEOF
-
-mapfile -t PICKED <"$PICK"
-TAG="${PICKED[0]:-}"
-CORE_ASSET_NAME="${PICKED[1]:-}"
-CORE_ASSET_URL="${PICKED[2]:-}"
-CORE_ASSET_DIGEST="${PICKED[3]:-}"
-CLI_ASSET_NAME="${PICKED[4]:-}"
-CLI_ASSET_URL="${PICKED[5]:-}"
-CLI_ASSET_DIGEST="${PICKED[6]:-}"
-
-[ -n "$TAG" ] && [ -n "$CORE_ASSET_URL" ] && [ -n "$CLI_ASSET_URL" ] || fail "Could not resolve release/assets from GitHub API"
-note "Selected release: $TAG"
-note "Core asset:       $CORE_ASSET_NAME"
-note "CLI asset:        $CLI_ASSET_NAME"
-
-LATEST_TAG="$(INCLUDE_PRERELEASE="$INCLUDE_PRERELEASE" python3 - "$RELEASES_JSON" <<'PYEOF'
-import json, os, sys
-data = json.load(open(sys.argv[1]))
-include_pre = os.environ.get("INCLUDE_PRERELEASE", "1") == "1"
-for rel in data:
-    if rel.get("draft"):
-        continue
-    if rel.get("prerelease") and not include_pre:
-        continue
+    assets = rel.get("assets", [])
+    core = find(assets, core_re)
+    if not core:
+        continue  # this release has no Linux core tarball; try older
+    cli = find(assets, cli_re)
+    snap = find(assets, snap_re)
     print(rel["tag_name"])
-    break
+    for a in (core, cli, snap):
+        if a:
+            print(a["name"]); print(a["browser_download_url"]); print(a.get("digest", "") or "-")
+        else:
+            print("-"); print("-"); print("-")
+    sys.exit(0)
+sys.exit("no Dinero v8 release with a Linux core tarball found on the last 10 releases")
 PYEOF
-)"
 
-if [ -n "$LATEST_TAG" ] && [ "$TAG" != "$LATEST_TAG" ] && [ "$ALLOW_OLDER_LINUX_TARBALLS" != "1" ]; then
-  fail "Latest release is ${LATEST_TAG}, but the newest Linux tarball set found is ${TAG}. Refusing to install an older node. To intentionally install the older tarballs, rerun with ALLOW_OLDER_LINUX_TARBALLS=1."
-fi
+mapfile -t P <"$PICK"
+TAG="${P[0]:-}"
+CORE_NAME="${P[1]:-}";  CORE_URL="${P[2]:-}";  CORE_DIGEST="${P[3]:-}"
+CLI_NAME="${P[4]:-}";   CLI_URL="${P[5]:-}";   CLI_DIGEST="${P[6]:-}"
+SNAP_NAME="${P[7]:-}";  SNAP_URL="${P[8]:-}";  SNAP_DIGEST="${P[9]:-}"
 
-download_and_verify() {
-  local name="$1"
-  local url="$2"
-  local digest="$3"
-  local path="$TMP/$name"
+[ -n "$TAG" ] && [ "$CORE_URL" != "-" ] || fail "Could not resolve a Linux release from the GitHub API"
+note "Selected release: $TAG"
 
+# ---------------------------------------------------------------------------
+# Download + hash-verify + install a tarball binary
+# ---------------------------------------------------------------------------
+dl_verify() {  # <name> <url> <digest> <out>
+  local name="$1" url="$2" digest="$3" out="$4"
   note "Downloading $name"
-  curl -fsSL --retry 3 --connect-timeout 20 -o "$path" "$url"
-
-  if [ -n "$digest" ]; then
+  curl -fsSL --retry 3 --connect-timeout 20 -o "$out" "$url"
+  if [ -n "$digest" ] && [ "$digest" != "-" ]; then
     local expected="${digest#sha256:}"
-    local actual
-    actual="$(sha256sum "$path" | awk '{print $1}')"
-    if [ "$expected" != "$actual" ]; then
-      fail "SHA256 mismatch for $name — expected=$expected got=$actual"
-    fi
-    note "SHA256 verified for $name: $actual"
+    local actual; actual="$(sha256sum "$out" | awk '{print $1}')"
+    [ "$expected" = "$actual" ] || fail "SHA256 mismatch for $name (expected $expected got $actual)"
+    note "SHA256 verified: $actual"
   else
-    warn "GitHub did not return a digest for $name — proceeding WITHOUT hash verification (older API response shape)"
+    warn "No digest from GitHub for $name — proceeding without hash verification"
   fi
-
-  printf '%s\n' "$path"
 }
 
-# ---------------------------------------------------------------------------
-# Download, verify, and install binaries
-# ---------------------------------------------------------------------------
-CORE_PATH="$(download_and_verify "$CORE_ASSET_NAME" "$CORE_ASSET_URL" "$CORE_ASSET_DIGEST")"
-CLI_PATH="$(download_and_verify "$CLI_ASSET_NAME" "$CLI_ASSET_URL" "$CLI_ASSET_DIGEST")"
+install_tarball_bin() {  # <tarball> <binary-basename>
+  local tarball="$1" binname="$2" stage; stage="$(mktemp -d)"
+  tar -xzf "$tarball" -C "$stage"
+  local found; found="$(find "$stage" -type f -name "$binname" | head -1)"
+  [ -n "$found" ] || fail "Could not find $binname inside $tarball"
+  install -m 0755 "$found" "$BINDIR/$binname"
+  rm -rf "$stage"
+  note "Installed $BINDIR/$binname"
+}
 
-EXTRACT_DIR="$TMP/extract"
-mkdir -p "$EXTRACT_DIR"
-tar -xzf "$CORE_PATH" -C "$EXTRACT_DIR"
-tar -xzf "$CLI_PATH" -C "$EXTRACT_DIR"
-
-DINEROD_PATH="$(find "$EXTRACT_DIR" -type f -name dinerod -perm -111 | head -1)"
-CLI_PATH_EXTRACTED="$(find "$EXTRACT_DIR" -type f -name dinero-cli -perm -111 | head -1)"
-[ -n "$DINEROD_PATH" ] || fail "Downloaded core tarball did not contain executable dinerod"
-[ -n "$CLI_PATH_EXTRACTED" ] || fail "Downloaded CLI tarball did not contain executable dinero-cli"
-
-note "Installing binaries to ${INSTALL_PREFIX}"
-install -m 0755 "$DINEROD_PATH" "${INSTALL_PREFIX}/dinerod"
-install -m 0755 "$CLI_PATH_EXTRACTED" "${INSTALL_PREFIX}/dinero-cli"
-
-if ! id -u "$SERVICE_USER" >/dev/null 2>&1; then
-  note "Creating ${SERVICE_USER} system user"
-  useradd --system --home-dir "$DATADIR" --shell /usr/sbin/nologin "$SERVICE_USER"
+note "Installing dinerod + dinero-cli to $BINDIR"
+dl_verify "$CORE_NAME" "$CORE_URL" "$CORE_DIGEST" "$TMP/core.tgz"
+install_tarball_bin "$TMP/core.tgz" "dinerod"
+if [ "$CLI_URL" != "-" ]; then
+  dl_verify "$CLI_NAME" "$CLI_URL" "$CLI_DIGEST" "$TMP/cli.tgz"
+  install_tarball_bin "$TMP/cli.tgz" "dinero-cli"
+else
+  warn "Release $TAG has no dinero-cli tarball — installing daemon only"
 fi
 
-note "Preparing datadir ${DATADIR}"
-install -d -m 0750 -o "$SERVICE_USER" -g "$SERVICE_USER" "$DATADIR"
+# ---------------------------------------------------------------------------
+# System user + datadir
+# ---------------------------------------------------------------------------
+if ! id -u "$RUN_USER" >/dev/null 2>&1; then
+  note "Creating system user '$RUN_USER'"
+  useradd --system --home-dir "$DATADIR" --shell /usr/sbin/nologin "$RUN_USER"
+fi
+mkdir -p "$DATADIR"
+chown -R "$RUN_USER:$RUN_USER" "$DATADIR"
+chmod 0750 "$DATADIR"
 
-note "Writing systemd unit ${SERVICE_UNIT}"
-cat >"/etc/systemd/system/${SERVICE_UNIT}" <<EOF
+FRESH_DATADIR=0
+if [ ! -e "$DATADIR/blockchain" ] && [ ! -e "$DATADIR/blocks" ]; then
+  FRESH_DATADIR=1
+fi
+
+# ---------------------------------------------------------------------------
+# Fast sync: fetch the AssumeUTXO snapshot (only useful on a fresh datadir)
+# ---------------------------------------------------------------------------
+SNAPSHOT_LINE=""
+if [ "$DINERO_FAST_SYNC" = "1" ] && [ "$SNAP_URL" != "-" ] && [ "$FRESH_DATADIR" = "1" ]; then
+  SNAP_PATH="$DATADIR/$SNAP_NAME"
+  dl_verify "$SNAP_NAME" "$SNAP_URL" "$SNAP_DIGEST" "$SNAP_PATH"
+  chown "$RUN_USER:$RUN_USER" "$SNAP_PATH"
+  SNAPSHOT_LINE="assumeutxo_snapshot=$SNAP_PATH"
+  note "Fast sync enabled — node will bootstrap from $SNAP_NAME (verified against the binary's built-in trust anchor), then validate forward + in the background."
+elif [ "$DINERO_FAST_SYNC" != "1" ]; then
+  note "DINERO_FAST_SYNC=0 — full validate-from-genesis sync (no snapshot)"
+elif [ "$FRESH_DATADIR" != "1" ]; then
+  note "Existing datadir detected — skipping snapshot bootstrap (full node continues normally)"
+else
+  note "Release $TAG ships no snapshot — full validate-from-genesis sync"
+fi
+
+# ---------------------------------------------------------------------------
+# Config (only create if absent — never clobber an operator's config)
+# ---------------------------------------------------------------------------
+CONF="$DATADIR/dinero.conf"
+if [ ! -f "$CONF" ]; then
+  note "Writing $CONF"
+  {
+    echo "# Dinero node config — written by install.sh ($TAG)"
+    echo "listen=1"
+    echo "rpcbind=127.0.0.1"
+    echo "rpcallowip=127.0.0.1"
+    [ -n "$SNAPSHOT_LINE" ] && echo "$SNAPSHOT_LINE"
+  } > "$CONF"
+  chown "$RUN_USER:$RUN_USER" "$CONF"
+  chmod 0640 "$CONF"
+else
+  warn "$CONF already exists — leaving it unchanged"
+  if [ -n "$SNAPSHOT_LINE" ] && ! grep -q '^assumeutxo_snapshot=' "$CONF"; then
+    warn "To enable fast sync on this node, add to $CONF: $SNAPSHOT_LINE"
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# systemd unit
+# ---------------------------------------------------------------------------
+UNIT_PATH="/etc/systemd/system/$SERVICE_UNIT"
+note "Writing $UNIT_PATH"
+cat > "$UNIT_PATH" <<UNIT
 [Unit]
-Description=Dinero node
+Description=Dinero v8 node (dinerod)
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 Type=simple
-User=${SERVICE_USER}
-Group=${SERVICE_USER}
-ExecStart=${INSTALL_PREFIX}/dinerod -datadir=${DATADIR}
+User=$RUN_USER
+Group=$RUN_USER
+ExecStart=$BINDIR/dinerod -datadir=$DATADIR
 Restart=on-failure
-RestartSec=10
-LimitNOFILE=65536
-PrivateTmp=true
-ProtectSystem=full
-ReadWritePaths=${DATADIR}
+RestartSec=5
+TimeoutStopSec=120
+LimitNOFILE=8192
 
 [Install]
 WantedBy=multi-user.target
-EOF
-
+UNIT
 systemctl daemon-reload
 
 # ---------------------------------------------------------------------------
@@ -251,43 +281,34 @@ if command -v ufw >/dev/null 2>&1 && ufw status 2>/dev/null | grep -qi '^Status:
   note "ufw is active — allowing inbound P2P port ${P2P_PORT}/tcp"
   ufw allow "${P2P_PORT}/tcp" >/dev/null || warn "ufw allow ${P2P_PORT}/tcp failed (non-fatal)"
   note "RPC port ${RPC_PORT} is intentionally NOT exposed to the internet"
-  note "(RPC controls your wallet — only open it if you understand the implications)"
 else
-  note "ufw not active — skipping firewall config"
-  note "If you run a different firewall, allow inbound ${P2P_PORT}/tcp for P2P connectivity"
+  note "ufw not active — if you run a firewall, allow inbound ${P2P_PORT}/tcp for P2P"
 fi
 
 # ---------------------------------------------------------------------------
-# systemd: enable + start
+# Enable + start + verify
 # ---------------------------------------------------------------------------
 note "Enabling and starting ${SERVICE_UNIT}"
 systemctl enable --now "$SERVICE_UNIT"
 
-# ---------------------------------------------------------------------------
-# Verify
-# ---------------------------------------------------------------------------
 note "Waiting 30s for dinerod to initialize and reach out to peers..."
 sleep 30
 
 note "Node status:"
-
-VERSION_LINE="$(dinerod --version 2>/dev/null | grep -E '^(dinerod|version|commit)' | head -3 || true)"
-if [ -n "$VERSION_LINE" ]; then
-  while IFS= read -r line; do printf '  %s\n' "$line"; done <<<"$VERSION_LINE"
-fi
-
-INFO_FILE="$TMP/netinfo.json"
-if dinero-cli -datadir="$DATADIR" getnetworkinfo >"$INFO_FILE" 2>/dev/null; then
-  python3 - "$INFO_FILE" <<'PYEOF'
+if command -v dinero-cli >/dev/null 2>&1; then
+  INFO_FILE="$TMP/netinfo.json"
+  if dinero-cli -datadir="$DATADIR" getnetworkinfo >"$INFO_FILE" 2>/dev/null; then
+    python3 - "$INFO_FILE" <<'PYEOF'
 import json, sys
 d = json.load(open(sys.argv[1]))
 print(f"  Subversion:   {d.get('subversion', d.get('version', 'unknown'))}")
 print(f"  Connections:  {d.get('connections', 'unknown')}")
 addrs = [a.get('address') for a in d.get('localaddresses', [])]
-print(f"  Local addrs:  {addrs if addrs else 'none yet (will populate after a peer advertises your public address)'}")
+print(f"  Local addrs:  {addrs if addrs else 'none yet (populates after a peer advertises your public address)'}")
 PYEOF
-else
-  warn "dinero-cli getnetworkinfo failed — daemon may still be initializing. Run 'systemctl status ${SERVICE_UNIT}' to check."
+  else
+    warn "dinero-cli getnetworkinfo failed — daemon may still be initializing. Check: systemctl status ${SERVICE_UNIT}"
+  fi
 fi
 
 cat <<MSG
@@ -298,16 +319,15 @@ cat <<MSG
   Useful commands:
     systemctl status ${SERVICE_UNIT}
     journalctl -u ${SERVICE_UNIT} -f
-    dinero-cli -datadir=${DATADIR} getnetworkinfo
     dinero-cli -datadir=${DATADIR} getblockchaininfo
 
+  Fast sync: ${SNAPSHOT_LINE:+enabled (AssumeUTXO bootstrap → forward + background validation)}${SNAPSHOT_LINE:-not active (full validate-from-genesis sync)}
+
   Ports:
-    P2P  ${P2P_PORT}/tcp  — open to internet (if you have a NAT, also forward this port)
-    RPC  ${RPC_PORT}/tcp  — localhost only by default; do NOT expose
+    P2P  ${P2P_PORT}/tcp  — open to internet (forward this port if behind NAT)
+    RPC  ${RPC_PORT}/tcp  — localhost only; do NOT expose
 
   Dinero is a young network. Your node helps it grow beyond the bootstrap
-  fleet. To check peer count later: dinero-cli -datadir=${DATADIR} getnetworkinfo
-
-  Issues:   https://github.com/${RELEASE_REPO}/issues
+  fleet. Issues: https://github.com/${RELEASE_REPO}/issues
 ────────────────────────────────────────────────────────────────────────────
 MSG
