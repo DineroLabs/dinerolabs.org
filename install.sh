@@ -11,14 +11,17 @@
 #      and verifies each against the digest GitHub publishes for the asset
 #   4. Installs dinerod + dinero-cli to /usr/local/bin
 #   5. Creates the `dinero` system user + /var/lib/dinero datadir
-#   6. SYNC: defaults to a full validate-from-genesis sync. Fast sync via an
-#      AssumeUTXO snapshot is TEMPORARILY OPT-IN (DINERO_FAST_SYNC=1) while a
-#      concurrency bug in the rc24 snapshot loader — it can crash on multi-core
-#      hosts during the UTXO load — is fixed and re-validated. When enabled and
-#      the release ships a snapshot, the node bootstraps from it (usable in
-#      minutes), verifies forward to the tip, and BACKGROUND-VALIDATES the
+#   6. SYNC MODE (DINERO_SYNC_MODE, default `auto`):
+#        auto — fast snapshot bootstrap when the release carries the snapshot-
+#               load fix AND the machine is fit (fresh datadir, RAM/disk),
+#               otherwise a full validate-from-genesis sync.
+#        full — always verify from genesis (safest, slowest).
+#        fast — force snapshot bootstrap (advanced; fresh datadir only).
+#      When fast runs, the node bootstraps from the AssumeUTXO snapshot (usable
+#      in minutes), verifies forward to the tip, and BACKGROUND-VALIDATES the
 #      pre-snapshot history; the snapshot is checked against a hash compiled
-#      into the binary, so a tampered file is rejected.
+#      into the binary, so a tampered file is rejected. (Back-compat:
+#      DINERO_FAST_SYNC=1 => fast, =0 => full.)
 #   7. Writes + enables a dinero.service systemd unit, starts it
 #   8. If ufw is active, opens inbound P2P port 20999/tcp; never exposes RPC
 #   9. Waits ~30s and reports node status (version, peer count, local addrs)
@@ -47,12 +50,26 @@ RUN_USER=dinero
 # Set INCLUDE_PRERELEASE=0 once a stable v8.0.0 ships and you want only stables.
 INCLUDE_PRERELEASE="${INCLUDE_PRERELEASE:-1}"
 
-# Fast sync via AssumeUTXO snapshot. TEMPORARILY OPT-IN (default off): a
-# concurrency bug in the rc24 snapshot loader can crash on multi-core hosts
-# during the UTXO load. Until the fixed binary ships, new installs default to a
-# full validate-from-genesis sync (slower but safe). Set DINERO_FAST_SYNC=1 to
-# opt in to snapshot bootstrap.
-DINERO_FAST_SYNC="${DINERO_FAST_SYNC:-0}"
+# Sync mode — how a fresh node builds its UTXO set:
+#   auto (default) — fast snapshot bootstrap when the machine AND release are
+#                    known-safe, otherwise full validate-from-genesis.
+#   full           — always verify from genesis (no snapshot). Safest, slowest.
+#   fast           — force snapshot bootstrap (advanced; fresh datadir only).
+# Back-compat: DINERO_FAST_SYNC=1 => fast, DINERO_FAST_SYNC=0 => full (when set,
+# overrides DINERO_SYNC_MODE).
+DINERO_SYNC_MODE="${DINERO_SYNC_MODE:-auto}"
+
+# First release tag whose dinerod contains the single-flight LoadSnapshot fix.
+# The rc24 snapshot loader can be entered concurrently and crash on multi-core
+# hosts during the UTXO load, so `auto` will NOT choose fast on releases older
+# than this. Bump to the tag that ships the fix and `auto` re-enables fast
+# automatically. Empty disables fast under auto entirely.
+SNAPSHOT_FIX_MIN_TAG="${SNAPSHOT_FIX_MIN_TAG:-v8.0.0-rc25}"
+
+# Minimum total RAM / free disk for a safe fast bootstrap (the loader holds the
+# UTXO set in memory and writes the snapshot). Below these, `auto` uses full.
+FASTSYNC_MIN_RAM_MB="${FASTSYNC_MIN_RAM_MB:-2048}"
+FASTSYNC_MIN_DISK_MB="${FASTSYNC_MIN_DISK_MB:-5120}"
 
 # Override-able for mirrors / air-gapped installs (advanced).
 RELEASE_API="${RELEASE_API:-https://api.github.com/repos/${RELEASE_REPO}/releases}"
@@ -213,21 +230,73 @@ if [ ! -e "$DATADIR/blockchain" ] && [ ! -e "$DATADIR/blocks" ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# Fast sync: fetch the AssumeUTXO snapshot (only useful on a fresh datadir)
+# Sync-mode resolution + (if fast) AssumeUTXO snapshot fetch
+#
+# Two safety layers protect fast sync:
+#   * Installer policy (here): `auto` only chooses fast when the release carries
+#     the snapshot-load fix (TAG >= SNAPSHOT_FIX_MIN_TAG) and the machine is fit.
+#   * Daemon guard (in dinerod): a single-flight LoadSnapshot state machine that
+#     prevents a crash even if a user forces fast on an unfixed/edge case.
 # ---------------------------------------------------------------------------
+
+# True if release tag $1 contains the single-flight snapshot-load fix.
+tag_has_snapshot_fix() {  # <tag>
+  local tag="$1"
+  [ -n "$SNAPSHOT_FIX_MIN_TAG" ] || return 1          # no fixed release declared
+  [ "$tag" = "$SNAPSHOT_FIX_MIN_TAG" ] && return 0
+  case "$tag" in *-rc*|*-beta*|*-alpha*) : ;; *) return 0 ;; esac  # final >= any rc
+  [ "$(printf '%s\n%s\n' "$tag" "$SNAPSHOT_FIX_MIN_TAG" | sort -V | head -1)" = "$SNAPSHOT_FIX_MIN_TAG" ]
+}
+
+# True if the host has enough RAM + free disk for a safe fast bootstrap.
+have_resources_for_fast() {
+  local ram_mb disk_mb
+  ram_mb="$(awk '/^MemTotal:/ {print int($2/1024)}' /proc/meminfo 2>/dev/null || echo 0)"
+  disk_mb="$(df -Pm "$DATADIR" 2>/dev/null | awk 'NR==2 {print $4}' || echo 0)"
+  [ "${ram_mb:-0}" -ge "$FASTSYNC_MIN_RAM_MB" ] && [ "${disk_mb:-0}" -ge "$FASTSYNC_MIN_DISK_MB" ]
+}
+
+# Back-compat: explicit DINERO_FAST_SYNC overrides the mode.
+[ "${DINERO_FAST_SYNC:-}" = "1" ] && DINERO_SYNC_MODE=fast
+[ "${DINERO_FAST_SYNC:-}" = "0" ] && DINERO_SYNC_MODE=full
+case "$DINERO_SYNC_MODE" in
+  auto|full|fast) : ;;
+  *) warn "Unknown DINERO_SYNC_MODE='$DINERO_SYNC_MODE' — using auto"; DINERO_SYNC_MODE=auto ;;
+esac
+
+EFFECTIVE_SYNC=full
+if [ "$DINERO_SYNC_MODE" = "full" ]; then
+  note "Sync mode: full — validate from genesis (no snapshot)"
+elif [ "$DINERO_SYNC_MODE" = "fast" ]; then
+  if [ "$SNAP_URL" = "-" ]; then
+    warn "Sync mode: fast requested but release $TAG ships no snapshot — using full"
+  elif [ "$FRESH_DATADIR" != "1" ]; then
+    warn "Sync mode: fast requested but datadir is not fresh — using full"
+  else
+    EFFECTIVE_SYNC=fast
+    tag_has_snapshot_fix "$TAG" || warn "Sync mode: fast FORCED on $TAG, which predates the snapshot-load fix ($SNAPSHOT_FIX_MIN_TAG); relying on the daemon's single-flight guard."
+  fi
+else  # auto
+  reasons=""
+  [ "$FRESH_DATADIR" = "1" ]  || reasons="${reasons}existing datadir; "
+  [ "$SNAP_URL" != "-" ]      || reasons="${reasons}release ships no snapshot; "
+  tag_has_snapshot_fix "$TAG" || reasons="${reasons}release $TAG predates snapshot-load fix ($SNAPSHOT_FIX_MIN_TAG); "
+  have_resources_for_fast     || reasons="${reasons}insufficient RAM/disk (need ${FASTSYNC_MIN_RAM_MB}MB RAM + ${FASTSYNC_MIN_DISK_MB}MB free); "
+  if [ -z "$reasons" ]; then
+    EFFECTIVE_SYNC=fast
+    note "Sync mode: auto → fast (machine + release are fast-sync-safe)"
+  else
+    note "Sync mode: auto → full (${reasons%; })"
+  fi
+fi
+
 SNAPSHOT_LINE=""
-if [ "$DINERO_FAST_SYNC" = "1" ] && [ "$SNAP_URL" != "-" ] && [ "$FRESH_DATADIR" = "1" ]; then
+if [ "$EFFECTIVE_SYNC" = "fast" ]; then
   SNAP_PATH="$DATADIR/$SNAP_NAME"
   dl_verify "$SNAP_NAME" "$SNAP_URL" "$SNAP_DIGEST" "$SNAP_PATH"
   chown "$RUN_USER:$RUN_USER" "$SNAP_PATH"
   SNAPSHOT_LINE="assumeutxo_snapshot=$SNAP_PATH"
-  warn "Fast sync (DINERO_FAST_SYNC=1) opted in — bootstrapping from $SNAP_NAME. NOTE: the rc24 snapshot loader has a known concurrency bug that can crash on multi-core hosts; if the daemon fails to start, re-run with DINERO_FAST_SYNC=0."
-elif [ "$DINERO_FAST_SYNC" != "1" ]; then
-  note "Full validate-from-genesis sync (default). Fast sync is temporarily opt-in while the rc24 snapshot loader is fixed; set DINERO_FAST_SYNC=1 to try it."
-elif [ "$FRESH_DATADIR" != "1" ]; then
-  note "Existing datadir detected — skipping snapshot bootstrap (full node continues normally)"
-else
-  note "Release $TAG ships no snapshot — full validate-from-genesis sync"
+  note "Fast bootstrap from $SNAP_NAME (verified vs the binary's built-in trust anchor), then forward + background validation."
 fi
 
 # ---------------------------------------------------------------------------
@@ -325,7 +394,7 @@ cat <<MSG
     journalctl -u ${SERVICE_UNIT} -f
     dinero-cli -datadir=${DATADIR} getblockchaininfo
 
-  Fast sync: ${SNAPSHOT_LINE:+enabled (AssumeUTXO bootstrap → forward + background validation)}${SNAPSHOT_LINE:-not active (full validate-from-genesis sync)}
+  Sync: mode=${DINERO_SYNC_MODE} → ${EFFECTIVE_SYNC}${SNAPSHOT_LINE:+ (AssumeUTXO bootstrap → forward + background validation)}${SNAPSHOT_LINE:- (validate from genesis)}
 
   Ports:
     P2P  ${P2P_PORT}/tcp  — open to internet (forward this port if behind NAT)
