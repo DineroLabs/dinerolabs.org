@@ -369,8 +369,23 @@ sleep 30
 
 note "Node status:"
 if command -v dinero-cli >/dev/null 2>&1; then
+  STATUS_FILE="$TMP/nodestatus.json"
   INFO_FILE="$TMP/netinfo.json"
-  if dinero-cli -datadir="$DATADIR" getnetworkinfo >"$INFO_FILE" 2>/dev/null; then
+  if dinero-cli -datadir="$DATADIR" node.status >"$STATUS_FILE" 2>/dev/null; then
+    # rc27+ : one aggregated operator health summary (sync/peers/reachability).
+    python3 - "$STATUS_FILE" <<'PYEOF'
+import json, sys
+d = json.load(open(sys.argv[1]))
+s = d.get('sync', {}); p = d.get('peers', {}); r = d.get('reachability', {})
+print(f"  {d.get('summary', '(no summary)')}")
+print(f"  Synced:       {s.get('synced')}  (height {s.get('height')})")
+print(f"  Peers:        {p.get('total')} ({p.get('in')} in / {p.get('out')} out)")
+print(f"  Reachable:    direct={r.get('direct_reachable')}  via_relay={r.get('reachable_via_relay')}  behind_nat={r.get('behind_nat')}")
+print(f"  Relays:       registered={r.get('registered_relays')}  relay_data_ready={r.get('relay_data_ready')}")
+print(f"  Overall:      {'OK' if d.get('ok') else 'still establishing — sync/peers/reachability in progress'}")
+PYEOF
+  elif dinero-cli -datadir="$DATADIR" getnetworkinfo >"$INFO_FILE" 2>/dev/null; then
+    # pre-rc27 fallback: basic network info (no node.status yet).
     python3 - "$INFO_FILE" <<'PYEOF'
 import json, sys
 d = json.load(open(sys.argv[1]))
@@ -380,7 +395,7 @@ addrs = [a.get('address') for a in d.get('localaddresses', [])]
 print(f"  Local addrs:  {addrs if addrs else 'none yet (populates after a peer advertises your public address)'}")
 PYEOF
   else
-    warn "dinero-cli getnetworkinfo failed — daemon may still be initializing. Check: systemctl status ${SERVICE_UNIT}"
+    warn "dinero-cli status query failed — daemon may still be initializing. Check: systemctl status ${SERVICE_UNIT}"
   fi
 fi
 
@@ -392,6 +407,7 @@ cat <<MSG
   Useful commands:
     systemctl status ${SERVICE_UNIT}
     journalctl -u ${SERVICE_UNIT} -f
+    dinero-cli -datadir=${DATADIR} node.status        # one-shot health summary
     dinero-cli -datadir=${DATADIR} getblockchaininfo
 
   Sync: mode=${DINERO_SYNC_MODE} → ${EFFECTIVE_SYNC}${SNAPSHOT_LINE:+ (AssumeUTXO bootstrap → forward + background validation)}${SNAPSHOT_LINE:- (validate from genesis)}
