@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dinero Labs · Dinero (DIN)</title>
-  <meta name="description" content="Dinero Labs ships Dinero (DIN). Download the current v8.0.0-rc29 wallet and node software for macOS, Windows, and Linux, verify official releases, and help grow the peer-to-peer network.">
+  <meta name="description" content="Dinero Labs ships Dinero (DIN). Download the current v8.0.0-rc36 wallet and node software for macOS, Windows, and Linux, verify official releases, and help grow the peer-to-peer network.">
   <meta property="og:title" content="Dinero Labs · Dinero (DIN)">
-  <meta property="og:description" content="Dinero Labs — building Dinero (DIN). v8.0.0-rc29 desktop wallets, Core node software, relay/NAT traversal, and Dynamic P2P.">
+  <meta property="og:description" content="Dinero Labs — building Dinero (DIN). v8.0.0-rc36 desktop wallets, Core node software, relay/NAT traversal, and Dynamic P2P.">
   <meta property="og:url" content="https://dinerolabs.org/">
   <meta property="og:image" content="https://github.com/DineroLabs.png?size=320">
   <meta property="og:type" content="website">
@@ -620,19 +620,19 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="wrap hero-grid">
         <div>
-          <div class="eyebrow">Dinero v8.0.0-rc29 — Dynamic P2P release candidate</div>
+          <div class="eyebrow">Dinero v8.0.0-rc36 — Dynamic P2P release candidate</div>
           <h1 id="hero-title">Run Dinero. Help the network.</h1>
-          <p class="lead">Dinero is moving from a small fleet of bootstrap servers toward a self-healing peer-to-peer network. rc29 brings the Windows operator experience to parity with Linux: a fresh Windows Server install goes from zero to a synced, peer-reachable node in under two minutes via the bundled AssumeUTXO snapshot — no manual config files, no missing-DLL errors, no Service Control Manager workarounds.</p>
+          <p class="lead">Dinero is moving from a small fleet of bootstrap servers toward a self-healing peer-to-peer network. rc36 is a wallet + mining correctness pass on top of rc35's IBD-wedge scheduler fix: the Qt consolidate flow and wallet RPC now round-trip cleanly, the solo-mining template uses the correct ASERT-aware time field, and the embedded Qt daemon now bootstraps against the active live fleet — so a fresh wallet finds peers without any manual <code>addnode</code> editing.</p>
           <div class="hero-actions">
-            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/Dinero-v8.0.0-rc29-macOS-arm64.dmg">Download for macOS</a>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/Dinero-8.0.0-rc29-windows-x86_64-Setup.exe">Download for Windows</a>
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/Dinero-v8.0.0-rc36-macOS-arm64.dmg">Download for macOS</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/Dinero-8.0.0-rc36-windows-x86_64-Setup.exe">Download for Windows</a>
             <a class="button secondary" href="#downloads">View all downloads</a>
           </div>
         </div>
         <div class="quick" aria-label="Current recommendations">
           <div class="quick-card">
             <strong>Desktop users</strong>
-            <span>Use the v8.0.0-rc29 macOS DMG or Windows installer for desktop wallets. Linux rc29 is command-line/operator packaging.</span>
+            <span>Use the v8.0.0-rc36 macOS DMG or Windows installer for desktop wallets. Linux rc36 is command-line/operator packaging.</span>
           </div>
           <div class="quick-card">
             <strong>Node operators</strong>
@@ -640,7 +640,7 @@
           </div>
           <div class="quick-card">
             <strong>Network status</strong>
-            <span>Bootstrap relays run rc29 with Dynamic P2P active. The goal is for normal wallets and miners to become useful peers too.</span>
+            <span>Bootstrap relays run rc36 with Dynamic P2P active. The goal is for normal wallets and miners to become useful peers too.</span>
           </div>
         </div>
       </div>
@@ -650,46 +650,46 @@
       <div class="wrap">
         <div class="section-head">
           <h2 id="downloads-title">Current downloads</h2>
-          <p>These are the recommended rc29 artifacts. Older release candidates remain available in the archive for provenance, but should not be used unless you know exactly why.</p>
+          <p>These are the recommended rc36 artifacts. Older release candidates remain available in the archive for provenance, but should not be used unless you know exactly why.</p>
         </div>
 
         <div class="download-grid">
           <article class="card download-card">
             <div class="tag-row">
               <div class="platform">macOS Wallet</div>
-              <span class="pill preview">rc29</span>
+              <span class="pill preview">rc36</span>
             </div>
             <p class="meta">Best choice for Apple Silicon Mac users. Signed, Apple-notarized, and stapled. Drag <code>dinero-qt.app</code> to Applications and launch. Bundles the wallet, embedded daemon, CLI tools, seeder, and miner helpers.</p>
-            <div class="filename">Dinero-v8.0.0-rc29-macOS-arm64.dmg</div>
+            <div class="filename">Dinero-v8.0.0-rc36-macOS-arm64.dmg</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/Dinero-v8.0.0-rc29-macOS-arm64.dmg">Download .dmg</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/Dinero-v8.0.0-rc29-macOS-arm64-qt.zip">.app zip</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/Dinero-v8.0.0-rc36-macOS-arm64.dmg">Download .dmg</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/Dinero-v8.0.0-rc36-macOS-arm64-qt.zip">.app zip</a>
             </div>
           </article>
 
           <article class="card download-card">
             <div class="tag-row">
               <div class="platform">Windows Wallet</div>
-              <span class="pill preview">rc29</span>
+              <span class="pill preview">rc36</span>
             </div>
             <p class="meta">Best choice for Windows desktop users. Bundles the Qt wallet, embedded daemon stack, runtime DLLs, miner tools, and icon. Installs to Program Files and preserves wallet data in <code>%APPDATA%\Dinero</code>.</p>
-            <div class="filename">Dinero-8.0.0-rc29-windows-x86_64-Setup.exe</div>
+            <div class="filename">Dinero-8.0.0-rc36-windows-x86_64-Setup.exe</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/Dinero-8.0.0-rc29-windows-x86_64-Setup.exe">Download installer</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.0-rc29">Read rc29 notes</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/Dinero-8.0.0-rc36-windows-x86_64-Setup.exe">Download installer</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.0-rc36">Read rc36 notes</a>
             </div>
           </article>
 
           <article class="card download-card">
             <div class="tag-row">
               <div class="platform">Linux Node</div>
-              <span class="pill preview">rc29</span>
+              <span class="pill preview">rc36</span>
             </div>
-            <p class="meta">Best choice for Linux x86_64 operators. The one-command installer fetches the rc29 <code>dinerod</code> and <code>dinero-cli</code> tarballs, verifies GitHub SHA256 digests, installs them to <code>/usr/local/bin</code>, and creates a systemd service.</p>
+            <p class="meta">Best choice for Linux x86_64 operators. The one-command installer fetches the rc36 <code>dinerod</code> and <code>dinero-cli</code> tarballs, verifies GitHub SHA256 digests, installs them to <code>/usr/local/bin</code>, and creates a systemd service.</p>
             <div class="filename">curl -fsSL https://dinerolabs.org/install.sh | sudo bash</div>
             <div class="actions">
               <a class="button" href="install.sh">View install script</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/dinero-core-8.0.0-rc29-linux-x86_64.tar.gz">Core tarball</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/dinero-core-8.0.0-rc36-linux-x86_64.tar.gz">Core tarball</a>
             </div>
           </article>
         </div>
@@ -703,20 +703,20 @@
           <article class="card">
             <h3>Windows Server installer</h3>
             <p class="meta">NSIS install to <code>C:\Program Files\Dinero-Server\</code>. Registers <code>dinerod</code> as a Windows Service (auto-start, datadir under <code>C:\ProgramData\Dinero</code>, failure-restart policy). No Start Menu shortcuts. Wallets + chain data survive uninstall.</p>
-            <div class="filename">Dinero-Server-8.0.0-rc29-windows-x86_64-Setup.exe</div>
-            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/Dinero-Server-8.0.0-rc29-windows-x86_64-Setup.exe">Download server installer</a>
+            <div class="filename">Dinero-Server-8.0.0-rc36-windows-x86_64-Setup.exe</div>
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/Dinero-Server-8.0.0-rc36-windows-x86_64-Setup.exe">Download server installer</a>
           </article>
 
           <article class="card">
             <h3>macOS headless daemon</h3>
             <p class="meta">Apple Silicon operator archive with <code>dinerod</code>, <code>dinero-cli</code>, and <code>dinero-seeder</code>. Use it for headless Mac nodes or local testing without the Qt wallet bundle.</p>
-            <div class="filename">dinero-operator-v8.0.0-rc29-macOS-arm64.tar.gz</div>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/dinero-operator-v8.0.0-rc29-macOS-arm64.tar.gz">Download macOS operator archive</a>
+            <div class="filename">dinero-operator-v8.0.0-rc36-macOS-arm64.tar.gz</div>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/dinero-operator-v8.0.0-rc36-macOS-arm64.tar.gz">Download macOS operator archive</a>
           </article>
 
           <article class="card">
             <h3>Linux systemd installer</h3>
-            <p class="meta">Ubuntu 24.04+ x86_64 install script. Downloads the rc29 core and CLI tarballs, verifies GitHub digests, creates the <code>dinero</code> system user, writes <code>dinero.service</code>, and starts the node under <code>/var/lib/dinero</code>.</p>
+            <p class="meta">Ubuntu 24.04+ x86_64 install script. Downloads the rc36 core and CLI tarballs, verifies GitHub digests, creates the <code>dinero</code> system user, writes <code>dinero.service</code>, and starts the node under <code>/var/lib/dinero</code>.</p>
             <div class="filename">curl -fsSL https://dinerolabs.org/install.sh | sudo bash</div>
             <a class="button" href="install.sh">View install.sh</a>
           </article>
@@ -727,66 +727,63 @@
           <p class="meta">Raw archives for manual installs, mirrors, and operators who do not want a platform installer.</p>
           <div class="filename">Windows raw zip / Linux core + CLI + seeder + miner tarballs</div>
           <div class="actions">
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/dinero-v8.0.0-rc29-windows-x86_64-msvc.zip">Windows raw zip</a>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/dinero-cli-8.0.0-rc29-linux-x86_64.tar.gz">Linux CLI tarball</a>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/dinero-core-8.0.0-rc29-linux-x86_64.tar.gz">Linux core tarball</a>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/dinero-seeder-8.0.0-rc29-linux-x86_64.tar.gz">Linux seeder tarball</a>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/dinero-solo-miner-8.0.0-rc29-linux-x86_64.tar.gz">Linux miner tarball</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/dinero-v8.0.0-rc36-windows-x86_64-msvc.zip">Windows raw zip</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/dinero-cli-8.0.0-rc36-linux-x86_64.tar.gz">Linux CLI tarball</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/dinero-core-8.0.0-rc36-linux-x86_64.tar.gz">Linux core tarball</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/dinero-seeder-8.0.0-rc36-linux-x86_64.tar.gz">Linux seeder tarball</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/dinero-solo-miner-8.0.0-rc36-linux-x86_64.tar.gz">Linux miner tarball</a>
           </div>
         </article>
 
         <div class="two-col" style="margin-top: 14px;">
           <article class="card">
             <h3>Checksums</h3>
-            <p class="meta">The rc29 release publishes checksum files for macOS and Linux, while GitHub exposes per-asset digests for every artifact. Verify before running preview software.</p>
-            <div class="filename">SHA256SUMS-macos-8.0.0-rc29 / SHA256SUMS-linux-8.0.0-rc29</div>
+            <p class="meta">The rc36 release publishes checksum files for macOS and Linux, while GitHub exposes per-asset digests for every artifact. Verify before running preview software.</p>
+            <div class="filename">SHA256SUMS-macos-8.0.0-rc36 / SHA256SUMS-linux-8.0.0-rc36</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/SHA256SUMS-macos-8.0.0-rc29">macOS checksums</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/SHA256SUMS-linux-8.0.0-rc29">Linux checksums</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/SHA256SUMS-macos-8.0.0-rc36">macOS checksums</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/SHA256SUMS-linux-8.0.0-rc36">Linux checksums</a>
             </div>
           </article>
 
           <article class="card">
             <h3>Release notes</h3>
-            <p class="meta">rc29 ships a properly hardened Windows server installer: <code>dinerod</code> runs as a real Windows Service, the VC++ runtime is bundled, the AssumeUTXO snapshot is bundled and wired into <code>dinero.conf</code> automatically, and the catch-up sync edge case for nodes that fell behind is fixed (PR #209). Carries every fix from rc24/rc25/rc26/rc28.</p>
-            <div class="filename">Dinero v8.0.0-rc29</div>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.0-rc29">Open rc29 release</a>
+            <p class="meta">rc36 ships the hardened Windows server installer first cut in rc29 and rebuilt on rc36's canonical packaging (OpenSSL 3.5.6 + QUIC/ngtcp2, SV2 miner bundling). <code>dinerod</code> runs as a real Windows Service, VC++ runtime bundled, the AssumeUTXO snapshot is bundled and wired into <code>dinero.conf</code> automatically on fresh datadirs. Carries the rc35 from-genesis IBD scheduler fix, the rc36 wallet consolidate + ASERT template corrections, and every Windows-installer fix back through rc24.</p>
+            <div class="filename">Dinero v8.0.0-rc36</div>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.0-rc36">Open rc36 release</a>
           </article>
         </div>
 
         <div class="section-head" style="margin-top: 28px;">
-          <h2>What changed in rc29</h2>
-          <p>rc29 is the Windows-operator graduation. The Linux installer has had snapshot fast-sync since rc25; with rc29's hardened server installer and bundled snapshot, Windows Server operators get the same one-command experience — install, wait ~90 seconds, node is synced and peer-reachable.</p>
+          <h2>What changed in rc36</h2>
+          <p>rc36 is a wallet + solo-mining polish release. rc35 closed the from-genesis IBD wedge that AssumeUTXO/snapshot peers used to trigger; rc36 finishes the loop on the user-facing surfaces that depend on a healthy synced node — the Qt consolidate flow, the wallet RPC, the solo-mining block template, and the embedded daemon's first-boot fleet discovery.</p>
         </div>
 
         <div class="two-col" style="margin-top: 14px;">
           <article class="card">
-            <h3>Windows server installer, no workarounds</h3>
-            <p class="meta">Validated end-to-end on a fresh, non-NVIDIA Windows Server 2022 box: silent install completes in 11 seconds, service is registered and reaches <code>RUNNING</code> via real SCM handshake, snapshot is copied into the datadir and loaded by the daemon, <code>verificationprogress</code> jumps from 0 to 0.98 in ~90 seconds.</p>
+            <h3>Wallet consolidate: RPC + Qt flow</h3>
+            <p class="meta">The wallet's consolidate operation now round-trips cleanly through both the RPC and the Qt UI. Dry-run options are preserved through to broadcast instead of getting silently reset between preview and confirm.</p>
             <ul class="list">
-              <li>Bundles the Microsoft VC++ 2015-2022 x64 Redistributable (detect-or-install). No more missing <code>vcruntime140.dll</code> on a clean Server box.</li>
-              <li>Bundles <code>utxo-snapshot-33048.dat</code> and writes <code>dinero.conf</code> with the <code>assumeutxo_snapshot=</code> line on fresh datadirs. Strict no-op on operator-configured datadirs.</li>
-              <li><code>dinerod --service</code> is a real Windows Service Control Manager entrypoint. The 1-second-after-install <code>sc start Dinerod</code> finishes the SCM handshake cleanly instead of timing out.</li>
-              <li>Service binPath uses the resolved <code>C:\ProgramData\Dinero</code> datadir, not the literal NSIS variable name.</li>
-              <li>The server-lane <code>dinerod.exe</code> has no load-time CUDA or NVRTC dependency — no missing-DLL errors on hosts without NVIDIA drivers.</li>
-              <li>Uninstaller waits for the daemon's graceful shutdown to release file handles before removing the install dir. No leftover Program Files directory.</li>
+              <li>RPC: <code>consolidate</code> request shape and response contract are stable across estimate → preview → broadcast.</li>
+              <li>Qt: the Consolidate panel keeps the user's selected dry-run options (fee mode, output count, address scope) when they advance from preview to broadcast.</li>
+              <li>Fixes a class of confusing "I previewed X but broadcast did Y" reports that came in against rc35 wallet UX.</li>
             </ul>
           </article>
 
           <article class="card">
-            <h3>Catch-up sync fix (PR #209)</h3>
-            <p class="meta">Block-download is now height-aware in its <code>getdata</code> requests, so a node that has fallen many blocks behind can catch back up cleanly without operator intervention.</p>
+            <h3>Solo-mining template + embedded fleet bootstrap</h3>
+            <p class="meta">Two correctness fixes for the wallet-as-miner path that the desktop wallet exercises by default.</p>
             <ul class="list">
-              <li>Before: certain edge cases left a behind node stuck downloading without ever advancing.</li>
-              <li>After: catch-up sync completes from any starting point, with the same forward-only flow used for normal block ingest.</li>
-              <li>Applies to all platforms; particularly useful for budget VPS nodes that occasionally lose connectivity.</li>
+              <li><strong>ASERT / getblocktemplate</strong>: the template's time field is now consistent with ASERT difficulty derivation, so solo-mined block proposals compute their target correctly the first time instead of relying on a retry.</li>
+              <li><strong>Qt embedded daemon fleet bootstrap</strong>: the wallet's embedded <code>dinerod</code> now seeds against the current live fleet (LA / SJ / NA / EU1 + <code>dinerolabs.org</code> seeds) on first boot, no manual <code>addnode</code> editing required.</li>
+              <li>Qt dashboard / mainline release-lane alignment so the in-app "Up to date" check matches what's published here.</li>
             </ul>
           </article>
         </div>
 
         <article class="card" style="margin-top: 14px;">
           <h3>Fast-sync snapshot</h3>
-          <p class="meta">UTXO snapshot at height 33048, republished on rc29 unchanged from rc24/rc25/rc26/rc28. The sha256 is the compiled-in trust anchor in the daemon, so the snapshot file is only ever loaded if it matches that anchor. Bundled in the Windows server installer (writes <code>dinero.conf</code> automatically on fresh datadirs); pulled by the Linux <code>install.sh</code> via GitHub API; available here directly for manual operators on either platform.</p>
+          <p class="meta">UTXO snapshot at height 33048, unchanged since rc24. The sha256 is the compiled-in trust anchor in the daemon, so the snapshot file is only ever loaded if it matches that anchor — rc36 reuses the same file as every prior cut. Bundled in the Windows server installer (writes <code>dinero.conf</code> automatically on fresh datadirs); pulled by the Linux <code>install.sh</code> via GitHub API; available here directly for manual operators on either platform (link below points at the v8.0.0-rc29 release where the standalone <code>.dat</code> is still hosted).</p>
           <div class="filename">utxo-snapshot-33048.dat</div>
           <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/utxo-snapshot-33048.dat">Download snapshot</a>
         </article>
@@ -828,9 +825,9 @@
 
     <section class="status-band" aria-label="Release status">
       <div class="wrap status-grid">
-        <div><strong>Windows</strong><span>v8.0.0-rc29 wallet + Server installer</span></div>
-        <div><strong>macOS</strong><span>v8.0.0-rc29 notarized Apple Silicon DMG</span></div>
-        <div><strong>Linux</strong><span>v8.0.0-rc29 core / CLI / seeder / miner tarballs</span></div>
+        <div><strong>Windows</strong><span>v8.0.0-rc36 wallet + Server installer</span></div>
+        <div><strong>macOS</strong><span>v8.0.0-rc36 notarized Apple Silicon DMG</span></div>
+        <div><strong>Linux</strong><span>v8.0.0-rc36 core / CLI / seeder / miner tarballs</span></div>
         <div><strong>Network</strong><span>Dynamic P2P active, relay bootstrap live</span></div>
       </div>
     </section>
@@ -845,78 +842,78 @@
         <div class="verify-grid">
           <div class="card">
             <h3>Windows user installer</h3>
-            <pre><code>certutil -hashfile Dinero-8.0.0-rc29-windows-x86_64-Setup.exe SHA256
+            <pre><code>certutil -hashfile Dinero-8.0.0-rc36-windows-x86_64-Setup.exe SHA256
 # Expected:
-d89a03d26c619d6e9ee657cf1c41357383e015213bb31d6af6fe812d34f393a8</code></pre>
+088af3c3c7c7bf758a93a5290a248bea23083d4b39a6d3ae06fb0655137c6842</code></pre>
           </div>
 
           <div class="card">
             <h3>Windows Server installer</h3>
-            <pre><code>certutil -hashfile Dinero-Server-8.0.0-rc29-windows-x86_64-Setup.exe SHA256
+            <pre><code>certutil -hashfile Dinero-Server-8.0.0-rc36-windows-x86_64-Setup.exe SHA256
 # Expected:
-2d53dab2a629f1abeea514bea15610d4bfc8270813b1cda4aea47a5b0fa11c45</code></pre>
+15b0913cc2901e3292fbab517eadb9e75f08f85354e52d480ca55fb1cd019103</code></pre>
           </div>
 
           <div class="card">
             <h3>Windows daemon ZIP</h3>
-            <pre><code>certutil -hashfile dinero-v8.0.0-rc29-windows-x86_64-msvc.zip SHA256
+            <pre><code>certutil -hashfile dinero-v8.0.0-rc36-windows-x86_64-msvc.zip SHA256
 # Expected:
-a8a396e9755720702429907fc54859c7608d767bc4778785cf797287f25b473c</code></pre>
+4447f7a4d6cea17a2f58bd14459bef59535fb86b64f2934fa76d8a7a115f48bf</code></pre>
           </div>
         </div>
 
         <div class="verify-grid" style="margin-top: 14px;">
           <div class="card">
             <h3>macOS DMG</h3>
-            <pre><code>shasum -a 256 Dinero-v8.0.0-rc29-macOS-arm64.dmg
+            <pre><code>shasum -a 256 Dinero-v8.0.0-rc36-macOS-arm64.dmg
 # Expected:
-3ed750865a733eb1ac7a6c471cad567bbc03cbdb5834350a8cb93f1477dd66df</code></pre>
+bad68d3b9d3434add1cfa4e5b44bb5433a4a70654b9f2400829fe16bfc81d045</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS app zip</h3>
-            <pre><code>shasum -a 256 Dinero-v8.0.0-rc29-macOS-arm64-qt.zip
+            <pre><code>shasum -a 256 Dinero-v8.0.0-rc36-macOS-arm64-qt.zip
 # Expected:
-fc9fbd4d4fb453274a9656cc81f9739defa72d49756212caefe893cb57549666</code></pre>
+79b1a6d9770576e32d3921751fe0dc6b4cf4866714ab52c2abb348a19985e2e3</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS operator archive</h3>
-            <pre><code>shasum -a 256 dinero-operator-v8.0.0-rc29-macOS-arm64.tar.gz
+            <pre><code>shasum -a 256 dinero-operator-v8.0.0-rc36-macOS-arm64.tar.gz
 # Expected:
-7221d7afa62e88220610aee00fb8008dc93e4c0dab72d876317dd50e69dd1393</code></pre>
+8248ac97ec5daea88fde995242ef80697254cecd2fd4ea8149ad3382f6c5f119</code></pre>
           </div>
         </div>
 
         <div class="verify-grid" style="margin-top: 14px;">
           <div class="card">
             <h3>macOS checksum file</h3>
-            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/SHA256SUMS-macos-8.0.0-rc29
-shasum -a 256 -c SHA256SUMS-macos-8.0.0-rc29</code></pre>
+            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc36/SHA256SUMS-macos-8.0.0-rc36
+shasum -a 256 -c SHA256SUMS-macos-8.0.0-rc36</code></pre>
           </div>
 
           <div class="card">
-            <h3>Linux rc29 tarballs</h3>
-            <pre><code>shasum -a 256 dinero-core-8.0.0-rc29-linux-x86_64.tar.gz
+            <h3>Linux rc36 tarballs</h3>
+            <pre><code>shasum -a 256 dinero-core-8.0.0-rc36-linux-x86_64.tar.gz
 # Expected:
-7fa8226e36211be23c9c8e0d56374bd2f289bbc97d47e0b0d2613a3da585e15a
+4104d21f7caa501396251b06a57bb08fc990015f52d9633da244fe9fcec2b942
 
-shasum -a 256 dinero-cli-8.0.0-rc29-linux-x86_64.tar.gz
+shasum -a 256 dinero-cli-8.0.0-rc36-linux-x86_64.tar.gz
 # Expected:
-2f9bfd128cb4a9777aded94ab288d066bb8530748be88fb19a3f5f9f9e4a35af
+e9e3882df29d076bd64c50fd3b67122ca16eef3a08f194408996e2cf04f36aac
 
-shasum -a 256 dinero-seeder-8.0.0-rc29-linux-x86_64.tar.gz
+shasum -a 256 dinero-seeder-8.0.0-rc36-linux-x86_64.tar.gz
 # Expected:
-847b71a578f0ea099588e0c0ca482692e3dd0e6a17628cdbf6b3cbd70336fa2f
+992dc770d295dad86d440c72dba2b4e32b47955328c45c59d41708dfdf86d97c
 
-shasum -a 256 dinero-solo-miner-8.0.0-rc29-linux-x86_64.tar.gz
+shasum -a 256 dinero-solo-miner-8.0.0-rc36-linux-x86_64.tar.gz
 # Expected:
-aa286a6d0393d7ee5155a56885632f86b7071c3aa059f9c64cb752cfaadf4ad2</code></pre>
+8540e6eaaf7addfc8a44afa71db4cf1a1e0aac8b3689451fddc02f64c2cf86e0</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS notarization</h3>
-            <pre><code>spctl --assess --type open --context context:primary-signature -vv Dinero-v8.0.0-rc29-macOS-arm64.dmg
+            <pre><code>spctl --assess --type open --context context:primary-signature -vv Dinero-v8.0.0-rc36-macOS-arm64.dmg
 # Expected:
 accepted
 source=Notarized Developer ID</code></pre>
@@ -959,7 +956,7 @@ source=Notarized Developer ID</code></pre>
             <tr>
               <td>Linux install script / systemd service</td>
               <td><code>/var/lib/dinero</code></td>
-              <td>FHS/systemd daemon under the dinero service user; installed from rc29 tarballs</td>
+              <td>FHS/systemd daemon under the dinero service user; installed from rc36 tarballs</td>
             </tr>
             <tr>
               <td>Linux source build / developer</td>
@@ -983,8 +980,8 @@ dinero-cli -datadir=/var/lib/dinero getnetworkinfo</code></pre>
           </article>
           <article class="card">
             <h3>macOS operator quick start</h3>
-            <pre><code>tar -xzf dinero-operator-v8.0.0-rc29-macOS-arm64.tar.gz
-cd dinero-operator-v8.0.0-rc29-macOS-arm64
+            <pre><code>tar -xzf dinero-operator-v8.0.0-rc36-macOS-arm64.tar.gz
+cd dinero-operator-v8.0.0-rc36-macOS-arm64
 ./bin/dinerod
 ./bin/dinero-cli getnetworkinfo</code></pre>
           </article>
@@ -995,7 +992,7 @@ cd dinero-operator-v8.0.0-rc29-macOS-arm64
             <h3>What is still release-candidate</h3>
             <ul class="list">
               <li>Windows v8 installers are not yet Authenticode-signed — SmartScreen may warn. Verify the SHA256 above and click "More info" → "Run anyway".</li>
-              <li>Linux rc29 is operator packaging: core, CLI, seeder, and solo-miner tarballs. Desktop Linux GUI packages are not published in rc29.</li>
+              <li>Linux rc36 is operator packaging: core, CLI, seeder, and solo-miner tarballs. Desktop Linux GUI packages are not published in rc36.</li>
               <li>Dynamic P2P is active in conservative slow-churn mode. It is designed to improve peer diversity gradually, not churn aggressively.</li>
               <li>Relay/NAT traversal is useful infrastructure, but the long-term goal is broader community-run peers and relays, not dependence on Dinero Labs bootstrap nodes.</li>
               <li>Stable promotion waits for the next final-release ceremony.</li>
