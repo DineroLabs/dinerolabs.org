@@ -292,12 +292,11 @@ spctl -a -t exec -vv /Applications/Dinero.app</code></pre>
       <h3>Linux .deb, standalone tarballs, Windows installers</h3>
       <p>Every release asset on GitHub has a SHA256 digest published by GitHub itself and exposed via the GitHub API (<code>assets[].digest</code> field). This is the property that <a href="https://dinerolabs.org/install.sh"><code>install.sh</code></a> verifies before installation, so any operator running the install script gets hash verification automatically.</p>
       <p>Manual verification:</p>
-      <pre><code>EXPECTED=$(gh api repos/DineroLabs/dinero-v8/releases/tags/v8.0.0-rc6 \
+      <pre><code>EXPECTED=$(gh api repos/DineroLabs/dinero-v8/releases/tags/v8.0.0-rc37 \
   --jq '.assets[] | select(.name | test("amd64.deb$")) | .digest')
 echo "$EXPECTED"
-# expected: sha256:67ef3680fcbd4bcfb89a05d0b4bf291ce1dd62f0e4b663f722d0231187078b0f
 
-sha256sum dinero-core_8.0.0.rc6-1_amd64.deb
+sha256sum dinero-core_8.0.0~rc37-1_amd64.deb
 # compare; should match the hex after sha256:</code></pre>
 
       <h2 id="signing-gaps">What's not yet signed</h2>
@@ -305,7 +304,7 @@ sha256sum dinero-core_8.0.0.rc6-1_amd64.deb
       <ul>
         <li><strong>Windows Authenticode signature</strong> on the <code>.exe</code> installer — open item, planned. Until shipped, Windows users see SmartScreen warnings; verification falls back to the GitHub SHA256 digest above.</li>
         <li><strong>GPG / minisign signature</strong> on the Linux <code>.deb</code> directly — open item, planned. Today's integrity guarantee for Linux comes from GitHub's per-asset SHA256, which protects against transit corruption and asset-level substitution on GitHub, but not against a compromise of GitHub itself or the DineroLabs publishing account.</li>
-        <li><strong><code>SHA256SUMS</code> manifest file for Linux assets</strong> in the release page — open item. macOS has one shipped (<code>SHA256SUMS-v8.0.0-rcN-macOS-arm64.txt</code>); the equivalent for Linux is on the to-do list. Until then, operators not running <code>install.sh</code> should verify against the GitHub API digest as shown above.</li>
+        <li><strong>Detached GPG / minisign signature for <code>SHA256SUMS</code></strong> — open item. Current releases publish checksum files for macOS and Linux assets, but the checksum files themselves are not yet signed independently of GitHub.</li>
         <li><strong>Reproducible builds</strong> — the new <code>depends/</code> system (added 2026-05-16) is the foundation. Multi-builder bit-identical verification is future work.</li>
       </ul>
       <p>When each gap closes, this page updates. The current state is documented honestly so operators can make their own trust tradeoffs.</p>
