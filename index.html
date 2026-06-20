@@ -625,7 +625,7 @@
           <p class="lead">Dinero v8 is here. This is the <strong>first stable release</strong> of the v8 line — a privacy-capable, Utreexo-based node with a complete AssumeUTXO trust model: a fresh node fast-syncs to the chain tip from a snapshot in minutes, validates the entire history from genesis in the background, retires the trust assumption once the proof completes, and refuses to run if the snapshot is ever shown to be dishonest. Verified end-to-end with the mainnet fleet in block + shielded-state consensus.</p>
           <div class="hero-actions">
             <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.2/Dinero-v8.0.2-macOS-arm64.dmg">Download for macOS</a>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0/Dinero-8.0.0-windows-x86_64-Setup.exe">Download for Windows</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.2/Dinero-8.0.2-windows-x86_64-Setup.exe">Download for Windows</a>
             <a class="button secondary" href="#downloads">View all downloads</a>
           </div>
         </div>
@@ -673,9 +673,9 @@
               <span class="pill">Stable</span>
             </div>
             <p class="meta">Best choice for Windows desktop users. Bundles the Qt wallet, embedded daemon stack, runtime DLLs, miner tools, and icon. Installs to Program Files and preserves wallet data in <code>%APPDATA%\Dinero</code>.</p>
-            <div class="filename">Dinero-8.0.0-windows-x86_64-Setup.exe</div>
+            <div class="filename">Dinero-8.0.2-windows-x86_64-Setup.exe</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0/Dinero-8.0.0-windows-x86_64-Setup.exe">Download installer</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.2/Dinero-8.0.2-windows-x86_64-Setup.exe">Download installer</a>
               <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.2">Read v8.0.2 notes</a>
             </div>
           </article>
@@ -704,8 +704,8 @@
           <article class="card">
             <h3>Windows Server installer</h3>
             <p class="meta">NSIS install to <code>C:\Program Files\Dinero-Server\</code>. Registers <code>dinerod</code> as a Windows Service (auto-start, datadir under <code>C:\ProgramData\Dinero</code>, failure-restart policy). No Start Menu shortcuts. Wallets + chain data survive uninstall.</p>
-            <div class="filename">Dinero-Server-8.0.0-windows-x86_64-Setup.exe</div>
-            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0/Dinero-Server-8.0.0-windows-x86_64-Setup.exe">Download server installer</a>
+            <div class="filename">Dinero-Server-8.0.2-windows-x86_64-Setup.exe</div>
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.2/Dinero-Server-8.0.2-windows-x86_64-Setup.exe">Download server installer</a>
           </article>
 
           <article class="card">
@@ -728,7 +728,7 @@
           <p class="meta">Raw archives for manual installs, mirrors, and operators who do not want a platform installer.</p>
           <div class="filename">Windows raw zip / Debian .deb / Linux core + CLI + seeder + miner tarballs</div>
           <div class="actions">
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0/dinero-v8.0.0-windows-x86_64-msvc.zip">Windows raw zip</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.2/dinero-v8.0.2-windows-x86_64-msvc.zip">Windows raw zip</a>
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.2/dinero-core_8.0.2-1_amd64.deb">Debian .deb</a>
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.2/dinero-cli-8.0.2-linux-x86_64.tar.gz">Linux CLI tarball</a>
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.2/dinero-core-8.0.2-linux-x86_64.tar.gz">Linux core tarball</a>
@@ -786,9 +786,9 @@
 
         <article class="card" style="margin-top: 14px;">
           <h3>Fast-sync snapshot</h3>
-          <p class="meta">UTXO snapshot at height 33048, unchanged since rc24. The sha256 is the compiled-in trust anchor in the daemon, so the snapshot file is only ever loaded if it matches that anchor — v8.0.2 reuses the same file as every prior cut. Bundled in the Windows server installer (writes <code>dinero.conf</code> automatically on fresh datadirs); pulled by the Linux <code>install.sh</code> via GitHub API; available here directly for manual operators on either platform (link below points at the v8.0.2-rc29 release where the standalone <code>.dat</code> is still hosted).</p>
+          <p class="meta">UTXO snapshot at height 33048, unchanged since rc24. The sha256 is the compiled-in trust anchor in the daemon, so the snapshot file is only ever loaded if it matches that anchor — v8.0.2 reuses the same file as every prior cut. Bundled in the Windows server installer (writes <code>dinero.conf</code> automatically on fresh datadirs); pulled by the Linux <code>install.sh</code> via GitHub API; available here directly for manual operators on either platform (link below points at the v8.0.0-rc29 release where the standalone <code>.dat</code> is still hosted).</p>
           <div class="filename">utxo-snapshot-33048.dat</div>
-          <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.2-rc29/utxo-snapshot-33048.dat">Download snapshot</a>
+          <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.0-rc29/utxo-snapshot-33048.dat">Download snapshot</a>
         </article>
 
         <article class="card explorer-card" style="margin-top: 14px;" aria-labelledby="explorer-title">
@@ -845,23 +845,23 @@
         <div class="verify-grid">
           <div class="card">
             <h3>Windows user installer</h3>
-            <pre><code>certutil -hashfile Dinero-8.0.0-windows-x86_64-Setup.exe SHA256
+            <pre><code>certutil -hashfile Dinero-8.0.2-windows-x86_64-Setup.exe SHA256
 # Expected:
-06f7b1663a5d4c1fb782fa310392232e958f9f5e14af61fd17d84acfac4637c0</code></pre>
+6990c6e80b97e493d8d57acadd2db0d1c42eaa5b2354eb110edf63aca81ec3b7</code></pre>
           </div>
 
           <div class="card">
             <h3>Windows Server installer</h3>
-            <pre><code>certutil -hashfile Dinero-Server-8.0.0-windows-x86_64-Setup.exe SHA256
+            <pre><code>certutil -hashfile Dinero-Server-8.0.2-windows-x86_64-Setup.exe SHA256
 # Expected:
-1c5a2f90f22f48b122725006f0743e4eed52a94fbdbdf69894855bc5266e591f</code></pre>
+5a74d6d6ab1bd576ffa73a8888a418382355c2c102395703395e48d7361aa5c9</code></pre>
           </div>
 
           <div class="card">
             <h3>Windows daemon ZIP</h3>
-            <pre><code>certutil -hashfile dinero-v8.0.0-windows-x86_64-msvc.zip SHA256
+            <pre><code>certutil -hashfile dinero-v8.0.2-windows-x86_64-msvc.zip SHA256
 # Expected:
-19d222f2d51ccc65fad7ef58437380c4b92851c5a457312c6771dba823ef91c8</code></pre>
+9f8c5655dd9df158d9470a535faafa7937ede14613eac1c0153346439aa79e0a</code></pre>
           </div>
         </div>
 
