@@ -625,7 +625,7 @@
           <p class="lead">Dinero v8 is here. This is the <strong>first stable release</strong> of the v8 line — a privacy-capable, Utreexo-based node with a complete AssumeUTXO trust model: a fresh node fast-syncs to the chain tip from a snapshot in minutes, validates the entire history from genesis in the background, retires the trust assumption once the proof completes, and refuses to run if the snapshot is ever shown to be dishonest. Verified end-to-end with the mainnet fleet in block + shielded-state consensus.</p>
           <div class="hero-actions">
             <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.4/Dinero-v8.0.4-macOS-arm64.dmg">Download for macOS</a>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.4/Dinero-8.0.4-windows-x86_64-Setup.exe">Download for Windows</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.5/Dinero-8.0.5-windows-x86_64-Setup.exe">Download for Windows</a>
             <a class="button secondary" href="#downloads">View all downloads</a>
           </div>
         </div>
@@ -673,10 +673,10 @@
               <span class="pill">Stable</span>
             </div>
             <p class="meta">Best choice for Windows desktop users. Bundles the Qt wallet, embedded daemon stack, runtime DLLs, miner tools, and icon. Installs to Program Files and preserves wallet data in <code>%APPDATA%\Dinero</code>.</p>
-            <div class="filename">Dinero-8.0.4-windows-x86_64-Setup.exe</div>
+            <div class="filename">Dinero-8.0.5-windows-x86_64-Setup.exe</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.4/Dinero-8.0.4-windows-x86_64-Setup.exe">Download installer</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.4">Read v8.0.4 notes</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.5/Dinero-8.0.5-windows-x86_64-Setup.exe">Download installer</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.5">Read v8.0.5 notes</a>
             </div>
           </article>
 
@@ -704,8 +704,8 @@
           <article class="card">
             <h3>Windows Server installer</h3>
             <p class="meta">NSIS install to <code>C:\Program Files\Dinero-Server\</code>. Registers <code>dinerod</code> as a Windows Service (auto-start, datadir under <code>C:\ProgramData\Dinero</code>, failure-restart policy). No Start Menu shortcuts. Wallets + chain data survive uninstall.</p>
-            <div class="filename">Dinero-Server-8.0.4-windows-x86_64-Setup.exe</div>
-            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.4/Dinero-Server-8.0.4-windows-x86_64-Setup.exe">Download server installer</a>
+            <div class="filename">Dinero-Server-8.0.5-windows-x86_64-Setup.exe</div>
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.5/Dinero-Server-8.0.5-windows-x86_64-Setup.exe">Download server installer</a>
           </article>
 
           <article class="card">
@@ -728,7 +728,7 @@
           <p class="meta">Raw archives for manual installs, mirrors, and operators who do not want a platform installer.</p>
           <div class="filename">Windows raw zip / Debian .deb / Linux core + CLI + seeder + miner tarballs</div>
           <div class="actions">
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.4/dinero-v8.0.4-windows-x86_64-msvc.zip">Windows raw zip</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.5/dinero-v8.0.5-windows-x86_64-msvc.zip">Windows raw zip</a>
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.2/dinero-core_8.0.2-1_amd64.deb">Debian .deb</a>
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.2/dinero-cli-8.0.2-linux-x86_64.tar.gz">Linux CLI tarball</a>
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.2/dinero-core-8.0.2-linux-x86_64.tar.gz">Linux core tarball</a>
@@ -828,7 +828,7 @@
 
     <section class="status-band" aria-label="Release status">
       <div class="wrap status-grid">
-        <div><strong>Windows</strong><span>v8.0.4 wallet + Server installer</span></div>
+        <div><strong>Windows</strong><span>v8.0.5 wallet + Server installer</span></div>
         <div><strong>macOS</strong><span>v8.0.4 notarized Apple Silicon DMG</span></div>
         <div><strong>Linux</strong><span>v8.0.2 core / CLI / seeder / miner tarballs</span></div>
         <div><strong>Network</strong><span>Dynamic P2P active, relay bootstrap live</span></div>
@@ -845,23 +845,23 @@
         <div class="verify-grid">
           <div class="card">
             <h3>Windows user installer</h3>
-            <pre><code>certutil -hashfile Dinero-8.0.4-windows-x86_64-Setup.exe SHA256
+            <pre><code>certutil -hashfile Dinero-8.0.5-windows-x86_64-Setup.exe SHA256
 # Expected:
-4cd9fac6d3b5ced6deac1b9c230ca6c99724c0fe4813a3bebe8c8cf133a99ee0</code></pre>
+14409c797df9edbe08e41e4e24936722fdc009f4978a2c464f3277f9d5e7ecf3</code></pre>
           </div>
 
           <div class="card">
             <h3>Windows Server installer</h3>
-            <pre><code>certutil -hashfile Dinero-Server-8.0.4-windows-x86_64-Setup.exe SHA256
+            <pre><code>certutil -hashfile Dinero-Server-8.0.5-windows-x86_64-Setup.exe SHA256
 # Expected:
-f799212103022bd0faf122f4b78decf733a8b1cecea9a138a9d52534f9b66d1d</code></pre>
+86bf33bfa213ece998090599ef53016f3bc37a6060f22ae532e5c723350b72f0</code></pre>
           </div>
 
           <div class="card">
             <h3>Windows daemon ZIP</h3>
-            <pre><code>certutil -hashfile dinero-v8.0.4-windows-x86_64-msvc.zip SHA256
+            <pre><code>certutil -hashfile dinero-v8.0.5-windows-x86_64-msvc.zip SHA256
 # Expected:
-8d0538c6fb2a5cf8d9c931eb27eed62a4396e47fb0796c5007b5d0318fea3545</code></pre>
+a515c13d1c2fb3c46bc537b7dc07a85beb672623489699be97ad77256338840d</code></pre>
           </div>
         </div>
 
@@ -995,7 +995,7 @@ cd dinero-operator-v8.0.4-macOS-arm64
             <h3>Good to know</h3>
             <ul class="list">
               <li>Windows v8 installers are not yet Authenticode-signed — SmartScreen may warn. Verify the SHA256 above and click "More info" → "Run anyway".</li>
-              <li>The published Windows binaries are built directly from the signed v8.0.4 tag (daemon embeds <code>8.0.4</code> + commit <code>ecab1799</code>), and carry the consensus fixes that were proven on a multi-hour live fleet canary in the prior cut.</li>
+              <li>The published Windows binaries are built directly from the signed v8.0.5 tag (daemon embeds <code>8.0.5</code> + commit <code>72e5e2ad</code>), and add the shielded-wallet correctness fixes (#320 / #322 / #324) on top of the consensus fixes proven in prior cuts. The server installer bundles the height-47176 AssumeUTXO snapshot.</li>
               <li>Linux v8.0.2 ships operator/CLI packaging — core, CLI, seeder, miner tarballs plus a Debian <code>.deb</code>. The desktop GUI wallet is published for macOS and Windows.</li>
               <li>Dynamic P2P is active in conservative slow-churn mode. It is designed to improve peer diversity gradually, not churn aggressively.</li>
               <li>Relay/NAT traversal is useful infrastructure, but the long-term goal is broader community-run peers and relays, not dependence on Dinero Labs bootstrap nodes.</li>
