@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dinero Labs · Dinero (DIN)</title>
-  <meta name="description" content="Dinero Labs ships Dinero (DIN). Download the current v8.0.11 wallet and node software for macOS, Windows, and Linux, verify official releases, and help grow the peer-to-peer network.">
+  <meta name="description" content="Dinero Labs ships Dinero (DIN). Download the current v8.0.13 wallet and node software for macOS, Windows, and Linux, verify official releases, and help grow the peer-to-peer network.">
   <meta property="og:title" content="Dinero Labs · Dinero (DIN)">
-  <meta property="og:description" content="Dinero Labs — building Dinero (DIN). v8.0.11 desktop wallets, Core node software, relay/NAT traversal, and Dynamic P2P.">
+  <meta property="og:description" content="Dinero Labs — building Dinero (DIN). v8.0.13 desktop wallets, Core node software, relay/NAT traversal, and Dynamic P2P.">
   <meta property="og:url" content="https://dinerolabs.org/">
   <meta property="og:image" content="https://github.com/DineroLabs.png?size=320">
   <meta property="og:type" content="website">
@@ -620,11 +620,11 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="wrap hero-grid">
         <div>
-          <div class="eyebrow">Dinero v8.0.11 — current stable release</div>
+          <div class="eyebrow">Dinero v8.0.13 — current stable release</div>
           <h1 id="hero-title">Run Dinero. Help the network.</h1>
           <p class="lead">Dinero v8 is here. This is the <strong>first stable release</strong> of the v8 line — a privacy-capable, Utreexo-based node with a complete AssumeUTXO trust model: a fresh node fast-syncs to the chain tip from a snapshot in minutes, validates the entire history from genesis in the background, retires the trust assumption once the proof completes, and refuses to run if the snapshot is ever shown to be dishonest. Verified end-to-end with the mainnet fleet in block + shielded-state consensus.</p>
           <div class="hero-actions">
-            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.12/Dinero-v8.0.12-macOS-arm64.dmg">Download for macOS</a>
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.13/Dinero-v8.0.13-macOS-arm64.dmg">Download for macOS</a>
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.11/Dinero-8.0.11-windows-x86_64-Setup.exe">Download for Windows</a>
             <a class="button secondary" href="#downloads">View all downloads</a>
           </div>
@@ -632,7 +632,7 @@
         <div class="quick" aria-label="Current recommendations">
           <div class="quick-card">
             <strong>Desktop users</strong>
-            <span>Use the v8.0.11 macOS DMG, Windows installer, or Linux desktop bundle for desktop wallets — all now fast-sync from a bundled AssumeUTXO snapshot (height 52,287) instead of syncing from genesis.</span>
+            <span>Use the v8.0.13 macOS DMG, Windows installer, or Linux desktop bundle for desktop wallets — all now fast-sync from a bundled AssumeUTXO snapshot (height 52,287) instead of syncing from genesis.</span>
           </div>
           <div class="quick-card">
             <strong>Node operators</strong>
@@ -650,7 +650,7 @@
       <div class="wrap">
         <div class="section-head">
           <h2 id="downloads-title">Current downloads</h2>
-          <p>These are the recommended v8.0.11 artifacts. Older release candidates remain available in the archive for provenance, but should not be used unless you know exactly why.</p>
+          <p>These are the recommended v8.0.13 artifacts. Older release candidates remain available in the archive for provenance, but should not be used unless you know exactly why.</p>
         </div>
 
         <div class="download-grid">
@@ -660,10 +660,10 @@
               <span class="pill">Stable</span>
             </div>
             <p class="meta">Best choice for Apple Silicon Mac users. Signed, Apple-notarized, and stapled. Drag <code>dinero-qt.app</code> to Applications and launch. Bundles the wallet, embedded daemon, CLI tools, seeder, and miner helpers.</p>
-            <div class="filename">Dinero-v8.0.12-macOS-arm64.dmg</div>
+            <div class="filename">Dinero-v8.0.13-macOS-arm64.dmg</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.12/Dinero-v8.0.12-macOS-arm64.dmg">Download .dmg</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.12/Dinero-v8.0.12-macOS-arm64-qt.zip">.app zip</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.13/Dinero-v8.0.13-macOS-arm64.dmg">Download .dmg</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.13/Dinero-v8.0.13-macOS-arm64-qt.zip">.app zip</a>
             </div>
           </article>
 
@@ -764,8 +764,8 @@
           <article class="card">
             <h3>Release notes</h3>
             <p class="meta">The first stable v8 release. On Windows, the desktop installer bundles the Qt wallet + daemon stack, and the separate Server installer registers <code>dinerod</code> as a real Windows Service with the VC++ runtime and the AssumeUTXO snapshot bundled (wired into <code>dinero.conf</code> automatically on fresh datadirs). The server daemon is verified to have no CUDA/NVRTC/OpenCL load-time imports, so it runs on GPU-less servers. Linux ships a first-class Debian <code>.deb</code> alongside the tarballs; macOS is signed, notarized, and stapled.</p>
-            <div class="filename">Dinero v8.0.11</div>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.11">Open v8.0.11 release</a>
+            <div class="filename">Dinero v8.0.13</div>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.13">Open v8.0.13 release</a>
           </article>
         </div>
 
