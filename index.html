@@ -625,7 +625,7 @@
           <p class="lead">Dinero v8 is here. This is the <strong>first stable release</strong> of the v8 line — a privacy-capable, Utreexo-based node with a complete AssumeUTXO trust model: a fresh node fast-syncs to the chain tip from a snapshot in minutes, validates the entire history from genesis in the background, retires the trust assumption once the proof completes, and refuses to run if the snapshot is ever shown to be dishonest. Verified end-to-end with the mainnet fleet in block + shielded-state consensus.</p>
           <div class="hero-actions">
             <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.13/Dinero-v8.0.13-macOS-arm64.dmg">Download for macOS</a>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.11/Dinero-8.0.11-windows-x86_64-Setup.exe">Download for Windows</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.13/Dinero-8.0.13-windows-x86_64-Setup.exe">Download for Windows</a>
             <a class="button secondary" href="#downloads">View all downloads</a>
           </div>
         </div>
@@ -640,7 +640,7 @@
           </div>
           <div class="quick-card">
             <strong>Network status</strong>
-            <span>Bootstrap relays run v8.0.11 with Dynamic P2P active. The goal is for normal wallets and miners to become useful peers too.</span>
+            <span>Bootstrap relays run v8.0.13 with Dynamic P2P active. The goal is for normal wallets and miners to become useful peers too.</span>
           </div>
         </div>
       </div>
@@ -673,10 +673,10 @@
               <span class="pill">Stable</span>
             </div>
             <p class="meta">Best choice for Windows desktop users. Bundles the Qt wallet, embedded daemon stack, runtime DLLs, miner tools, and icon. Installs to Program Files and preserves wallet data in <code>%APPDATA%\Dinero</code>.</p>
-            <div class="filename">Dinero-8.0.11-windows-x86_64-Setup.exe</div>
+            <div class="filename">Dinero-8.0.13-windows-x86_64-Setup.exe</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.11/Dinero-8.0.11-windows-x86_64-Setup.exe">Download installer</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.11">Read v8.0.11 notes</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.13/Dinero-8.0.13-windows-x86_64-Setup.exe">Download installer</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.0.13">Read v8.0.13 notes</a>
             </div>
           </article>
 
@@ -698,7 +698,7 @@
               <div class="platform">Linux Node</div>
               <span class="pill">Stable</span>
             </div>
-            <p class="meta">Best choice for Linux x86_64 operators. The one-command installer fetches the v8.0.11 <code>dinerod</code> and <code>dinero-cli</code> tarballs, verifies GitHub SHA256 digests, installs them to <code>/usr/local/bin</code>, and creates a systemd service.</p>
+            <p class="meta">Best choice for Linux x86_64 operators. The one-command installer fetches the v8.0.12 <code>dinerod</code> and <code>dinero-cli</code> tarballs, verifies GitHub SHA256 digests, installs them to <code>/usr/local/bin</code>, and creates a systemd service.</p>
             <div class="filename">curl -fsSL https://dinerolabs.org/install.sh | sudo bash</div>
             <div class="actions">
               <a class="button" href="install.sh">View install script</a>
@@ -717,8 +717,8 @@
           <article class="card">
             <h3>Windows Server installer</h3>
             <p class="meta">NSIS install to <code>C:\Program Files\Dinero-Server\</code>. Registers <code>dinerod</code> as a Windows Service (auto-start, datadir under <code>C:\ProgramData\Dinero</code>, failure-restart policy). No Start Menu shortcuts. Wallets + chain data survive uninstall.</p>
-            <div class="filename">Dinero-Server-8.0.11-windows-x86_64-Setup.exe</div>
-            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.11/Dinero-Server-8.0.11-windows-x86_64-Setup.exe">Download server installer</a>
+            <div class="filename">Dinero-Server-8.0.13-windows-x86_64-Setup.exe</div>
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.13/Dinero-Server-8.0.13-windows-x86_64-Setup.exe">Download server installer</a>
           </article>
 
           <article class="card">
@@ -730,9 +730,19 @@
 
           <article class="card">
             <h3>Linux systemd installer</h3>
-            <p class="meta">Ubuntu 24.04+ x86_64 install script. Downloads the v8.0.11 core and CLI tarballs, verifies GitHub digests, creates the <code>dinero</code> system user, writes <code>dinero.service</code>, and starts the node under <code>/var/lib/dinero</code>.</p>
+            <p class="meta">Ubuntu 24.04+ x86_64 install script. Downloads the v8.0.12 core and CLI tarballs, verifies GitHub digests, creates the <code>dinero</code> system user, writes <code>dinero.service</code>, and starts the node under <code>/var/lib/dinero</code>.</p>
             <div class="filename">curl -fsSL https://dinerolabs.org/install.sh | sudo bash</div>
             <a class="button" href="install.sh">View install.sh</a>
+          </article>
+
+          <article class="card">
+            <h3>Linux server daemon (v8.0.13)</h3>
+            <p class="meta">Latest <strong>v8.0.13</strong> server-safe <code>dinerod</code> — the full AssumeUTXO end-to-end campaign plus the 60000/61000 fork hardening, built without GPU libraries. This is the exact binary the DineroLabs fleet runs. Extract, verify the digest, and run under systemd.</p>
+            <div class="filename">dinero-8.0.13-linux-x86_64.tar.gz</div>
+            <div class="actions">
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.13/dinero-8.0.13-linux-x86_64.tar.gz">Download v8.0.13 server tarball</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.13/dinero-8.0.13-linux-x86_64.tar.gz.sha256">SHA256</a>
+            </div>
           </article>
         </div>
 
@@ -741,7 +751,7 @@
           <p class="meta">Raw archives for manual installs, mirrors, and operators who do not want a platform installer.</p>
           <div class="filename">Windows raw zip / Debian .deb / Linux core + CLI + seeder + miner tarballs</div>
           <div class="actions">
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.11/dinero-v8.0.11-windows-x86_64-msvc.zip">Windows raw zip</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.13/dinero-v8.0.13-windows-x86_64-msvc.zip">Windows raw zip</a>
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.12/dinero-core_8.0.12-1_amd64.deb">Debian .deb</a>
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.12/dinero-cli-8.0.12-linux-x86_64.tar.gz">Linux CLI tarball</a>
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.12/dinero-core-8.0.12-linux-x86_64.tar.gz">Linux core tarball</a>
@@ -753,7 +763,7 @@
         <div class="two-col" style="margin-top: 14px;">
           <article class="card">
             <h3>Checksums</h3>
-            <p class="meta">The v8.0.11 release publishes checksum files for Windows, macOS, and Linux, while GitHub exposes per-asset digests for every artifact. Always verify your download before running.</p>
+            <p class="meta">The v8.0.13 release publishes checksum files for Windows, macOS, and Linux, while GitHub exposes per-asset digests for every artifact. Always verify your download before running.</p>
             <div class="filename">SHA256SUMS-macos-8.0.12 / SHA256SUMS-linux-8.0.12</div>
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.12/SHA256SUMS-macos-8.0.12">macOS checksums</a>
@@ -770,7 +780,7 @@
         </div>
 
         <div class="section-head" style="margin-top: 28px;">
-          <h2>What's in v8.0.11</h2>
+          <h2>What's in v8.0.13</h2>
           <p>The first stable release of the v8 line. It completes the AssumeUTXO trust lifecycle — fast-sync now, prove the pre-snapshot history in the background, then retire the trust — and lands the consensus, wallet, and packaging work that cleared the stable gate. Built from commit <code>8fa38541</code> and verified end-to-end with the mainnet fleet in block + shielded-state consensus on that exact commit.</p>
         </div>
 
@@ -799,7 +809,7 @@
 
         <article class="card" style="margin-top: 14px;">
           <h3>Fast-sync snapshot</h3>
-          <p class="meta">v8.0.11 ships a height-52287 <strong>v4</strong> fast-sync anchor (generated 2026-06-28 from the genesis-validated fleet), turning the initial sync from hours into seconds. As a v4 snapshot it carries the shielded-pool state — commitment-tree frontier, anchor history, and nullifier set — alongside the UTXO set, so a snapshot-bootstrapped node validates post-snapshot shielded transactions correctly instead of wedging. The sha256 is a compiled-in trust anchor in the daemon, so the snapshot is only ever loaded if it matches; the older v3/no-shielded anchors have been retired. The desktop wallet installers (macOS + Windows) and the Windows server installer all bundle it and fast-sync fresh datadirs automatically; the Linux <code>install.sh</code> pulls it via the GitHub API; manual operators can grab the <code>.dat</code> directly below.</p>
+          <p class="meta">v8.0.13 ships a height-52287 <strong>v4</strong> fast-sync anchor (generated 2026-06-28 from the genesis-validated fleet), turning the initial sync from hours into seconds. As a v4 snapshot it carries the shielded-pool state — commitment-tree frontier, anchor history, and nullifier set — alongside the UTXO set, so a snapshot-bootstrapped node validates post-snapshot shielded transactions correctly instead of wedging. The sha256 is a compiled-in trust anchor in the daemon, so the snapshot is only ever loaded if it matches; the older v3/no-shielded anchors have been retired. The desktop wallet installers (macOS + Windows) and the Windows server installer all bundle it and fast-sync fresh datadirs automatically; the Linux <code>install.sh</code> pulls it via the GitHub API; manual operators can grab the <code>.dat</code> directly below.</p>
           <div class="filename">utxo-snapshot-52287.dat</div>
           <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.12/utxo-snapshot-52287.dat">Download snapshot</a>
         </article>
@@ -841,9 +851,9 @@
 
     <section class="status-band" aria-label="Release status">
       <div class="wrap status-grid">
-        <div><strong>Windows</strong><span>v8.0.11 wallet + Server installer</span></div>
-        <div><strong>macOS</strong><span>v8.0.11 notarized Apple Silicon DMG</span></div>
-        <div><strong>Linux</strong><span>v8.0.11 core / CLI / seeder / miner tarballs</span></div>
+        <div><strong>Windows</strong><span>v8.0.13 wallet + Server installer</span></div>
+        <div><strong>macOS</strong><span>v8.0.13 notarized Apple Silicon DMG</span></div>
+        <div><strong>Linux</strong><span>v8.0.12 core / CLI / seeder / miner tarballs</span></div>
         <div><strong>Network</strong><span>Dynamic P2P active, relay bootstrap live</span></div>
       </div>
     </section>
@@ -858,21 +868,21 @@
         <div class="verify-grid">
           <div class="card">
             <h3>Windows user installer</h3>
-            <pre><code>certutil -hashfile Dinero-8.0.11-windows-x86_64-Setup.exe SHA256
+            <pre><code>certutil -hashfile Dinero-8.0.13-windows-x86_64-Setup.exe SHA256
 # Expected:
 a0570d12528673d9037498f4ad555520f4568459d7a92dc7ac5e9e5aeac00aa0</code></pre>
           </div>
 
           <div class="card">
             <h3>Windows Server installer</h3>
-            <pre><code>certutil -hashfile Dinero-Server-8.0.11-windows-x86_64-Setup.exe SHA256
+            <pre><code>certutil -hashfile Dinero-Server-8.0.13-windows-x86_64-Setup.exe SHA256
 # Expected:
 b50517977eb4bc3c5913758a123d3d087f0551e4df87c55d6ba468a447795844</code></pre>
           </div>
 
           <div class="card">
             <h3>Windows daemon ZIP</h3>
-            <pre><code>certutil -hashfile dinero-v8.0.11-windows-x86_64-msvc.zip SHA256
+            <pre><code>certutil -hashfile dinero-v8.0.13-windows-x86_64-msvc.zip SHA256
 # Expected:
 a9dce98e3cb39ec4d58b98d8308f530862b9775558cdb42c8904c569202a2caa</code></pre>
           </div>
@@ -881,21 +891,21 @@ a9dce98e3cb39ec4d58b98d8308f530862b9775558cdb42c8904c569202a2caa</code></pre>
         <div class="verify-grid" style="margin-top: 14px;">
           <div class="card">
             <h3>macOS DMG</h3>
-            <pre><code>shasum -a 256 Dinero-v8.0.11-macOS-arm64.dmg
+            <pre><code>shasum -a 256 Dinero-v8.0.13-macOS-arm64.dmg
 # Expected:
 51264b9efc745d16516324daed51360f07669a0c97f2509b08b4aa641113adbd</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS app zip</h3>
-            <pre><code>shasum -a 256 Dinero-v8.0.11-macOS-arm64-qt.zip
+            <pre><code>shasum -a 256 Dinero-v8.0.13-macOS-arm64-qt.zip
 # Expected:
 7a4c13b1bca13a3f498f5bc02c15aead2e97a938aa4e459c2179f722589bffce</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS operator archive</h3>
-            <pre><code>shasum -a 256 dinero-operator-v8.0.11-macOS-arm64.tar.gz
+            <pre><code>shasum -a 256 dinero-operator-v8.0.13-macOS-arm64.tar.gz
 # Expected:
 2b6dec3a0c2bd1302091d93a254f8a16c15a734a0439461698c59d23f9bcc73b</code></pre>
           </div>
@@ -905,31 +915,31 @@ a9dce98e3cb39ec4d58b98d8308f530862b9775558cdb42c8904c569202a2caa</code></pre>
           <div class="card">
             <h3>macOS checksum file</h3>
             <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.0.12/SHA256SUMS-macos-8.0.12
-shasum -a 256 -c SHA256SUMS-macos-8.0.11</code></pre>
+shasum -a 256 -c SHA256SUMS-macos-8.0.13</code></pre>
           </div>
 
           <div class="card">
-            <h3>Linux v8.0.11 tarballs</h3>
-            <pre><code>shasum -a 256 dinero-core-8.0.11-linux-x86_64.tar.gz
+            <h3>Linux v8.0.12 tarballs</h3>
+            <pre><code>shasum -a 256 dinero-core-8.0.12-linux-x86_64.tar.gz
 # Expected:
 51644852d5adb2af7798ed6ce560670b94cc8bbd9ff6c7b6932eed566edac9b8
 
-shasum -a 256 dinero-cli-8.0.11-linux-x86_64.tar.gz
+shasum -a 256 dinero-cli-8.0.12-linux-x86_64.tar.gz
 # Expected:
 f986251334abf47f9e614fd9fcfba82955089f7aed8ca4d58d5a6fde577bde02
 
-shasum -a 256 dinero-seeder-8.0.11-linux-x86_64.tar.gz
+shasum -a 256 dinero-seeder-8.0.12-linux-x86_64.tar.gz
 # Expected:
 43eec080365cdcdb363bc3d3d8e003fc934771a997e843c4a31cee348c75c01e
 
-shasum -a 256 dinero-solo-miner-8.0.11-linux-x86_64.tar.gz
+shasum -a 256 dinero-solo-miner-8.0.12-linux-x86_64.tar.gz
 # Expected:
 6889de7a1886a32cad31a4c04608d0699b13e662237db7c62b3050f12f4fa6e8</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS notarization</h3>
-            <pre><code>spctl --assess --type open --context context:primary-signature -vv Dinero-v8.0.11-macOS-arm64.dmg
+            <pre><code>spctl --assess --type open --context context:primary-signature -vv Dinero-v8.0.13-macOS-arm64.dmg
 # Expected:
 accepted
 source=Notarized Developer ID</code></pre>
@@ -972,7 +982,7 @@ source=Notarized Developer ID</code></pre>
             <tr>
               <td>Linux install script / systemd service</td>
               <td><code>/var/lib/dinero</code></td>
-              <td>FHS/systemd daemon under the dinero service user; installed from v8.0.11 tarballs</td>
+              <td>FHS/systemd daemon under the dinero service user; installed from v8.0.12 tarballs</td>
             </tr>
             <tr>
               <td>Linux source build / developer</td>
@@ -996,8 +1006,8 @@ dinero-cli -datadir=/var/lib/dinero getnetworkinfo</code></pre>
           </article>
           <article class="card">
             <h3>macOS operator quick start</h3>
-            <pre><code>tar -xzf dinero-operator-v8.0.11-macOS-arm64.tar.gz
-cd dinero-operator-v8.0.11-macOS-arm64
+            <pre><code>tar -xzf dinero-operator-v8.0.13-macOS-arm64.tar.gz
+cd dinero-operator-v8.0.13-macOS-arm64
 ./bin/dinerod
 ./bin/dinero-cli getnetworkinfo</code></pre>
           </article>
@@ -1008,8 +1018,8 @@ cd dinero-operator-v8.0.11-macOS-arm64
             <h3>Good to know</h3>
             <ul class="list">
               <li>Windows v8 installers are not yet Authenticode-signed — SmartScreen may warn. Verify the SHA256 above and click "More info" → "Run anyway".</li>
-              <li>The published Windows binaries are built directly from the signed v8.0.11 tag (daemon embeds <code>8.0.11</code> + commit <code>8fa38541</code> + OpenSSL 3.5.6 + ngtcp2). <strong>v8.0.11 is the first Windows release with fast-sync:</strong> the user installer bundles the height-52287 AssumeUTXO v4 snapshot (carrying the shielded-pool state) next to the wallet, so a fresh datadir fast-syncs to height 52,287 instead of syncing from genesis. It carries the AssumeUTXO shielded-restore + snapshot-restart consensus fixes and the GUI daemon-launch reliability fix.</li>
-              <li>Linux v8.0.11 ships operator/CLI packaging — core, CLI, seeder, miner tarballs plus a Debian <code>.deb</code>. The desktop GUI wallet is published for macOS and Windows.</li>
+              <li>The published Windows binaries are built directly from the signed v8.0.13 tag (daemon embeds <code>8.0.13</code> + commit <code>c5f91187</code> + OpenSSL 3.5.6 + ngtcp2). <strong>v8.0.13 ships the full AssumeUTXO fast-sync stack on Windows:</strong> the user installer bundles the height-52287 AssumeUTXO v4 snapshot (carrying the shielded-pool state) next to the wallet, so a fresh datadir fast-syncs to height 52,287 instead of syncing from genesis. It carries the complete AssumeUTXO end-to-end campaign — snapshot bootstrap through real-spend validation and forward-connect to tip — hardened through the 60000/61000 consensus fork activations.</li>
+              <li>Linux v8.0.12 ships operator/CLI packaging — core, CLI, seeder, miner tarballs plus a Debian <code>.deb</code>. The desktop GUI wallet is published for macOS and Windows.</li>
               <li>Dynamic P2P is active in conservative slow-churn mode. It is designed to improve peer diversity gradually, not churn aggressively.</li>
               <li>Relay/NAT traversal is useful infrastructure, but the long-term goal is broader community-run peers and relays, not dependence on Dinero Labs bootstrap nodes.</li>
             </ul>
