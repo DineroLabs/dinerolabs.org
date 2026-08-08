@@ -17,7 +17,7 @@ INSTALLER = ROOT / "install.sh"
 RELEASES_API = "https://api.github.com/repos/DineroLabs/dinero-v8/releases?per_page=10"
 
 
-def fetch_releases() -> list[dict]:
+def fetch_json(url: str) -> object:
     headers = {
         "Accept": "application/vnd.github+json",
         "User-Agent": "dinerolabs.org-release-verifier",
@@ -26,7 +26,7 @@ def fetch_releases() -> list[dict]:
     if token:
         headers["Authorization"] = f"Bearer {token}"
     with urllib.request.urlopen(
-        urllib.request.Request(RELEASES_API, headers=headers), timeout=30
+        urllib.request.Request(url, headers=headers), timeout=30
     ) as response:
         return json.load(response)
 
@@ -41,7 +41,8 @@ def assignment(script: str, name: str) -> str:
 def main() -> None:
     html = INDEX.read_text()
     installer = INSTALLER.read_text()
-    releases = fetch_releases()
+    releases = fetch_json(RELEASES_API)
+    assert isinstance(releases, list)
 
     stable = next(
         release
@@ -53,10 +54,23 @@ def main() -> None:
             for asset in release.get("assets", [])
         )
     )
+    native_release = next(
+        release
+        for release in releases
+        if not release.get("draft")
+        and not release.get("prerelease")
+        and re.match(r"^dinerodpi-v[0-9]+\.[0-9]+\.[0-9]+$", release["tag_name"])
+    )
     tag = stable["tag_name"]
     assets = {
         asset["name"]: (asset.get("digest") or "").removeprefix("sha256:")
         for asset in stable["assets"]
+    }
+    native_tag = native_release["tag_name"]
+    native_version = native_tag.removeprefix("dinerodpi-v")
+    native_assets = {
+        asset["name"]: (asset.get("digest") or "").removeprefix("sha256:")
+        for asset in native_release["assets"]
     }
 
     assert f"Dinero {tag} — current consensus release" in html
@@ -86,21 +100,52 @@ def main() -> None:
     )
     assert not retired_v8_links, f"retired v8 download tags remain: {retired_v8_links}"
 
+    assert f"DineroDPI macOS Native {native_version}" in html
+    native_urls = re.findall(
+        rf'href="(https://github\.com/DineroLabs/dinero-v8/releases/download/{re.escape(native_tag)}/[^\"]+)"',
+        html,
+    )
+    native_linked_assets = [
+        urllib.parse.unquote(url.rsplit("/", 1)[-1]) for url in native_urls
+    ]
+    missing_native = sorted(set(native_linked_assets) - native_assets.keys())
+    assert not missing_native, (
+        f"native download links reference missing {native_tag} assets: {missing_native}"
+    )
+    assert sorted(set(native_linked_assets)) == sorted(
+        [
+            f"DineroDPI-{native_version}.dmg",
+            f"DineroDPI-{native_version}-macOS.zip",
+        ]
+    ), f"native download coverage is incomplete: {native_linked_assets}"
+
     hash_commands = re.findall(
         r"(?:certutil -hashfile ([^\s<]+) SHA256|shasum -a 256 ([^\s<]+))\s*\n"
         r"# Expected:\s*\n([0-9a-f]{64})",
         html,
     )
     checked_hashes = 0
+    checked_native_hashes = 0
     for certutil_filename, shasum_filename, expected in hash_commands:
         filename = certutil_filename or shasum_filename
         if filename.startswith("DineroDPI-"):
+            assert filename in native_assets, (
+                f"native hash command references missing asset: {filename}"
+            )
+            assert native_assets[filename] == expected, (
+                f"displayed native SHA-256 is wrong: {filename}"
+            )
+            checked_native_hashes += 1
             continue
         assert filename in assets, f"hash command references missing asset: {filename}"
         assert assets[filename] == expected, f"displayed SHA-256 is wrong: {filename}"
         checked_hashes += 1
     assert checked_hashes == 10, (
         f"expected 10 displayed {tag} asset hashes, found {checked_hashes}"
+    )
+    assert checked_native_hashes == 1, (
+        "expected one displayed native macOS asset hash, "
+        f"found {checked_native_hashes}"
     )
 
     assert 'INCLUDE_PRERELEASE="${INCLUDE_PRERELEASE:-0}"' in installer
@@ -122,7 +167,9 @@ def main() -> None:
 
     print(
         f"PASS: {tag}; {len(linked_assets)} valid release links; "
-        f"{checked_hashes} matching hashes; installer selects core + CLI + snapshot"
+        f"{checked_hashes} matching hashes; DineroDPI {native_tag} has "
+        f"{len(set(native_linked_assets))} valid links and {checked_native_hashes} "
+        "matching hash; installer selects core + CLI + snapshot"
     )
 
 
