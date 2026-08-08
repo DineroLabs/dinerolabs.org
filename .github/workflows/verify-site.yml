@@ -1,0 +1,21 @@
+name: Verify site
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  release-page:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify release links, hashes, and installer selection
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 scripts/verify-release-page.py
+      - name: Check installer syntax
+        run: bash -n install.sh

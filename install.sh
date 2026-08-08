@@ -5,8 +5,7 @@
 #
 # What this does (read before piping to sudo):
 #   1. Verifies you're on Ubuntu 24.04+ x86_64 with root privileges
-#   2. Queries the GitHub API for the latest Dinero v8 release (currently
-#      includes pre-releases — v8 is still in rcN)
+#   2. Queries the GitHub API for the latest stable Dinero v8 release
 #   3. Downloads the headless Linux tarballs (dinero-core = daemon, dinero-cli)
 #      and verifies each against the digest GitHub publishes for the asset
 #   4. Installs dinerod + dinero-cli to /usr/local/bin
@@ -39,7 +38,7 @@ set -euo pipefail
 RELEASE_REPO="DineroLabs/dinero-v8"
 CORE_PATTERN='^dinero-core-.*-linux-x86_64\.tar\.gz$'
 CLI_PATTERN='^dinero-cli-.*-linux-x86_64\.tar\.gz$'
-SNAPSHOT_PATTERN='^utxo-snapshot-[0-9]+\.dat$'
+SNAPSHOT_PATTERN='^(utxo-snapshot-[0-9]+|dinero-assumeutxo-[0-9]+-v[0-9]+)\.dat$'
 P2P_PORT=20999
 RPC_PORT=20998
 SERVICE_UNIT="dinero.service"
@@ -47,8 +46,9 @@ DATADIR=/var/lib/dinero
 BINDIR=/usr/local/bin
 RUN_USER=dinero
 
-# Set INCLUDE_PRERELEASE=0 once a stable v8.0.0 ships and you want only stables.
-INCLUDE_PRERELEASE="${INCLUDE_PRERELEASE:-1}"
+# Stable releases are the public default. Advanced testers can opt in to
+# pre-releases explicitly with INCLUDE_PRERELEASE=1.
+INCLUDE_PRERELEASE="${INCLUDE_PRERELEASE:-0}"
 
 # Sync mode — how a fresh node builds its UTXO set:
 #   auto (default) — fast snapshot bootstrap when the machine AND release are
@@ -135,7 +135,7 @@ SNAPSHOT_PATTERN="$SNAPSHOT_PATTERN" INCLUDE_PRERELEASE="$INCLUDE_PRERELEASE" \
 python3 - "$RELEASES_JSON" >"$PICK" <<'PYEOF'
 import json, os, re, sys
 data = json.load(open(sys.argv[1]))
-include_pre = os.environ.get("INCLUDE_PRERELEASE", "1") == "1"
+include_pre = os.environ.get("INCLUDE_PRERELEASE", "0") == "1"
 core_re = re.compile(os.environ["CORE_PATTERN"])
 cli_re = re.compile(os.environ["CLI_PATTERN"])
 snap_re = re.compile(os.environ["SNAPSHOT_PATTERN"])
