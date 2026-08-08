@@ -40,6 +40,7 @@ def assignment(script: str, name: str) -> str:
 
 def main() -> None:
     html = INDEX.read_text()
+    security_html = (ROOT / "security" / "index.html").read_text()
     installer = INSTALLER.read_text()
     releases = fetch_json(RELEASES_API)
     assert isinstance(releases, list)
@@ -75,6 +76,21 @@ def main() -> None:
 
     assert f"Dinero {tag} — current consensus release" in html
     assert f"Download the current {tag}" in html
+
+    retired_explorer_hosts = (
+        "explorer." + "dinero-coin.com",
+        "rpc." + "dinero-coin.com",
+    )
+    for host in retired_explorer_hosts:
+        assert host not in html, f"retired explorer host remains in index.html: {host}"
+        assert host not in security_html, (
+            f"retired explorer host remains in security/index.html: {host}"
+        )
+    assert html.count("https://explorer.realmoneyforfreepeople.org/") == 4, (
+        "expected the explorer URL in navigation, ticker action, footer, and JS"
+    )
+    assert 'const EXPLORER_RPC_URL = "https://rpc.realmoneyforfreepeople.org";' in html
+    assert "https://explorer.realmoneyforfreepeople.org/" in security_html
 
     current_urls = re.findall(
         rf'href="(https://github\.com/DineroLabs/dinero-v8/releases/download/{re.escape(tag)}/[^\"]+)"',
