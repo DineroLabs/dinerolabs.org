@@ -36,8 +36,8 @@ set -euo pipefail
 # Configuration
 # ---------------------------------------------------------------------------
 RELEASE_REPO="DineroLabs/dinero-v8"
-CORE_PATTERN='^dinero-core-.*-linux-x86_64\.tar\.gz$'
-CLI_PATTERN='^dinero-cli-.*-linux-x86_64\.tar\.gz$'
+CORE_PATTERN='^(dinero-core-.*-linux-x86_64|dinero-linux-x86_64-.*)\.tar\.gz$'
+CLI_PATTERN='^(dinero-cli-.*-linux-x86_64|dinero-linux-x86_64-.*)\.tar\.gz$'
 SNAPSHOT_PATTERN='^(utxo-snapshot-[0-9]+|dinero-assumeutxo-[0-9]+-v[0-9]+)\.dat$'
 P2P_PORT=20999
 RPC_PORT=20998
@@ -127,7 +127,7 @@ curl -fsSL -H 'Accept: application/vnd.github+json' \
   "${RELEASE_API}?per_page=10" -o "$RELEASES_JSON"
 
 # Pick the newest non-draft release (honoring INCLUDE_PRERELEASE) whose assets
-# contain a Linux core tarball, and emit name/url/digest for each asset of
+# contain a Linux daemon archive (split or combined), and emit name/url/digest for each asset of
 # interest (core, cli, snapshot). One line per field; "-" when absent.
 PICK="$TMP/pick.txt"
 CORE_PATTERN="$CORE_PATTERN" CLI_PATTERN="$CLI_PATTERN" \
@@ -141,10 +141,22 @@ cli_re = re.compile(os.environ["CLI_PATTERN"])
 snap_re = re.compile(os.environ["SNAPSHOT_PATTERN"])
 
 def find(assets, rx):
-    for a in assets:
-        if rx.match(a["name"]):
-            return a
-    return None
+    matches = [a for a in assets if rx.match(a["name"])]
+    if not matches:
+        return None
+    return next(
+        (a for a in matches if a["name"].startswith("dinero-linux-x86_64-")),
+        matches[0],
+    )
+
+def newest_snapshot(assets):
+    candidates = [a for a in assets if snap_re.match(a["name"])]
+    if not candidates:
+        return None
+    def height(asset):
+        match = re.search(r"(?:snapshot-|assumeutxo-)([0-9]+)", asset["name"])
+        return int(match.group(1)) if match else -1
+    return max(candidates, key=height)
 
 for rel in data:
     if rel.get("draft"):
@@ -154,9 +166,9 @@ for rel in data:
     assets = rel.get("assets", [])
     core = find(assets, core_re)
     if not core:
-        continue  # this release has no Linux core tarball; try older
+        continue  # this release has no Linux daemon archive; try older
     cli = find(assets, cli_re)
-    snap = find(assets, snap_re)
+    snap = newest_snapshot(assets)
     print(rel["tag_name"])
     for a in (core, cli, snap):
         if a:
@@ -207,8 +219,13 @@ note "Installing dinerod + dinero-cli to $BINDIR"
 dl_verify "$CORE_NAME" "$CORE_URL" "$CORE_DIGEST" "$TMP/core.tgz"
 install_tarball_bin "$TMP/core.tgz" "dinerod"
 if [ "$CLI_URL" != "-" ]; then
-  dl_verify "$CLI_NAME" "$CLI_URL" "$CLI_DIGEST" "$TMP/cli.tgz"
-  install_tarball_bin "$TMP/cli.tgz" "dinero-cli"
+  if [ "$CLI_URL" = "$CORE_URL" ]; then
+    note "Installing dinero-cli from the combined release archive"
+    install_tarball_bin "$TMP/core.tgz" "dinero-cli"
+  else
+    dl_verify "$CLI_NAME" "$CLI_URL" "$CLI_DIGEST" "$TMP/cli.tgz"
+    install_tarball_bin "$TMP/cli.tgz" "dinero-cli"
+  fi
 else
   warn "Release $TAG has no dinero-cli tarball — installing daemon only"
 fi
