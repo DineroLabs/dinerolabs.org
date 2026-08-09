@@ -14,7 +14,7 @@ import urllib.request
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
 INSTALLER = ROOT / "install.sh"
-RELEASES_API = "https://api.github.com/repos/DineroLabs/dinero-v8/releases?per_page=10"
+CORE_RELEASES_API = "https://api.github.com/repos/DineroLabs/dinero-v8/releases?per_page=10"
 
 
 def fetch_json(url: str) -> object:
@@ -42,8 +42,12 @@ def main() -> None:
     html = INDEX.read_text()
     security_html = (ROOT / "security" / "index.html").read_text()
     installer = INSTALLER.read_text()
-    releases = fetch_json(RELEASES_API)
+    releases = fetch_json(CORE_RELEASES_API)
     assert isinstance(releases, list)
+
+    core_asset_re = re.compile(
+        r"^(?:dinero-core-.*-linux-x86_64|dinero-linux-x86_64-.*)\.tar\.gz$"
+    )
 
     stable = next(
         release
@@ -51,7 +55,7 @@ def main() -> None:
         if not release.get("draft")
         and not release.get("prerelease")
         and any(
-            re.match(r"^dinero-core-.*-linux-x86_64\.tar\.gz$", asset["name"])
+            core_asset_re.match(asset["name"])
             for asset in release.get("assets", [])
         )
     )
@@ -101,8 +105,37 @@ def main() -> None:
     ]
     missing = sorted(set(linked_assets) - assets.keys())
     assert not missing, f"download links reference missing {tag} assets: {missing}"
-    assert len(linked_assets) >= 20, (
-        f"expected broad {tag} platform coverage, found {len(linked_assets)} links"
+    version = tag.removeprefix("v")
+    combined_linux = f"dinero-linux-x86_64-{version}.tar.gz"
+    split_linux = f"dinero-core-{version}-linux-x86_64.tar.gz"
+    linux_asset = combined_linux if combined_linux in assets else split_linux
+    snapshot_assets = [
+        name
+        for name in assets
+        if re.match(
+            r"^(?:utxo-snapshot-[0-9]+|dinero-assumeutxo-[0-9]+-v[0-9]+)\.dat$",
+            name,
+        )
+    ]
+    assert snapshot_assets, f"{tag} has no snapshot asset"
+    latest_snapshot = max(
+        snapshot_assets,
+        key=lambda name: int(re.search(r"(?:snapshot-|assumeutxo-)([0-9]+)", name).group(1)),
+    )
+    required_assets = {
+        linux_asset,
+        f"Dinero-Server-{version}-windows-x86_64-Setup.exe",
+        f"Dinero-v{version}-macOS-arm64.dmg",
+        f"Dinero-v{version}-macOS-arm64-qt.zip",
+        f"dinero-operator-v{version}-macOS-arm64.tar.gz",
+        f"dinero-operator-v{version}-macOS-x86_64.tar.gz",
+        latest_snapshot,
+    }
+    absent_required = sorted(required_assets - assets.keys())
+    assert not absent_required, f"{tag} is missing required release assets: {absent_required}"
+    unlinked_required = sorted(required_assets - set(linked_assets))
+    assert not unlinked_required, (
+        f"public page does not link required {tag} assets: {unlinked_required}"
     )
 
     retired_v8_links = sorted(
@@ -140,7 +173,7 @@ def main() -> None:
         r"# Expected:\s*\n([0-9a-f]{64})",
         html,
     )
-    checked_hashes = 0
+    checked_hashes: set[str] = set()
     checked_native_hashes = 0
     for certutil_filename, shasum_filename, expected in hash_commands:
         filename = certutil_filename or shasum_filename
@@ -155,9 +188,11 @@ def main() -> None:
             continue
         assert filename in assets, f"hash command references missing asset: {filename}"
         assert assets[filename] == expected, f"displayed SHA-256 is wrong: {filename}"
-        checked_hashes += 1
-    assert checked_hashes == 10, (
-        f"expected 10 displayed {tag} asset hashes, found {checked_hashes}"
+        checked_hashes.add(filename)
+    assert checked_hashes == required_assets, (
+        f"displayed {tag} hash coverage differs from required assets: "
+        f"missing={sorted(required_assets - checked_hashes)}, "
+        f"extra={sorted(checked_hashes - required_assets)}"
     )
     assert checked_native_hashes == 1, (
         "expected one displayed native macOS asset hash, "
@@ -169,21 +204,27 @@ def main() -> None:
         re.compile(assignment(installer, name))
         for name in ("CORE_PATTERN", "CLI_PATTERN", "SNAPSHOT_PATTERN")
     ]
+    def selected_linux(pattern: re.Pattern[str]) -> str | None:
+        matches = [name for name in assets if pattern.match(name)]
+        return next(
+            (name for name in matches if name.startswith("dinero-linux-x86_64-")),
+            matches[0] if matches else None,
+        )
+
     selected = [
-        next((name for name in assets if pattern.match(name)), None)
-        for pattern in patterns
+        selected_linux(pattern) if index < 2 else latest_snapshot
+        for index, pattern in enumerate(patterns)
     ]
-    version = tag.removeprefix("v")
-    assert selected[0] == f"dinero-core-{version}-linux-x86_64.tar.gz", selected
-    assert selected[1] == f"dinero-cli-{version}-linux-x86_64.tar.gz", selected
-    assert selected[2] and re.match(
-        r"^(utxo-snapshot-[0-9]+|dinero-assumeutxo-[0-9]+-v[0-9]+)\.dat$",
-        selected[2],
-    ), f"installer does not select the {tag} snapshot: {selected}"
+    expected_cli = combined_linux if combined_linux in assets else f"dinero-cli-{version}-linux-x86_64.tar.gz"
+    assert selected[0] == linux_asset, selected
+    assert selected[1] == expected_cli, selected
+    assert selected[2] == latest_snapshot, (
+        f"installer does not select the newest {tag} snapshot: {selected}"
+    )
 
     print(
         f"PASS: {tag}; {len(linked_assets)} valid release links; "
-        f"{checked_hashes} matching hashes; DineroDPI {native_tag} has "
+        f"{len(checked_hashes)} matching hashes; DineroDPI {native_tag} has "
         f"{len(set(native_linked_assets))} valid links and {checked_native_hashes} "
         "matching hash; installer selects core + CLI + snapshot"
     )
