@@ -292,11 +292,11 @@ spctl -a -t exec -vv /Applications/Dinero.app</code></pre>
       <h3>Linux archives and Windows installers</h3>
       <p>Every release asset on GitHub has a SHA256 digest published by GitHub itself and exposed via the GitHub API (<code>assets[].digest</code> field). This is the property that <a href="https://dinerolabs.org/install.sh"><code>install.sh</code></a> verifies before installation, so any operator running the install script gets hash verification automatically.</p>
       <p>Manual verification:</p>
-      <pre><code>EXPECTED=$(gh api repos/DineroLabs/dinero-v8/releases/tags/v8.1.2 \
-  --jq '.assets[] | select(.name == "dinero-linux-x86_64-8.1.2.tar.gz") | .digest')
+      <pre><code>EXPECTED=$(gh api repos/DineroLabs/dinero-v8/releases/tags/v8.1.3 \
+  --jq '.assets[] | select(.name == "dinero-linux-x86_64-8.1.3.tar.gz") | .digest')
 echo "$EXPECTED"
 
-sha256sum dinero-linux-x86_64-8.1.2.tar.gz
+sha256sum dinero-linux-x86_64-8.1.3.tar.gz
 # compare; should match the hex after sha256:</code></pre>
 
       <h2 id="signing-gaps">What's not yet signed</h2>
