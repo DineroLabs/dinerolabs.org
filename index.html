@@ -631,7 +631,8 @@
           <h1 id="hero-title">Run Dinero. Own your money. Mine DIN.</h1>
           <p class="lead">Dinero v8.1.3 is the current desktop startup reliability release. It prevents duplicate embedded-daemon launches on slow macOS startups while preserving the block-100,000 CTV and CCV activation rules, the verified height-84,131 V4 fast-sync snapshot, and every v8.1.2 recovery fix. <strong>Upgrade before block 99,000.</strong></p>
           <div class="hero-actions">
-            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/Dinero-v8.1.3-macOS-arm64.dmg">Download for macOS</a>
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/Dinero-v8.1.3-macOS-arm64.dmg">macOS · Apple Silicon</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/Dinero-v8.1.3-macOS-x86_64.dmg">macOS · Intel</a>
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/Dinero-Server-8.1.3-windows-x86_64-Setup.exe">Download Windows node</a>
             <a class="button secondary" href="#downloads">View all downloads</a>
           </div>
@@ -666,11 +667,13 @@
               <div class="platform">macOS Wallet · dinero-qt</div>
               <span class="pill">Stable</span>
             </div>
-            <p class="meta">Best choice for Apple Silicon Mac users. Signed, Apple-notarized, and stapled. Drag <code>dinero-qt.app</code> to Applications and launch. Bundles the wallet, embedded daemon, CLI tools, seeder, and miner helpers.</p>
-            <div class="filename">Dinero-v8.1.3-macOS-arm64.dmg</div>
+            <p class="meta">Signed, Apple-notarized, and stapled builds for Apple Silicon and Intel Macs. Drag <code>dinero-qt.app</code> to Applications and launch. Bundles the wallet, embedded daemon, CLI tools, seeder, and miner helpers.</p>
+            <div class="filename">Dinero-v8.1.3-macOS-arm64.dmg / macOS-x86_64.dmg</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/Dinero-v8.1.3-macOS-arm64.dmg">Download .dmg</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/Dinero-v8.1.3-macOS-arm64-qt.zip">.app zip</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/Dinero-v8.1.3-macOS-arm64.dmg">Apple Silicon .dmg</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/Dinero-v8.1.3-macOS-x86_64.dmg">Intel .dmg</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/Dinero-v8.1.3-macOS-arm64-qt.zip">Apple Silicon .zip</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/Dinero-v8.1.3-macOS-x86_64-qt.zip">Intel .zip</a>
             </div>
           </article>
 
@@ -711,6 +714,21 @@
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/dinero-linux-x86_64-8.1.3.tar.gz">Download bundle</a>
               <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/SHA256SUMS-linux-x86_64-8.1.3">SHA256</a>
+            </div>
+          </article>
+
+          <article class="card download-card">
+            <div class="tag-row">
+              <div class="platform">Linux Desktop · dinero-qt</div>
+              <span class="pill">Stable</span>
+            </div>
+            <p class="meta">The complete graphical wallet and full-node desktop stack for x86_64 Linux. Choose the portable AppImage, Debian/Ubuntu package, or portable Qt archive; all three include the embedded daemon, CLI tools, seeder, and miner helpers.</p>
+            <div class="filename">dinero-v8.1.3-linux-x86_64.AppImage</div>
+            <div class="actions">
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/dinero-v8.1.3-linux-x86_64.AppImage">AppImage</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/dinero-qt-desktop_8.1.3-1_amd64.deb">Debian / Ubuntu .deb</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/dinero-v8.1.3-linux-x86_64-qt.tar.gz">Portable tar.gz</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/SHA256SUMS-linux-x86_64-desktop-8.1.3">SHA256</a>
             </div>
           </article>
 
@@ -888,7 +906,7 @@
       <div class="wrap status-grid">
         <div><strong>Windows</strong><span>v8.1.3 Server installer</span></div>
         <div><strong>macOS</strong><span>DineroDPI Native 1.3.3 + dinero-qt v8.1.3</span></div>
-        <div><strong>Linux</strong><span>v8.1.3 verified x86_64 release bundle</span></div>
+        <div><strong>Linux</strong><span>v8.1.3 desktop AppImage / .deb / Qt archive + operator bundle</span></div>
         <div><strong>Network</strong><span>Dynamic P2P active, relay bootstrap live</span></div>
       </div>
     </section>
@@ -913,6 +931,27 @@ e96905804b468974f8107cbf540941d6ebceeb8d9db2e284808a3c66c05255a2</code></pre>
             <pre><code>shasum -a 256 dinero-linux-x86_64-8.1.3.tar.gz
 # Expected:
 e9508d28e33a8ca8386a6b7e9c8e0daf5abb0248f449c03ec2cdeea353634568</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>Linux desktop AppImage</h3>
+            <pre><code>shasum -a 256 dinero-v8.1.3-linux-x86_64.AppImage
+# Expected:
+4bddce67aaf095aac1df2aaa5cf084780edd06af96a3afe1e7f88f86fda67d5c</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>Linux desktop package</h3>
+            <pre><code>shasum -a 256 dinero-qt-desktop_8.1.3-1_amd64.deb
+# Expected:
+7e2624da10964e3fd9d5b3d4eb46049cef63e10f5736facd248fb2d1f4c28842</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>Linux portable Qt archive</h3>
+            <pre><code>shasum -a 256 dinero-v8.1.3-linux-x86_64-qt.tar.gz
+# Expected:
+7ad1aa0ef2c40933cd429abda62fda1a695fba0bb233477c07b364a6ba5c816c</code></pre>
           </div>
 
           <div class="card">
@@ -951,6 +990,20 @@ source=Notarized Developer ID</code></pre>
           </div>
 
           <div class="card">
+            <h3>dinero-qt macOS Intel DMG</h3>
+            <pre><code>shasum -a 256 Dinero-v8.1.3-macOS-x86_64.dmg
+# Expected:
+6b5aa60ac26994a1a6b20420c08ad5f8c0c89d8b01f3ca0e553a69b95b31205e</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>macOS Intel app zip</h3>
+            <pre><code>shasum -a 256 Dinero-v8.1.3-macOS-x86_64-qt.zip
+# Expected:
+519cd1666e711ae77e757519704f8c8a1a5d48b1b9199d3d86a0760669960264</code></pre>
+          </div>
+
+          <div class="card">
             <h3>macOS operator archive — Apple Silicon</h3>
             <pre><code>shasum -a 256 dinero-operator-v8.1.3-macOS-arm64.tar.gz
 # Expected:
@@ -976,6 +1029,18 @@ shasum -a 256 -c SHA256SUMS-macos-8.1.3</code></pre>
             <h3>Linux checksum file</h3>
             <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/SHA256SUMS-linux-x86_64-8.1.3
 shasum -a 256 -c SHA256SUMS-linux-x86_64-8.1.3</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>Linux desktop checksum file</h3>
+            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/SHA256SUMS-linux-x86_64-desktop-8.1.3
+shasum -a 256 -c SHA256SUMS-linux-x86_64-desktop-8.1.3</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>macOS Intel desktop checksum file</h3>
+            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.3/SHA256SUMS-macos-x86_64-desktop-8.1.3
+shasum -a 256 -c SHA256SUMS-macos-x86_64-desktop-8.1.3</code></pre>
           </div>
 
           <div class="card">
@@ -1060,7 +1125,7 @@ cd dinero-operator-v8.1.3-macOS-arm64
             <ul class="list">
               <li>Windows v8 installers are not yet Authenticode-signed — SmartScreen may warn. Verify the SHA256 above and click "More info" → "Run anyway".</li>
               <li>The published v8.1.3 binaries carry the consensus rules required at block 100,000. Verify the runtime consensus checksum with <code>dinero-cli getconsensusinfo</code> before activation.</li>
-              <li>Linux v8.1.3 ships one verified x86_64 release bundle. The installer extracts <code>dinerod</code> and <code>dinero-cli</code> from that archive and selects the newest available snapshot.</li>
+              <li>Linux v8.1.3 ships verified graphical AppImage, Debian/Ubuntu, and portable Qt packages alongside the headless operator bundle. The node installer continues to extract <code>dinerod</code> and <code>dinero-cli</code> from the operator archive and selects the newest available snapshot.</li>
               <li>Dynamic P2P is active in conservative slow-churn mode. It is designed to improve peer diversity gradually, not churn aggressively.</li>
               <li>Relay/NAT traversal is useful infrastructure, but the long-term goal is broader community-run peers and relays, not dependence on Dinero Labs bootstrap nodes.</li>
             </ul>
