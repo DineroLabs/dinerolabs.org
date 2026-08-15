@@ -666,7 +666,7 @@
         <div class="two-col" style="margin-top: 14px;">
           <article class="card">
             <h3>macOS · Linux · Chromebook</h3>
-            <p class="meta">Detects your platform, downloads the current miner release, verifies the SHA-256 digest, and installs the <code>dinero-miner</code> command to <code>~/.local/bin</code>. On a Chromebook, enable Linux (Settings → Advanced → Developers → “Linux development environment”), open its Terminal, and paste the same command.</p>
+            <p class="meta">Detects your platform, downloads the current miner release, verifies the SHA-256 digest, and installs the <code>dinero-miner</code> command to <code>~/.local/bin</code>. macOS builds (Apple Silicon and Intel) are Developer ID signed and Apple-notarized. On a Chromebook, enable Linux (Settings → Advanced → Developers → “Linux development environment”), open its Terminal, and paste the same command.</p>
             <div class="filename">curl -fsSL https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install.sh | sh</div>
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-sv2/blob/main/scripts/install.sh">View install script</a>
@@ -676,7 +676,7 @@
 
           <article class="card">
             <h3>Windows · PowerShell</h3>
-            <p class="meta">Same flow for Windows x64: resolves the latest miner release, verifies the SHA-256 digest, installs <code>dinero-miner.exe</code> under <code>%LOCALAPPDATA%\DineroMiner\bin</code>, and adds it to your PATH. Open a new terminal after installing.</p>
+            <p class="meta">Same flow for Windows x64: resolves the latest miner release, verifies the SHA-256 digest, installs <code>dinero-miner.exe</code> under <code>%LOCALAPPDATA%\DineroMiner\bin</code>, and adds it to your PATH. The binary is digitally signed (Authenticode, Microsoft-verified publisher), so Windows recognizes its publisher instead of flagging an unknown download. Open a new terminal after installing.</p>
             <div class="filename">irm https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install.ps1 | iex</div>
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-sv2/blob/main/scripts/install.ps1">View install script</a>
