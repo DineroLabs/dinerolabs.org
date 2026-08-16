@@ -706,7 +706,7 @@
               <div class="platform">macOS Wallet · dinero-qt</div>
               <span class="pill">Stable</span>
             </div>
-            <p class="meta">Signed, Apple-notarized, and stapled builds for Apple Silicon and Intel Macs. <strong>Requires macOS 14 (Sonoma) or newer</strong> — the bundled Qt frameworks do not run on Ventura or older. Intel Macs capped at macOS 13 can still run the headless daemon (operator tarball below) and the Dinero miner. Drag <code>dinero-qt.app</code> to Applications and launch. Bundles the wallet, embedded daemon, CLI tools, seeder, and miner helpers.</p>
+            <p class="meta">Signed, Apple-notarized, and stapled builds for Apple Silicon and Intel Macs. <strong>Requires macOS 14 (Sonoma) or newer</strong> — the bundled Qt frameworks do not run on Ventura or older. Intel Macs capped at macOS 13 can run the DineroDPI Native Intel build (wallet + node + miner), the headless daemon (operator tarball below), and the Dinero miner. Drag <code>dinero-qt.app</code> to Applications and launch. Bundles the wallet, embedded daemon, CLI tools, seeder, and miner helpers.</p>
             <div class="filename">Dinero-v8.1.4-macOS-arm64.dmg / macOS-x86_64.dmg</div>
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.4/Dinero-v8.1.4-macOS-arm64.dmg">Apple Silicon .dmg</a>
@@ -721,11 +721,12 @@
               <div class="platform">DineroDPI macOS Native</div>
               <span class="pill native">1.3.3 · Native</span>
             </div>
-            <p class="meta">The SwiftUI/AppKit Dinero wallet, full Utreexo node, and miner — a separate native app, not dinero-qt. Version 1.3.3 preserves the last verified balance while snapshot-era wallet coins are restored, keeps the bridge wallet usable during local-node catch-up, and embeds the v8.1.2 NodeCore fixes. Developer ID signed by DineroLabs LLC, Apple-notarized, and stapled. Apple Silicon, macOS 14+.</p>
+            <p class="meta">The SwiftUI/AppKit Dinero wallet, full Utreexo node, and miner — a separate native app, not dinero-qt. Now also available as a separate Intel build for macOS 13 (Ventura) and newer — older Intel Macs that cannot run Sonoma get the full native wallet, node, and miner. Version 1.3.3 preserves the last verified balance while snapshot-era wallet coins are restored, keeps the bridge wallet usable during local-node catch-up, and embeds the v8.1.2 NodeCore fixes. Developer ID signed by DineroLabs LLC, Apple-notarized, and stapled. Apple Silicon, macOS 14+.</p>
             <div class="filename">DineroDPI-1.3.3.dmg</div>
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/dinerodpi-v1.3.3/DineroDPI-1.3.3.dmg">Download macOS Native 1.3.3</a>
               <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/dinerodpi-v1.3.3/DineroDPI-1.3.3-macOS.zip">.app zip</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/dinerodpi-v1.3.4-intel/DineroDPI-1.3.4-Intel.dmg">Intel Mac · macOS 13+</a>
               <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/dinerodpi-v1.3.3">Read v1.3.3 notes</a>
             </div>
           </article>
