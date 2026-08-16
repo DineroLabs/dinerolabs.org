@@ -660,17 +660,17 @@
       <div class="wrap">
         <div class="section-head">
           <h2 id="miner-title">Mine Dinero in one minute</h2>
-          <p>The standalone CLI miner: one pasted command installs it, then paste any Dinero address and you are mining to the shared pool. No node, no configuration, no chain sync — works on an old laptop or a Chromebook.</p>
+          <p>Dinero SV2 Miner v0.2.4 is a standalone CPU miner with an immersive live terminal dashboard. One pasted command installs it; one more starts shared mining to your own <code>din1p…</code> reward address. No node, configuration file, or chain sync required.</p>
         </div>
 
         <div class="two-col" style="margin-top: 14px;">
           <article class="card">
             <h3>macOS · Linux · Chromebook</h3>
-            <p class="meta">Detects your platform, downloads the current miner release, verifies the SHA-256 digest, and installs the <code>dinero-miner</code> command to <code>~/.local/bin</code>. macOS builds (Apple Silicon and Intel) are Developer ID signed and Apple-notarized. On a Chromebook, enable Linux (Settings → Advanced → Developers → “Linux development environment”), open its Terminal, and paste the same command.</p>
+            <p class="meta">Detects Apple Silicon, Intel macOS, or Linux; downloads the current release; verifies its SHA-256 digest; and installs <code>dinero-miner</code> to <code>~/.local/bin</code>. Both macOS builds are Developer ID signed by DineroLabs LLC and accepted by Apple’s notarization service. On a Chromebook, enable Linux (Settings → Advanced → Developers → “Linux development environment”), open Terminal, and paste the same command.</p>
             <div class="filename">curl -fsSL https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install.sh | sh</div>
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-sv2/blob/main/scripts/install.sh">View install script</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases">Miner releases</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.4">v0.2.4 release</a>
             </div>
           </article>
 
@@ -680,15 +680,21 @@
             <div class="filename">irm https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install.ps1 | iex</div>
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-sv2/blob/main/scripts/install.ps1">View install script</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases">Miner releases</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.4">v0.2.4 release</a>
             </div>
           </article>
         </div>
 
         <article class="card" style="margin-top: 14px;">
-          <h3>Then run it</h3>
-          <p class="meta">Type <code>dinero-miner</code>, paste any Dinero address (<code>din1p…</code>) at the prompt, and press Enter. The miner validates and saves the address for next time, connects to <code>pool.dinerolabs.org:4444</code>, and shows a live hash feed with your accepted shares, blocks, and the DIN earned this session. Shared rewards are trustless — every found block pays recent contributors directly on-chain, so the pool never holds your funds. <code>Ctrl-C</code> stops cleanly with a session summary. Prefer all-or-nothing whole-block payouts? Run <code>dinero-miner --reward-mode solo</code>.</p>
-          <div class="filename">dinero-miner</div>
+          <h3>Start shared CPU mining</h3>
+          <p class="meta">Replace <code>YOUR_DIN1_ADDRESS</code> with your complete Dinero reward address. This example uses two CPU threads, connects securely to <code>pool.dinerolabs.org:4444</code>, and opens the new full-screen SV2 dashboard with 31 live hashing rows, full candidate hashes, accepted/rejected shares, connection health, session work, and network events. <code>Ctrl-C</code> stops cleanly and restores your terminal.</p>
+          <div class="filename">cd "$HOME/.local/bin" &amp;&amp; ./dinero-miner --address "YOUR_DIN1_ADDRESS" --reward-mode shared --threads 2</div>
+        </article>
+
+        <article class="card" style="margin-top: 14px;">
+          <h3>Windows start command</h3>
+          <p class="meta">After installing in PowerShell, open a new PowerShell window, replace the reward-address placeholder, and run:</p>
+          <div class="filename">cd "$env:LOCALAPPDATA\DineroMiner\bin"; .\dinero-miner.exe --address "YOUR_DIN1_ADDRESS" --reward-mode shared --threads 2</div>
         </article>
       </div>
     </section>
@@ -963,35 +969,35 @@
             <h3>Windows Server installer</h3>
             <pre><code>certutil -hashfile Dinero-Server-8.1.4-windows-x86_64-Setup.exe SHA256
 # Expected:
-e96905804b468974f8107cbf540941d6ebceeb8d9db2e284808a3c66c05255a2</code></pre>
+8a8f6985ead142e9016c77d65d37b0eea1fbe99dd2a72759908ddd2d5d9db6b9</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux x86_64 bundle</h3>
             <pre><code>shasum -a 256 dinero-linux-x86_64-8.1.4.tar.gz
 # Expected:
-e9508d28e33a8ca8386a6b7e9c8e0daf5abb0248f449c03ec2cdeea353634568</code></pre>
+7d893f641f4ecd700252dc147b7065eb8dda009a0143383291cf141112d82f57</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux desktop AppImage</h3>
             <pre><code>shasum -a 256 dinero-v8.1.4-linux-x86_64.AppImage
 # Expected:
-4bddce67aaf095aac1df2aaa5cf084780edd06af96a3afe1e7f88f86fda67d5c</code></pre>
+1ffcb49c024cd2d3318741c4a23e0d54f019944142e8f5a0aebfe003271b447d</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux desktop package</h3>
             <pre><code>shasum -a 256 dinero-qt-desktop_8.1.4-1_amd64.deb
 # Expected:
-7e2624da10964e3fd9d5b3d4eb46049cef63e10f5736facd248fb2d1f4c28842</code></pre>
+694a51341701aa5c21822483b1b0a50338221b42dad0adfb223b9fa73fc708ad</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux portable Qt archive</h3>
             <pre><code>shasum -a 256 dinero-v8.1.4-linux-x86_64-qt.tar.gz
 # Expected:
-7ad1aa0ef2c40933cd429abda62fda1a695fba0bb233477c07b364a6ba5c816c</code></pre>
+86454e3928836cfd910ffd19cd5f59f42ef93fa933f2149757b023026789d958</code></pre>
           </div>
 
           <div class="card">
@@ -1019,42 +1025,42 @@ source=Notarized Developer ID</code></pre>
             <h3>dinero-qt macOS DMG</h3>
             <pre><code>shasum -a 256 Dinero-v8.1.4-macOS-arm64.dmg
 # Expected:
-3a6c42ff5cc8cdada1a06754da015bae41e75ca3c6725a713fcc82a819b542b2</code></pre>
+4f91f90cf2227184f1284f9627a25e7ed43e3d75883e4140e4fe924ef337c868</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS app zip</h3>
             <pre><code>shasum -a 256 Dinero-v8.1.4-macOS-arm64-qt.zip
 # Expected:
-0766fc9138caa2162450f53edcdca00a1ecf572532e7e676924bb3b54692bf8d</code></pre>
+7b503fef73a3a61955d44a8be0f575df8d120ee123ac5f189e30b3a0756f7e69</code></pre>
           </div>
 
           <div class="card">
             <h3>dinero-qt macOS Intel DMG</h3>
             <pre><code>shasum -a 256 Dinero-v8.1.4-macOS-x86_64.dmg
 # Expected:
-6b5aa60ac26994a1a6b20420c08ad5f8c0c89d8b01f3ca0e553a69b95b31205e</code></pre>
+e751e623eb20a0fd62978ccc5481261c512950025fd17faaf3c5efba4d0c5c01</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS Intel app zip</h3>
             <pre><code>shasum -a 256 Dinero-v8.1.4-macOS-x86_64-qt.zip
 # Expected:
-519cd1666e711ae77e757519704f8c8a1a5d48b1b9199d3d86a0760669960264</code></pre>
+e91e7e876b7db1c2cc411927d55a6f2f919062b220a792db9c6e66e6989a898d</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS operator archive — Apple Silicon</h3>
             <pre><code>shasum -a 256 dinero-operator-v8.1.4-macOS-arm64.tar.gz
 # Expected:
-02fe256776dacfb3f15a403c2b0b12aea8978501d52a0c4685cb76b7d1642cb7</code></pre>
+67b902416d7ae353c5bf79df37bcb7422ef94d937aee111944801f90b841350e</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS operator archive — Intel</h3>
             <pre><code>shasum -a 256 dinero-operator-v8.1.4-macOS-x86_64.tar.gz
 # Expected:
-9946f111f1c21678ec63d2871977fb2447a0081a5c072ca87c4a7c2d4c7a4969</code></pre>
+c71eac14a232449fd65d8e81095aefbf9606f66d2ef65705504e75bd7334bbcc</code></pre>
           </div>
         </div>
 
