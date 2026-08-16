@@ -78,7 +78,7 @@ def main() -> None:
         for asset in native_release["assets"]
     }
 
-    assert f"Dinero {tag} — current consensus release" in html
+    assert f"Dinero {tag} — current release" in html
     assert f"Download the current {tag}" in html
 
     retired_explorer_hosts = (
