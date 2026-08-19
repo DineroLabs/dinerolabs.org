@@ -974,7 +974,7 @@
       <div class="wrap">
         <div class="section-head">
           <h2 id="verify-title">Verify before running</h2>
-          <p>Always check your download before launch. macOS artifacts are Developer ID signed and Apple-notarized; Windows artifacts may still trigger SmartScreen while Authenticode signing matures.</p>
+          <p>Always check your download before launch. macOS artifacts are Developer ID signed and Apple-notarized; Windows artifacts are Authenticode-signed with a Microsoft-verified publisher (Mirsad Hajdarevic). SmartScreen may still show a new-publisher prompt until the certificate builds download reputation.</p>
         </div>
 
         <div class="verify-grid">
@@ -1182,7 +1182,7 @@ cd dinero-operator-v8.1.5-macOS-arm64
           <article class="card">
             <h3>Good to know</h3>
             <ul class="list">
-              <li>Windows v8 installers are not yet Authenticode-signed — SmartScreen may warn. Verify the SHA256 above and click "More info" → "Run anyway".</li>
+              <li>The v8.1.5 Windows installers are Authenticode-signed (Microsoft-verified publisher: Mirsad Hajdarevic). SmartScreen may still show a new-publisher prompt until the certificate builds download reputation; verify the SHA256 above and, if prompted, click "More info" → "Run anyway".</li>
               <li>The published v8.1.5 binaries carry the consensus rules required at block 100,000. Verify the runtime consensus checksum with <code>dinero-cli getconsensusinfo</code> before activation.</li>
               <li>Linux v8.1.5 ships verified graphical AppImage, Debian/Ubuntu, and portable Qt packages alongside the headless operator bundle. The node installer continues to extract <code>dinerod</code> and <code>dinero-cli</code> from the operator archive and selects the newest available snapshot.</li>
               <li>Dynamic P2P is active in conservative slow-churn mode. It is designed to improve peer diversity gradually, not churn aggressively.</li>
