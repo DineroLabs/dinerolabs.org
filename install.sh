@@ -327,7 +327,15 @@ if [ ! -f "$CONF" ]; then
     echo "listen=1"
     echo "rpcbind=127.0.0.1"
     echo "rpcallowip=127.0.0.1"
-    [ -n "$SNAPSHOT_LINE" ] && echo "$SNAPSHOT_LINE"
+    if [ -n "$SNAPSHOT_LINE" ]; then
+      echo "$SNAPSHOT_LINE"
+      # Without this the active tip HOLDS at the snapshot base for the whole
+      # genesis->base background validation (hours-days): blocks past the base
+      # are accepted but never activated (daemon default is 0; dinero-qt has
+      # passed it explicitly since PR #393). With it, the node follows the
+      # live chain immediately while history validates behind.
+      echo "assumeutxo_forward_connect=1"
+    fi
   } > "$CONF"
   chown "$RUN_USER:$RUN_USER" "$CONF"
   chmod 0640 "$CONF"
@@ -335,6 +343,7 @@ else
   warn "$CONF already exists — leaving it unchanged"
   if [ -n "$SNAPSHOT_LINE" ] && ! grep -q '^assumeutxo_snapshot=' "$CONF"; then
     warn "To enable fast sync on this node, add to $CONF: $SNAPSHOT_LINE"
+    warn "  and: assumeutxo_forward_connect=1   # else the tip holds at the snapshot base until full history validation finishes"
   fi
 fi
 
