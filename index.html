@@ -1026,6 +1026,13 @@
 
         <div class="verify-grid">
           <div class="card">
+            <h3>Windows wallet installer</h3>
+            <pre><code>certutil -hashfile Dinero-8.1.9-windows-x86_64-Setup.exe SHA256
+# Expected:
+31d3350405d5796df1efd72d3971e0577b6d3af5218faad5a6573af6c0aa5b41</code></pre>
+          </div>
+
+          <div class="card">
             <h3>Windows Server installer</h3>
             <pre><code>certutil -hashfile Dinero-Server-8.1.9-windows-x86_64-Setup.exe SHA256
 # Expected:
