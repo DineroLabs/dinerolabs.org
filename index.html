@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dinero Labs · Dinero (DIN)</title>
-  <meta name="description" content="Dinero Labs ships Dinero (DIN). Download the current v8.1.8 wallet and node software for macOS, Windows, and Linux, verify official releases, and help grow the peer-to-peer network.">
+  <meta name="description" content="Dinero Labs ships Dinero (DIN). Download the current v8.1.9 wallet and node software for macOS, Windows, and Linux, verify official releases, and help grow the peer-to-peer network.">
   <meta property="og:title" content="Dinero Labs · Dinero (DIN)">
-  <meta property="og:description" content="Dinero Labs — building Dinero (DIN). v8.1.8 wallet and node software, signed installers on every platform, recovery hardening, relay/NAT traversal, and Dynamic P2P.">
+  <meta property="og:description" content="Dinero Labs — building Dinero (DIN). v8.1.9 wallet and node software, signed installers on every platform, recovery hardening, relay/NAT traversal, and Dynamic P2P.">
   <meta property="og:url" content="https://dinerolabs.org/">
   <meta property="og:image" content="https://github.com/DineroLabs.png?size=320">
   <meta property="og:type" content="website">
@@ -628,13 +628,13 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="wrap hero-grid">
         <div>
-          <div class="eyebrow">Dinero v8.1.8 — current release</div>
+          <div class="eyebrow">Dinero v8.1.9 — current release</div>
           <h1 id="hero-title">Run Dinero. Own your money. Mine DIN.</h1>
-          <p class="lead">Dinero v8.1.8 is the current stability release. The node gained deep concurrency and reorg-recovery hardening — fully lock-protected Utreexo forest access, correct stateless-node recovery after chain reorganizations, and serialized block invalidation — and the whole relay fleet already runs it. Consensus rules are unchanged, preserving the block-100,000 CTV and CCV activation rules and the verified height-84,131 V4 fast-sync snapshot.</p>
+          <p class="lead">Dinero v8.1.9 is the current stability release. Nodes now recover on their own from missing block bodies — a lifecycle-safe convergence driver fetches canonical bodies from capable peers, activates them in strict height order, and keeps mining on the last fully validated tip while it works. Connectivity opens up too: dynamic peers, feelers, gossip, DNS bootstrap, Tor v3, and an encrypted Dinero relay fallback for CGNAT nodes can all run at once. Consensus rules are unchanged, preserving the block-100,000 CTV and CCV activation rules and the verified height-84,131 V4 fast-sync snapshot.</p>
           <div class="hero-actions">
-            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/Dinero-v8.1.8-macOS-arm64.dmg">macOS · Apple Silicon</a>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/Dinero-v8.1.8-macOS-x86_64.dmg">macOS · Intel</a>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/Dinero-8.1.8-windows-x86_64-Setup.exe">Download Windows wallet</a>
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/Dinero-v8.1.9-macOS-arm64.dmg">macOS · Apple Silicon</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/Dinero-v8.1.9-macOS-x86_64.dmg">macOS · Intel</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/Dinero-8.1.9-windows-x86_64-Setup.exe">Download Windows wallet</a>
             <a class="button secondary" href="#miner">Start mining in one minute</a>
             <a class="button secondary" href="#downloads">View all downloads</a>
           </div>
@@ -642,7 +642,7 @@
         <div class="quick" aria-label="Current recommendations">
           <div class="quick-card">
             <strong>Desktop users</strong>
-            <span>Use the signed v8.1.8 macOS wallet or DineroDPI Native 1.3.5. Fresh nodes can fast-sync from the V4 AssumeUTXO snapshot at height 84,131 and validate earlier history in the background.</span>
+            <span>Use the signed v8.1.9 macOS wallet or DineroDPI Native 1.3.5. Fresh nodes can fast-sync from the V4 AssumeUTXO snapshot at height 84,131 and validate earlier history in the background.</span>
           </div>
           <div class="quick-card">
             <strong>Node operators</strong>
@@ -650,7 +650,7 @@
           </div>
           <div class="quick-card">
             <strong>Network status</strong>
-            <span>v8.1.8 keeps the v8.1.1 consensus checksum <code>68e0a997…e960a</code>; it is a performance and networking release, not a new activation — heavy blocks now connect in under a second and nodes discover peers dynamically, but consensus rules are unchanged.</span>
+            <span>v8.1.9 keeps the v8.1.1 consensus checksum <code>68e0a997…e960a</code>; it is a resilience and mining-continuity release, not a new activation — nodes repair missing block bodies automatically, reach the network over more paths, and never mine on an unvalidated header, but consensus rules are unchanged.</span>
           </div>
         </div>
       </div>
@@ -660,7 +660,7 @@
       <div class="wrap">
         <div class="section-head">
           <h2 id="miner-title">Mine Dinero in one minute</h2>
-          <p>Dinero SV2 Miner v0.2.5 is a standalone CPU miner with an immersive live terminal dashboard. This release keeps hashing alive across reconnect-time vardiff target changes. One pasted command installs it; one more starts shared mining to your own <code>din1p…</code> reward address. No node, configuration file, or chain sync required.</p>
+          <p>Dinero SV2 Miner v0.2.8 is a standalone CPU and GPU miner with an immersive live terminal dashboard. This release ships both variants — the GPU binaries use Metal on macOS and OpenCL on Linux and Windows — and an unspecified <code>--reward-mode</code> now resolves to <code>shared</code>, so pass <code>--reward-mode solo</code> if you want miner-owned all-or-nothing coinbases. One pasted command installs it; one more starts shared mining to your own <code>din1p…</code> reward address. No node, configuration file, or chain sync required.</p>
         </div>
 
         <div class="two-col" style="margin-top: 14px;">
@@ -670,7 +670,7 @@
             <div class="filename">curl -fsSL https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install.sh | sh</div>
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-sv2/blob/main/scripts/install.sh">View install script</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.5">v0.2.5 release</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.8">v0.2.8 release</a>
             </div>
           </article>
 
@@ -680,7 +680,7 @@
             <div class="filename">irm https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install.ps1 | iex</div>
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-sv2/blob/main/scripts/install.ps1">View install script</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.5">v0.2.5 release</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.8">v0.2.8 release</a>
             </div>
           </article>
         </div>
@@ -703,12 +703,12 @@
       <div class="wrap">
         <div class="section-head">
           <h2 id="downloads-title">Current downloads</h2>
-          <p>These are the verified Dinero v8.1.8 artifacts plus the separately published DineroDPI macOS Native 1.3.5. Older releases remain available in their respective archives for provenance.</p>
+          <p>These are the verified Dinero v8.1.9 artifacts plus the separately published DineroDPI macOS Native 1.3.5. Older releases remain available in their respective archives for provenance.</p>
         </div>
 
         <div class="section-head" style="margin-top: 26px;">
           <h3 style="font-size: 1.15rem; margin: 0 0 4px;">🍎 macOS</h3>
-          <p style="margin: 0;">Signed, Apple-notarized builds for Apple Silicon and Intel, including the native DineroDPI app and a Ventura-compatible Intel lane.</p>
+          <p style="margin: 0;">Signed, Apple-notarized builds for Apple Silicon and Intel, including the native DineroDPI app, which also covers Intel Macs on macOS 13.</p>
         </div>
         <div class="download-grid">
           <article class="card download-card">
@@ -716,13 +716,13 @@
               <div class="platform">macOS Wallet · dinero-qt</div>
               <span class="pill">Stable</span>
             </div>
-            <p class="meta">Signed, Apple-notarized, and stapled builds for Apple Silicon and Intel Macs. <strong>Requires macOS 14 (Sonoma) or newer</strong> — the bundled Qt frameworks do not run on Ventura or older. Intel Macs capped at macOS 13 have two full-wallet options: the <a href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/Dinero-v8.1.8-ventura-macOS-x86_64.dmg">dinero-qt Ventura build</a> (Qt 6.5, includes the embedded daemon and miners) and the DineroDPI Native Intel build — plus the headless operator tarball and the Dinero miner. Drag <code>dinero-qt.app</code> to Applications and launch. Bundles the wallet, embedded daemon, CLI tools, seeder, and miner helpers.</p>
-            <div class="filename">Dinero-v8.1.8-macOS-arm64.dmg / macOS-x86_64.dmg</div>
+            <p class="meta">Signed, Apple-notarized, and stapled builds for Apple Silicon and Intel Macs. <strong>Requires macOS 14 (Sonoma) or newer</strong> — the bundled Qt 6.11 frameworks do not run on Ventura or older. Intel Macs capped at macOS 13 should use the <a href="https://github.com/DineroLabs/dinero-v8/releases/download/dinerodpi-v1.3.5-intel/DineroDPI-1.3.5-Intel.dmg">DineroDPI Native Intel build</a> — a full wallet, node, and miner — or the headless operator tarball plus the Dinero miner. v8.1.9 does not ship a separate Ventura dinero-qt build. Drag <code>dinero-qt.app</code> to Applications and launch. Bundles the wallet, embedded daemon, CLI tools, seeder, and miner helpers.</p>
+            <div class="filename">Dinero-v8.1.9-macOS-arm64.dmg / macOS-x86_64.dmg</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/Dinero-v8.1.8-macOS-arm64.dmg">Apple Silicon .dmg</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/Dinero-v8.1.8-macOS-x86_64.dmg">Intel .dmg</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/Dinero-v8.1.8-macOS-arm64-qt.zip">Apple Silicon .zip</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/Dinero-v8.1.8-macOS-x86_64-qt.zip">Intel .zip</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/Dinero-v8.1.9-macOS-arm64.dmg">Apple Silicon .dmg</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/Dinero-v8.1.9-macOS-x86_64.dmg">Intel .dmg</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/Dinero-v8.1.9-macOS-arm64-qt.zip">Apple Silicon .zip</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/Dinero-v8.1.9-macOS-x86_64-qt.zip">Intel .zip</a>
             </div>
           </article>
 
@@ -752,11 +752,11 @@
               <div class="platform">Windows Desktop</div>
               <span class="pill">Stable</span>
             </div>
-            <p class="meta">The v8.1.8 dinero-qt graphical wallet and full node for Windows x64, digitally signed (Authenticode, Microsoft-verified publisher). Installs the wallet, embedded daemon, CLI tools, and miners. A portable operator zip (binaries, no installer) is also available on the release page.</p>
-            <div class="filename">Dinero-8.1.8-windows-x86_64-Setup.exe</div>
+            <p class="meta">The v8.1.9 dinero-qt graphical wallet and full node for Windows x64, digitally signed (Authenticode, Microsoft-verified publisher). Installs the wallet, embedded daemon, CLI tools, and miners. A portable operator zip (binaries, no installer) is also available on the release page.</p>
+            <div class="filename">Dinero-8.1.9-windows-x86_64-Setup.exe</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/Dinero-8.1.8-windows-x86_64-Setup.exe">Download wallet installer</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/dinero-v8.1.8-windows-x86_64-msvc.zip">Portable .zip</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/Dinero-8.1.9-windows-x86_64-Setup.exe">Download wallet installer</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/dinero-v8.1.9-windows-x86_64-msvc.zip">Portable .zip</a>
             </div>
           </article>
 
@@ -765,11 +765,11 @@
               <div class="platform">Windows Node</div>
               <span class="pill">Stable</span>
             </div>
-            <p class="meta">The v8.1.8 headless Windows node installer, digitally signed (Authenticode, Microsoft-verified publisher). It registers <code>dinerod</code> as a restartable Windows Service, includes the height-84,131 snapshot, and preserves chain and wallet data across upgrades and uninstall.</p>
-            <div class="filename">Dinero-Server-8.1.8-windows-x86_64-Setup.exe</div>
+            <p class="meta">The v8.1.9 headless Windows node installer, digitally signed (Authenticode, Microsoft-verified publisher). It registers <code>dinerod</code> as a restartable Windows Service, includes the height-84,131 snapshot, and preserves chain and wallet data across upgrades and uninstall.</p>
+            <div class="filename">Dinero-Server-8.1.9-windows-x86_64-Setup.exe</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/Dinero-Server-8.1.8-windows-x86_64-Setup.exe">Download installer</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.1.8">Read v8.1.8 notes</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/Dinero-Server-8.1.9-windows-x86_64-Setup.exe">Download installer</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.1.9">Read v8.1.9 notes</a>
             </div>
           </article>
         </div>
@@ -788,7 +788,7 @@
             <div class="filename">curl -fsSL https://dinerolabs.org/install.sh | sudo bash</div>
             <div class="actions">
               <a class="button" href="install.sh">View install script</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/dinero-linux-x86_64-8.1.8.tar.gz">Manual archive</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/dinero-linux-x86_64-8.1.9.tar.gz">Manual archive</a>
             </div>
           </article>
 
@@ -797,24 +797,24 @@
               <div class="platform">Linux x86_64 Bundle</div>
               <span class="pill">Stable</span>
             </div>
-            <p class="meta">Verified v8.1.8 Linux archive for x86_64 systems, carrying the release binaries in one bundle. Node operators can also use the one-command installer below.</p>
-            <div class="filename">dinero-linux-x86_64-8.1.8.tar.gz</div>
+            <p class="meta">Verified v8.1.9 Linux archive for x86_64 systems, carrying the release binaries in one bundle. Node operators can also use the one-command installer below.</p>
+            <div class="filename">dinero-linux-x86_64-8.1.9.tar.gz</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/dinero-linux-x86_64-8.1.8.tar.gz">Download bundle</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/SHA256SUMS-linux-x86_64-8.1.8">SHA256</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/dinero-linux-x86_64-8.1.9.tar.gz">Download bundle</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/SHA256SUMS-linux-x86_64-8.1.9">SHA256</a>
             </div>
           </article>
 
           <article class="card download-card">
             <div class="tag-row">
               <div class="platform">Linux Server .deb</div>
-              <span class="pill">New in v8.1.8</span>
+              <span class="pill">Debian package</span>
             </div>
             <p class="meta">The headless node as a native Debian/Ubuntu package: <code>dinerod</code>, <code>dinero-cli</code>, tools, and a systemd unit, installed and upgraded through <code>dpkg</code>/<code>apt</code>. The service is not auto-started — the operator stays in control.</p>
-            <div class="filename">dinero-core_8.1.8-1_amd64.deb</div>
+            <div class="filename">dinero-core_8.1.9-1_amd64.deb</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/dinero-core_8.1.8-1_amd64.deb">Download .deb</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/SHA256SUMS-dinero-core-8.1.8">SHA256</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/dinero-core_8.1.9-1_amd64.deb">Download .deb</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/SHA256SUMS-dinero-core-8.1.9">SHA256</a>
             </div>
           </article>
 
@@ -824,12 +824,12 @@
               <span class="pill">Stable</span>
             </div>
             <p class="meta">The complete graphical wallet and full-node desktop stack for x86_64 Linux. Choose the portable AppImage, Debian/Ubuntu package, or portable Qt archive; all three include the embedded daemon, CLI tools, seeder, and miner helpers.</p>
-            <div class="filename">dinero-v8.1.8-linux-x86_64.AppImage</div>
+            <div class="filename">dinero-v8.1.9-linux-x86_64.AppImage</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/dinero-v8.1.8-linux-x86_64.AppImage">AppImage</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/dinero-qt-desktop_8.1.8-1_amd64.deb">Debian / Ubuntu .deb</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/dinero-v8.1.8-linux-x86_64-qt.tar.gz">Portable tar.gz</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/SHA256SUMS-linux-x86_64-desktop-8.1.8">SHA256</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/dinero-v8.1.9-linux-x86_64.AppImage">AppImage</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/dinero-qt-desktop_8.1.9-1_amd64.deb">Debian / Ubuntu .deb</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/dinero-v8.1.9-linux-x86_64-qt.tar.gz">Portable tar.gz</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/SHA256SUMS-linux-x86_64-desktop-8.1.9">SHA256</a>
             </div>
           </article>
         </div>
@@ -845,10 +845,10 @@
               <span class="pill">Stable</span>
             </div>
             <p class="meta">Official container image for x86_64 Linux hosts, published to GitHub Container Registry alongside each release. Runs the same verified <code>dinerod</code> as the Linux bundle, with the fast-sync snapshot flow built in.</p>
-            <div class="filename">docker run -d --name dinero -v dinero-data:/data -p 20999:20999 ghcr.io/dinerolabs/dinero-v8:8.1.8</div>
+            <div class="filename">docker run -d --name dinero -v dinero-data:/data -p 20999:20999 ghcr.io/dinerolabs/dinero-v8:8.1.9</div>
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-v8/pkgs/container/dinero-v8">ghcr.io image</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.1.8">Release notes</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.1.9">Release notes</a>
             </div>
           </article>
         </div>
@@ -862,17 +862,17 @@
           <article class="card">
             <h3>Windows Server installer</h3>
             <p class="meta">NSIS install to <code>C:\Program Files\Dinero-Server\</code>. Registers <code>dinerod</code> as a Windows Service (auto-start, datadir under <code>C:\ProgramData\Dinero</code>, failure-restart policy). No Start Menu shortcuts. Wallets + chain data survive uninstall.</p>
-            <div class="filename">Dinero-Server-8.1.8-windows-x86_64-Setup.exe</div>
-            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/Dinero-Server-8.1.8-windows-x86_64-Setup.exe">Download server installer</a>
+            <div class="filename">Dinero-Server-8.1.9-windows-x86_64-Setup.exe</div>
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/Dinero-Server-8.1.9-windows-x86_64-Setup.exe">Download server installer</a>
           </article>
 
           <article class="card">
             <h3>macOS headless daemon</h3>
             <p class="meta">Native operator archives with <code>dinerod</code> and <code>dinero-cli</code> for both Apple Silicon and Intel Macs. Use them for headless nodes or local testing without the Qt wallet bundle.</p>
-            <div class="filename">dinero-operator-v8.1.8-macOS-arm64.tar.gz / macOS-x86_64.tar.gz</div>
+            <div class="filename">dinero-operator-v8.1.9-macOS-arm64.tar.gz / macOS-x86_64.tar.gz</div>
             <div class="actions">
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/dinero-operator-v8.1.8-macOS-arm64.tar.gz">Apple Silicon</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/dinero-operator-v8.1.8-macOS-x86_64.tar.gz">Intel</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/dinero-operator-v8.1.9-macOS-arm64.tar.gz">Apple Silicon</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/dinero-operator-v8.1.9-macOS-x86_64.tar.gz">Intel</a>
             </div>
           </article>
 
@@ -884,12 +884,12 @@
           </article>
 
           <article class="card">
-            <h3>Linux server daemon (v8.1.8)</h3>
-            <p class="meta">Current <strong>v8.1.8</strong> server-safe bundle. It carries the consensus rules required for block 100,000, the height-84,131 AssumeUTXO trust anchor, and the recovery fixes in this release. Extract, verify the digest, and run under systemd.</p>
-            <div class="filename">dinero-linux-x86_64-8.1.8.tar.gz</div>
+            <h3>Linux server daemon (v8.1.9)</h3>
+            <p class="meta">Current <strong>v8.1.9</strong> server-safe bundle. It carries the consensus rules required for block 100,000, the height-84,131 AssumeUTXO trust anchor, and the recovery fixes in this release. Extract, verify the digest, and run under systemd.</p>
+            <div class="filename">dinero-linux-x86_64-8.1.9.tar.gz</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/dinero-linux-x86_64-8.1.8.tar.gz">Download v8.1.8 bundle</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/SHA256SUMS-linux-x86_64-8.1.8">SHA256</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/dinero-linux-x86_64-8.1.9.tar.gz">Download v8.1.9 bundle</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/SHA256SUMS-linux-x86_64-8.1.9">SHA256</a>
             </div>
           </article>
         </div>
@@ -899,61 +899,61 @@
           <p class="meta">Raw archives and release metadata for manual installs, mirrors, and operators who do not want a platform installer.</p>
           <div class="filename">Linux bundle / macOS operator archives / snapshot and manifests</div>
           <div class="actions">
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/dinero-linux-x86_64-8.1.8.tar.gz">Linux bundle</a>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/dinero-assumeutxo-84131-v4.manifest.json">Snapshot manifest</a>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.1.8">All v8.1.8 assets</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/dinero-linux-x86_64-8.1.9.tar.gz">Linux bundle</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/dinero-assumeutxo-84131-v4.manifest.json">Snapshot manifest</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.1.9">All v8.1.9 assets</a>
           </div>
         </article>
 
         <div class="two-col" style="margin-top: 14px;">
           <article class="card">
             <h3>Checksums</h3>
-            <p class="meta">The v8.1.8 release publishes checksum files for Windows, macOS, Linux, and the AssumeUTXO snapshot. GitHub also exposes a digest for every individual asset.</p>
-            <div class="filename">SHA256SUMS-macos-8.1.8 / SHA256SUMS-linux-x86_64-8.1.8</div>
+            <p class="meta">The v8.1.9 release publishes checksum files for Windows, macOS, Linux, and the AssumeUTXO snapshot. GitHub also exposes a digest for every individual asset.</p>
+            <div class="filename">SHA256SUMS-macos-8.1.9 / SHA256SUMS-linux-x86_64-8.1.9</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/SHA256SUMS-macos-8.1.8">macOS checksums</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/SHA256SUMS-linux-x86_64-8.1.8">Linux checksums</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/SHA256SUMS-windows-x86_64-8.1.8">Windows checksums</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/SHA256SUMS-macos-8.1.9">macOS checksums</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/SHA256SUMS-linux-x86_64-8.1.9">Linux checksums</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/SHA256SUMS-windows-x86_64-8.1.9">Windows checksums</a>
             </div>
           </article>
 
           <article class="card">
             <h3>Release notes</h3>
             <p class="meta">Performance and peer-discovery release preserving the block-100,000 covenant activation and the height-84,131 V4 trust anchor; heavy blocks connect in a fraction of the previous time.</p>
-            <div class="filename">Dinero v8.1.8</div>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.1.8">Open v8.1.8 release</a>
+            <div class="filename">Dinero v8.1.9</div>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.1.9">Open v8.1.9 release</a>
           </article>
         </div>
 
         <div class="section-head" style="margin-top: 28px;">
-          <h2>What's in v8.1.8</h2>
-          <p>v8.1.8 is a node performance and peer-discovery release. It keeps the v8.1.1 consensus rules — CTV and CCV activate at mainnet block 100,000 — and the height-84,131 fast-sync anchor, while making heavy blocks connect in a fraction of the previous time and letting nodes find peers beyond the bootstrap anchors.</p>
+          <h2>What's in v8.1.9</h2>
+          <p>v8.1.9 is a network-resilience, mining-continuity, and desktop-usability release. It keeps the v8.1.1 consensus rules — CTV and CCV activate at mainnet block 100,000 — and the height-84,131 fast-sync anchor, while teaching nodes to repair their own chain gaps and to reach the network over far more paths than the bootstrap anchors.</p>
         </div>
 
         <div class="two-col" style="margin-top: 14px;">
           <article class="card">
-            <h3>Heavy blocks connect quickly</h3>
-            <p class="meta">Utreexo proof generation and removals are now batched across the block-connect hot paths, sharing subtree hashing work and rebuilding roots once per block instead of once per input.</p>
+            <h3>Mining continuity and chain convergence</h3>
+            <p class="meta">A lifecycle-safe recurring driver closes transient gaps between the best accepted header and the fully validated active tip, so a node repairs itself instead of stalling.</p>
             <ul class="list">
-              <li><strong>Before/after:</strong> the regression benchmark (65,536 leaves, 1,600 spent inputs) improves from roughly 82&nbsp;seconds to 0.12&nbsp;seconds.</li>
-              <li><strong>Consensus-neutral:</strong> equivalence tests pin proofs, roots, and commitments byte-for-byte against the previous implementation.</li>
-              <li><strong>Why it matters:</strong> large consolidation transactions no longer stall block connection or <code>submitblock</code> callers.</li>
+              <li><strong>Self-healing bodies:</strong> canonical block bodies are requested from the announcing peer, retried through bounded alternate-peer rotation, persisted, and activated in strict height order.</li>
+              <li><strong>Restart-safe:</strong> already stored bodies are adopted without re-downloading, and recovery resumes after a restart from persisted header/body metadata.</li>
+              <li><strong>Never mines blind:</strong> mining continues only on the last fully validated tip while recovery proceeds — never on an unvalidated header — and every safety gate stays a hard stop.</li>
             </ul>
           </article>
 
           <article class="card">
-            <h3>Dynamic peer discovery</h3>
-            <p class="meta">The bootstrap anchors remain mandatory connections; on top of them, nodes now build durable outbound connections selected dynamically from the address manager.</p>
+            <h3>Decentralized connectivity</h3>
+            <p class="meta">Dynamic AddrMan peers, feelers, peer gossip, persisted addresses, direct IPv4/IPv6, DNS bootstrap, explicit emergency peers, relay hints, and Tor v3 can now all operate at the same time.</p>
             <ul class="list">
-              <li><strong>Feelers:</strong> short-lived Bitcoin-style probe connections validate new addresses before promotion.</li>
-              <li><strong>Diversity:</strong> outbound slots prefer distinct network groups with connection backoff, so the topology can decentralize as the public node population grows.</li>
-              <li><strong>Persistence:</strong> learned addresses survive restarts, and failed dynamic peers are replaced automatically.</li>
+              <li><strong>Behind CGNAT:</strong> nodes gain an encrypted Dinero relay fallback, and reachable nodes can offer a bounded Dinero-only relay service with conservative automatic limits.</li>
+              <li><strong>Tor on macOS:</strong> Dinero Qt can run a pinned, verified Tor component privately for Dinero P2P. Tor failure never disables ordinary P2P, and no wallet RPC credentials or onion private keys are exposed. Linux and Windows keep ordinary P2P plus external-Tor support.</li>
+              <li><strong>Simple controls:</strong> Overview carries plain Tor and relay toggles plus a read-only public onion address; Command-K stays a keyboard-only diagnostics panel.</li>
             </ul>
           </article>
 
           <article class="card">
             <h3>CTV + CCV activation (unchanged)</h3>
-            <p class="meta">Both covenant opcodes activate together at block 100,000. Installing v8.1.8 early does not activate them early.</p>
+            <p class="meta">Both covenant opcodes activate together at block 100,000. Installing v8.1.9 early does not activate them early.</p>
             <ul class="list">
               <li><strong>CTV</strong>: <code>OP_CHECKTEMPLATEVERIFY</code>, compatible with BIP-119 semantics, activates at block 100,000.</li>
               <li><strong>CCV</strong>: Dinero's <code>OP_CHECKCONTRACTVERIFY</code> activates at the same height. A shared activation constant prevents the two rules from drifting apart.</li>
@@ -965,11 +965,11 @@
 
         <article class="card" style="margin-top: 14px;">
           <h3>Fast-sync snapshot</h3>
-          <p class="meta">v8.1.8 publishes a height-84,131 <strong>V4</strong> fast-sync snapshot carrying the UTXO set, Utreexo forest, and shielded state. Its SHA-256, base block, chainwork, and UTXO count are compiled into the daemon. Older exact snapshot files remain restart fallbacks only; fresh installs select 84,131.</p>
+          <p class="meta">v8.1.9 publishes a height-84,131 <strong>V4</strong> fast-sync snapshot carrying the UTXO set, Utreexo forest, and shielded state. Its SHA-256, base block, chainwork, and UTXO count are compiled into the daemon. Older exact snapshot files remain restart fallbacks only; fresh installs select 84,131.</p>
           <div class="filename">dinero-assumeutxo-84131-v4.dat</div>
           <div class="actions">
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/dinero-assumeutxo-84131-v4.dat">Download snapshot</a>
-            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/SHA256SUMS-assumeutxo-84131">Snapshot checksums</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/dinero-assumeutxo-84131-v4.dat">Download snapshot</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/SHA256SUMS-assumeutxo-84131">Snapshot checksums</a>
           </div>
         </article>
 
@@ -1010,9 +1010,9 @@
 
     <section class="status-band" aria-label="Release status">
       <div class="wrap status-grid">
-        <div><strong>Windows</strong><span>v8.1.8 Server installer</span></div>
-        <div><strong>macOS</strong><span>DineroDPI Native 1.3.5 + dinero-qt v8.1.8</span></div>
-        <div><strong>Linux</strong><span>v8.1.8 desktop AppImage / .deb / Qt archive + operator bundle</span></div>
+        <div><strong>Windows</strong><span>v8.1.9 Server installer</span></div>
+        <div><strong>macOS</strong><span>DineroDPI Native 1.3.5 + dinero-qt v8.1.9</span></div>
+        <div><strong>Linux</strong><span>v8.1.9 desktop AppImage / .deb / Qt archive + operator bundle</span></div>
         <div><strong>Network</strong><span>Dynamic P2P active, relay bootstrap live</span></div>
       </div>
     </section>
@@ -1027,37 +1027,37 @@
         <div class="verify-grid">
           <div class="card">
             <h3>Windows Server installer</h3>
-            <pre><code>certutil -hashfile Dinero-Server-8.1.8-windows-x86_64-Setup.exe SHA256
+            <pre><code>certutil -hashfile Dinero-Server-8.1.9-windows-x86_64-Setup.exe SHA256
 # Expected:
-b1f42a687a82642703ed80332ba698ed7d0f2583afca068f905bc6618533e95b</code></pre>
+2cf2dc1f0cedc6d6a0a6fcaae91ee2567c5380fe2af635e16bd16253efa291cf</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux x86_64 bundle</h3>
-            <pre><code>shasum -a 256 dinero-linux-x86_64-8.1.8.tar.gz
+            <pre><code>shasum -a 256 dinero-linux-x86_64-8.1.9.tar.gz
 # Expected:
-bd25535f32b34bd29ceb9c9f9557bec3114aa96495cd9a818b7695625b8850ff</code></pre>
+e458ae82cf64aae24f2ca167d2846996c085e97cce803359d59672fc0aff05f1</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux desktop AppImage</h3>
-            <pre><code>shasum -a 256 dinero-v8.1.8-linux-x86_64.AppImage
+            <pre><code>shasum -a 256 dinero-v8.1.9-linux-x86_64.AppImage
 # Expected:
-5208764669ea575cd01912262c61af0881c1283a7ec66617689479289f809b1d</code></pre>
+dc78398f3da7da499702d8ab45c2653f5b55467e15b905a5a6fae0de893ec6e3</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux desktop package</h3>
-            <pre><code>shasum -a 256 dinero-qt-desktop_8.1.8-1_amd64.deb
+            <pre><code>shasum -a 256 dinero-qt-desktop_8.1.9-1_amd64.deb
 # Expected:
-dd96cbae2725203001a6572e9177fc937a1b47a9548de6a7951881c30c850627</code></pre>
+3d703144910d6e9d8575117392772a32e09c7c67445c76bc3483eb59de36f339</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux portable Qt archive</h3>
-            <pre><code>shasum -a 256 dinero-v8.1.8-linux-x86_64-qt.tar.gz
+            <pre><code>shasum -a 256 dinero-v8.1.9-linux-x86_64-qt.tar.gz
 # Expected:
-3a15164ff6dc82a405742583d230861314b0fd4d3cdb1b899c80b877c0d3264b</code></pre>
+1ee2f69fcbef24346c419d0ea930c461e8ecf97881d6c596c1beeb6764d9e2c0</code></pre>
           </div>
 
           <div class="card">
@@ -1083,75 +1083,75 @@ source=Notarized Developer ID</code></pre>
 
           <div class="card">
             <h3>dinero-qt macOS DMG</h3>
-            <pre><code>shasum -a 256 Dinero-v8.1.8-macOS-arm64.dmg
+            <pre><code>shasum -a 256 Dinero-v8.1.9-macOS-arm64.dmg
 # Expected:
-12422460c5cff8d2d1e0c78dd8b0de220be6e106e8dd4df47e7c6874d23e8a76</code></pre>
+e178ce31df94d521880204477080c35524f6aa6db23eb01453e177b40ba01ded</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS app zip</h3>
-            <pre><code>shasum -a 256 Dinero-v8.1.8-macOS-arm64-qt.zip
+            <pre><code>shasum -a 256 Dinero-v8.1.9-macOS-arm64-qt.zip
 # Expected:
-037804e8d4e24f3c3995d5bc4bada5eb248b2efa7ec2ffa04a8a9f768fd3e75f</code></pre>
+7f19f0e3b10e997d59f8d3abb701834ae3f2eafccc79ecde77e411980e483495</code></pre>
           </div>
 
           <div class="card">
             <h3>dinero-qt macOS Intel DMG</h3>
-            <pre><code>shasum -a 256 Dinero-v8.1.8-macOS-x86_64.dmg
+            <pre><code>shasum -a 256 Dinero-v8.1.9-macOS-x86_64.dmg
 # Expected:
-d44e36583c8682ac0e4d8b8acf18c366c9b6627301a8df9f460567824d564675</code></pre>
+35e38c239da658d1aaf3fb7e410e391e38e82abd9a001c2bbfc121d2d1b5e002</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS Intel app zip</h3>
-            <pre><code>shasum -a 256 Dinero-v8.1.8-macOS-x86_64-qt.zip
+            <pre><code>shasum -a 256 Dinero-v8.1.9-macOS-x86_64-qt.zip
 # Expected:
-0eebd8b2ca594e740e99275615b232affa6e81535aba985c46f58b13629843de</code></pre>
+25c52ecd3bf12e46cd0e962cd2d4f6dda60cc6e67eec6ae16e313d51604d142f</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS operator archive — Apple Silicon</h3>
-            <pre><code>shasum -a 256 dinero-operator-v8.1.8-macOS-arm64.tar.gz
+            <pre><code>shasum -a 256 dinero-operator-v8.1.9-macOS-arm64.tar.gz
 # Expected:
-fae2fb84aa873815627c75268b1b23ebe0dad66b87d455264742c7e31025474d</code></pre>
+67ec6e6a431e9811dc4d7640c515708147f5d2c66fbba9abd6825c67eb5effdc</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS operator archive — Intel</h3>
-            <pre><code>shasum -a 256 dinero-operator-v8.1.8-macOS-x86_64.tar.gz
+            <pre><code>shasum -a 256 dinero-operator-v8.1.9-macOS-x86_64.tar.gz
 # Expected:
-199b9e9540b6297e5a9ee1b28ef039e1aa5333ad69ff681f643b16b44a44028f</code></pre>
+0a84b6319c31ca3b3d514e3b6d96028129430986826df26da1abd65ff205b660</code></pre>
           </div>
         </div>
 
         <div class="verify-grid" style="margin-top: 14px;">
           <div class="card">
             <h3>macOS checksum file</h3>
-            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/SHA256SUMS-macos-8.1.8
-shasum -a 256 -c SHA256SUMS-macos-8.1.8</code></pre>
+            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/SHA256SUMS-macos-8.1.9
+shasum -a 256 -c SHA256SUMS-macos-8.1.9</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux checksum file</h3>
-            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/SHA256SUMS-linux-x86_64-8.1.8
-shasum -a 256 -c SHA256SUMS-linux-x86_64-8.1.8</code></pre>
+            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/SHA256SUMS-linux-x86_64-8.1.9
+shasum -a 256 -c SHA256SUMS-linux-x86_64-8.1.9</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux desktop checksum file</h3>
-            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/SHA256SUMS-linux-x86_64-desktop-8.1.8
-shasum -a 256 -c SHA256SUMS-linux-x86_64-desktop-8.1.8</code></pre>
+            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/SHA256SUMS-linux-x86_64-desktop-8.1.9
+shasum -a 256 -c SHA256SUMS-linux-x86_64-desktop-8.1.9</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS Intel desktop checksum file</h3>
-            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.8/SHA256SUMS-macos-x86_64-desktop-8.1.8
-shasum -a 256 -c SHA256SUMS-macos-x86_64-desktop-8.1.8</code></pre>
+            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/SHA256SUMS-macos-x86_64-desktop-8.1.9
+shasum -a 256 -c SHA256SUMS-macos-x86_64-desktop-8.1.9</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS notarization</h3>
-            <pre><code>spctl --assess --type open --context context:primary-signature -vv Dinero-v8.1.8-macOS-arm64.dmg
+            <pre><code>spctl --assess --type open --context context:primary-signature -vv Dinero-v8.1.9-macOS-arm64.dmg
 # Expected:
 accepted
 source=Notarized Developer ID</code></pre>
@@ -1218,8 +1218,8 @@ dinero-cli -datadir=/var/lib/dinero getnetworkinfo</code></pre>
           </article>
           <article class="card">
             <h3>macOS operator quick start</h3>
-            <pre><code>tar -xzf dinero-operator-v8.1.8-macOS-arm64.tar.gz
-cd dinero-operator-v8.1.8-macOS-arm64
+            <pre><code>tar -xzf dinero-operator-v8.1.9-macOS-arm64.tar.gz
+cd dinero-operator-v8.1.9-macOS-arm64
 ./bin/dinerod
 ./bin/dinero-cli getnetworkinfo</code></pre>
           </article>
@@ -1229,9 +1229,9 @@ cd dinero-operator-v8.1.8-macOS-arm64
           <article class="card">
             <h3>Good to know</h3>
             <ul class="list">
-              <li>The v8.1.8 Windows installers are Authenticode-signed (Microsoft-verified publisher: Mirsad Hajdarevic). SmartScreen may still show a new-publisher prompt until the certificate builds download reputation; verify the SHA256 above and, if prompted, click "More info" → "Run anyway".</li>
-              <li>The published v8.1.8 binaries carry the consensus rules required at block 100,000. Verify the runtime consensus checksum with <code>dinero-cli getconsensusinfo</code> before activation.</li>
-              <li>Linux v8.1.8 ships verified graphical AppImage, Debian/Ubuntu, and portable Qt packages alongside the headless operator bundle. The node installer continues to extract <code>dinerod</code> and <code>dinero-cli</code> from the operator archive and selects the newest available snapshot.</li>
+              <li>The v8.1.9 Windows installers are Authenticode-signed (Microsoft-verified publisher: Mirsad Hajdarevic). SmartScreen may still show a new-publisher prompt until the certificate builds download reputation; verify the SHA256 above and, if prompted, click "More info" → "Run anyway".</li>
+              <li>The published v8.1.9 binaries carry the consensus rules required at block 100,000. Verify the runtime consensus checksum with <code>dinero-cli getconsensusinfo</code> before activation.</li>
+              <li>Linux v8.1.9 ships verified graphical AppImage, Debian/Ubuntu, and portable Qt packages alongside the headless operator bundle. The node installer continues to extract <code>dinerod</code> and <code>dinero-cli</code> from the operator archive and selects the newest available snapshot.</li>
               <li>Dynamic P2P is active in conservative slow-churn mode. It is designed to improve peer diversity gradually, not churn aggressively.</li>
               <li>Relay/NAT traversal is useful infrastructure, but the long-term goal is broader community-run peers and relays, not dependence on Dinero Labs bootstrap nodes.</li>
             </ul>
