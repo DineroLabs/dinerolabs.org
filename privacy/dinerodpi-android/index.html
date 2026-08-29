@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DineroDPI Android Privacy Policy · Dinero Labs</title>
+  <meta name="description" content="Privacy policy for the DineroDPI self-custody Android wallet.">
+  <link rel="canonical" href="https://dinerolabs.org/privacy/dinerodpi-android/">
+  <meta name="theme-color" content="#111216">
+  <style>
+    :root { color-scheme: dark; --bg:#111216; --panel:#1b1d22; --ink:#f7f7f8; --muted:#b5b7bf; --gold:#f5b94b; --line:#343740; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.65 Inter,system-ui,-apple-system,"Segoe UI",sans-serif; }
+    header { border-bottom:1px solid var(--line); background:rgba(17,18,22,.94); }
+    nav,main,footer { width:min(820px,calc(100% - 40px)); margin:auto; }
+    nav { min-height:68px; display:flex; align-items:center; justify-content:space-between; }
+    nav a { color:var(--ink); text-decoration:none; font-weight:750; }
+    .back { color:var(--muted); font-weight:600; }
+    main { padding:58px 0 72px; }
+    .eyebrow { color:var(--gold); font-weight:800; letter-spacing:.1em; text-transform:uppercase; font-size:13px; }
+    h1 { font-size:clamp(34px,6vw,54px); line-height:1.08; margin:12px 0 14px; }
+    h2 { margin:38px 0 10px; font-size:23px; }
+    p,li { color:var(--muted); }
+    strong,a { color:var(--ink); }
+    .summary { font-size:19px; max-width:700px; }
+    .card { margin:30px 0; padding:22px 24px; background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--gold); border-radius:14px; }
+    ul { padding-left:22px; }
+    li { margin:8px 0; }
+    footer { padding:24px 0 46px; border-top:1px solid var(--line); color:var(--muted); font-size:14px; }
+  </style>
+</head>
+<body>
+  <header><nav><a href="/">Dinero Labs</a><a class="back" href="/">Home</a></nav></header>
+  <main>
+    <div class="eyebrow">Privacy policy</div>
+    <h1>DineroDPI for Android</h1>
+    <p class="summary">DineroDPI is a self-custody wallet. Dinero Labs does not create an account for you and does not receive or store your recovery phrase or private keys.</p>
+    <div class="card"><strong>Effective date:</strong> August 29, 2026<br><strong>Application:</strong> DineroDPI for Android<br><strong>Package:</strong> org.dinerolabs.dinerodpi</div>
+
+    <h2>Information stored on your device</h2>
+    <p>Your recovery phrase and private signing material remain encrypted on your Android device. Android backup is disabled for wallet application data. Optional embedded NodeCore synchronization data is stored in the app's no-backup directory and does not contain your recovery phrase or private keys.</p>
+
+    <h2>Network information</h2>
+    <p>To show balances, unspent outputs, and transaction history, the app sends derived public wallet addresses to configured Dinero RPC bridges. A bridge operator can observe the requesting IP address, queried public addresses, and signed transactions submitted for broadcast. The app compares independent bridge responses and does not send recovery phrases or private keys to a bridge.</p>
+    <p>If you enable the embedded stateless NodeCore, it connects directly to public Dinero peers. Those peers can observe a Dinero protocol connection from your device's public IP address.</p>
+
+    <h2>Transactions</h2>
+    <p>Transactions are constructed and signed locally. A signed raw transaction is sent to a bridge or peer network only after you authorize broadcasting. Blockchain transactions and public addresses are public by design and cannot be removed from the Dinero network by Dinero Labs.</p>
+
+    <h2>Analytics, advertising, and sale of data</h2>
+    <ul>
+      <li>The app does not include advertising SDKs.</li>
+      <li>The app does not include third-party analytics SDKs.</li>
+      <li>Dinero Labs does not sell personal data collected through the app.</li>
+    </ul>
+
+    <h2>Security and your choices</h2>
+    <p>You control the wallet and are responsible for keeping an offline recovery-phrase backup. Removing the wallet from the device deletes its local wallet data, but it cannot remove public blockchain records. Dinero Labs cannot recover a lost phrase, reverse a transaction, or access funds.</p>
+
+    <h2>Children</h2>
+    <p>DineroDPI is a financial utility and is not directed to children.</p>
+
+    <h2>Changes</h2>
+    <p>Material changes will be published on this page with a revised effective date.</p>
+
+    <h2>Contact</h2>
+    <p>Privacy questions: <a href="mailto:contact@dinerolabs.org">contact@dinerolabs.org</a><br>Security reports: <a href="mailto:security@dinerolabs.org">security@dinerolabs.org</a></p>
+  </main>
+  <footer>© 2026 Dinero Labs · Real Money For Free People</footer>
+</body>
+</html>
