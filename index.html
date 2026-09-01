@@ -666,7 +666,7 @@
 
         <div class="two-col" style="margin-top: 14px;">
           <article class="card">
-            <h3>macOS · Linux · Chromebook</h3>
+            <h3>CPU miner · macOS · Linux · Chromebook</h3>
             <p class="meta">Detects Apple Silicon, Intel macOS, or Linux; downloads the current release; verifies its SHA-256 digest; and installs <code>dinero-miner</code> to <code>~/.local/bin</code>. Both macOS builds are Developer ID signed by DineroLabs LLC and accepted by Apple’s notarization service. On a Chromebook, enable Linux (Settings → Advanced → Developers → “Linux development environment”), open Terminal, and paste the same command.</p>
             <div class="filename">curl -fsSL https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install.sh | sh</div>
             <div class="actions">
@@ -676,7 +676,7 @@
           </article>
 
           <article class="card">
-            <h3>Windows · PowerShell</h3>
+            <h3>CPU miner · Windows PowerShell</h3>
             <p class="meta">Same flow for Windows x64: resolves the latest miner release, verifies the SHA-256 digest, installs <code>dinero-miner.exe</code> under <code>%LOCALAPPDATA%\DineroMiner\bin</code>, and adds it to your PATH. The binary is digitally signed (Authenticode, Microsoft-verified publisher), so Windows recognizes its publisher instead of flagging an unknown download. Open a new terminal after installing.</p>
             <div class="filename">irm https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install.ps1 | iex</div>
             <div class="actions">
@@ -692,14 +692,33 @@
           <div class="filename">cd "$HOME/.local/bin" &amp;&amp; ./dinero-miner --address "YOUR_DIN1_ADDRESS" --reward-mode shared --threads 2</div>
         </article>
 
+        <div class="two-col" style="margin-top: 14px;">
+          <article class="card">
+            <h3>GPU miner · macOS · Linux</h3>
+            <p class="meta">Installs <code>dinero-gpu-miner</code> beside the CPU miner &mdash; they do not replace each other. Uses <strong>Metal</strong> on macOS (Apple Silicon and Intel) and <strong>OpenCL</strong> on Linux x86_64. There is no GPU build for Linux aarch64; the script says so and points you at the CPU miner instead of failing on a missing download.</p>
+            <div class="filename">curl -fsSL https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install-gpu.sh | sh</div>
+            <div class="actions">
+              <a class="button" href="https://github.com/DineroLabs/dinero-sv2/blob/main/scripts/install-gpu.sh">View install script</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.8">v0.2.8 release</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>GPU miner · Windows PowerShell</h3>
+            <p class="meta">Installs <code>dinero-gpu-miner.exe</code> under <code>%LOCALAPPDATA%\DineroMiner\bin</code>, alongside the CPU miner, and adds it to your PATH. Uses <strong>OpenCL</strong> (or CUDA when an NVIDIA driver and runtime are present). Open a new terminal after installing.</p>
+            <div class="filename">irm https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install-gpu.ps1 | iex</div>
+            <div class="actions">
+              <a class="button" href="https://github.com/DineroLabs/dinero-sv2/blob/main/scripts/install-gpu.ps1">View install script</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.8">v0.2.8 release</a>
+            </div>
+          </article>
+        </div>
+
         <article class="card" style="margin-top: 14px;">
-          <h3>GPU mining</h3>
-          <p class="meta">v0.2.8 also publishes prebuilt GPU miners: <strong>Metal</strong> on macOS (Apple Silicon and Intel) and <strong>OpenCL</strong> on Linux x86_64 and Windows x64. The GPU and CPU builds share the same authenticated SV2 transport and the same interactive dashboard, so the commands below work identically &mdash; substitute <code>dinero-sv2-gpu-miner</code> for <code>dinero-miner</code>.</p>
-          <p class="meta">The one-command installer above installs the <strong>CPU</strong> miner. For GPU, download the binary for your platform from the release page and verify it against <code>SHA256SUMS</code>.</p>
-          <div class="actions" style="grid-template-columns: repeat(2, max-content);">
-            <a class="button" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.8">Download GPU binaries</a>
-            <a class="button secondary" href="#verify">How to verify</a>
-          </div>
+          <h3>Start shared GPU mining</h3>
+          <p class="meta">Note the command is <strong>not</strong> the same as the CPU one: the GPU miner has no <code>--threads</code>. It picks its backend automatically (<code>--backend auto</code>), so Metal on macOS, otherwise CUDA when available and OpenCL when not. Same reward address, same shared mode, same dashboard.</p>
+          <div class="filename">cd "$HOME/.local/bin" &amp;&amp; ./dinero-gpu-miner --address "YOUR_DIN1_ADDRESS" --reward-mode shared</div>
+          <div class="filename" style="margin-top: 8px;">cd "$env:LOCALAPPDATA\DineroMiner\bin"; .\dinero-gpu-miner.exe --address "YOUR_DIN1_ADDRESS" --reward-mode shared</div>
         </article>
 
         <article class="card" style="margin-top: 14px;">
