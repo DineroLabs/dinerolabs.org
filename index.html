@@ -745,7 +745,8 @@
 
           <article class="card">
             <h3>What you need</h3>
-            <p class="meta">A Linux server (x86_64 or aarch64) with a public IP, one open inbound port, a <code>din1p&hellip;</code> address for your fee, and <strong>a Dinero node on the same host</strong>. The node is not optional: the pool gets block templates from it and submits found blocks through it. That is the point &mdash; every pool operator is also a node operator. A fresh node bootstraps from the published snapshot rather than replaying the chain, so it is minutes, not hours.</p>
+            <p class="meta">A Linux server (x86_64 or aarch64) with a public IP, one open inbound port, a <code>din1p&hellip;</code> address for your fee, and <strong>a Dinero node on the same host</strong>. The node is not optional: the pool gets block templates from it and submits found blocks through it. That is the point &mdash; every pool operator is also a node operator.</p>
+            <p class="meta">Budget real time for the first sync. The snapshot the release ships an anchor for is behind the one the fleet publisher produces, so a fresh node still replays roughly 15,000 blocks &mdash; measured at about 8&ndash;9 blocks a minute on a 2-core VPS, or <strong>around 30 hours</strong> to reach the tip. It is unattended, but it is not a coffee break. Once a release carries a current anchor, the same install lands minutes from the tip.</p>
           </article>
         </div>
 
