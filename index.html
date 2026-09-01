@@ -661,7 +661,7 @@
       <div class="wrap">
         <div class="section-head">
           <h2 id="miner-title">Mine Dinero in one minute</h2>
-          <p>Dinero SV2 Miner v0.2.5 is a standalone CPU miner with an immersive live terminal dashboard. This release keeps hashing alive across reconnect-time vardiff target changes. One pasted command installs it; one more starts shared mining to your own <code>din1p…</code> reward address. No node, configuration file, or chain sync required.</p>
+          <p>Dinero SV2 Miner v0.2.8 is a standalone miner with an immersive live terminal dashboard, shipping in both CPU and GPU builds. One pasted command installs the CPU miner; one more starts shared mining to your own <code>din1p…</code> reward address. No node, configuration file, or chain sync required.</p>
         </div>
 
         <div class="two-col" style="margin-top: 14px;">
@@ -671,7 +671,7 @@
             <div class="filename">curl -fsSL https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install.sh | sh</div>
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-sv2/blob/main/scripts/install.sh">View install script</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.5">v0.2.5 release</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.8">v0.2.8 release</a>
             </div>
           </article>
 
@@ -681,7 +681,7 @@
             <div class="filename">irm https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install.ps1 | iex</div>
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-sv2/blob/main/scripts/install.ps1">View install script</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.5">v0.2.5 release</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.8">v0.2.8 release</a>
             </div>
           </article>
         </div>
@@ -690,6 +690,16 @@
           <h3>Start shared CPU mining</h3>
           <p class="meta">Replace <code>YOUR_DIN1_ADDRESS</code> with your complete Dinero reward address. This example uses two CPU threads, connects securely to <code>pool.dinerolabs.org:4444</code>, and opens the new full-screen SV2 dashboard with 31 live hashing rows, full candidate hashes, accepted/rejected shares, connection health, session work, and network events. <code>Ctrl-C</code> stops cleanly and restores your terminal.</p>
           <div class="filename">cd "$HOME/.local/bin" &amp;&amp; ./dinero-miner --address "YOUR_DIN1_ADDRESS" --reward-mode shared --threads 2</div>
+        </article>
+
+        <article class="card" style="margin-top: 14px;">
+          <h3>GPU mining</h3>
+          <p class="meta">v0.2.8 also publishes prebuilt GPU miners: <strong>Metal</strong> on macOS (Apple Silicon and Intel) and <strong>OpenCL</strong> on Linux x86_64 and Windows x64. The GPU and CPU builds share the same authenticated SV2 transport and the same interactive dashboard, so the commands below work identically &mdash; substitute <code>dinero-sv2-gpu-miner</code> for <code>dinero-miner</code>.</p>
+          <p class="meta">The one-command installer above installs the <strong>CPU</strong> miner. For GPU, download the binary for your platform from the release page and verify it against <code>SHA256SUMS</code>.</p>
+          <div class="actions" style="grid-template-columns: repeat(2, max-content);">
+            <a class="button" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.8">Download GPU binaries</a>
+            <a class="button secondary" href="#verify">How to verify</a>
+          </div>
         </article>
 
         <article class="card" style="margin-top: 14px;">
