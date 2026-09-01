@@ -617,6 +617,7 @@
         <a href="https://explorer.realmoneyforfreepeople.org/">Explorer</a>
         <a href="#verify">Verify</a>
         <a href="#nodes">Run a node</a>
+        <a href="#pool">Run a pool</a>
         <a href="https://github.com/DineroLabs/dinero-v8">Source</a>
         <a href="https://github.com/DineroLabs/dinero-v8/releases">Release archive</a>
         <a class="button" href="#downloads">Get Dinero</a>
@@ -660,12 +661,12 @@
       <div class="wrap">
         <div class="section-head">
           <h2 id="miner-title">Mine Dinero in one minute</h2>
-          <p>Dinero SV2 Miner v0.2.8 is a standalone CPU and GPU miner with an immersive live terminal dashboard. This release ships both variants — the GPU binaries use Metal on macOS and OpenCL on Linux and Windows — and an unspecified <code>--reward-mode</code> now resolves to <code>shared</code>, so pass <code>--reward-mode solo</code> if you want miner-owned all-or-nothing coinbases. One pasted command installs it; one more starts shared mining to your own <code>din1p…</code> reward address. No node, configuration file, or chain sync required.</p>
+          <p>Dinero SV2 Miner v0.2.8 is a standalone CPU and GPU miner with an immersive live terminal dashboard. This release ships both variants — the GPU binaries use Metal on macOS and OpenCL on Linux and Windows — and an unspecified <code>--reward-mode</code> now resolves to <code>shared</code>, so pass <code>--reward-mode solo</code> if you want miner-owned all-or-nothing coinbases. CPU and GPU install with separate commands below, so you always know which miner you are running; one more command starts shared mining to your own <code>din1p…</code> reward address. No node, configuration file, or chain sync required.</p>
         </div>
 
         <div class="two-col" style="margin-top: 14px;">
           <article class="card">
-            <h3>macOS · Linux · Chromebook</h3>
+            <h3>CPU miner · macOS · Linux · Chromebook</h3>
             <p class="meta">Detects Apple Silicon, Intel macOS, or Linux; downloads the current release; verifies its SHA-256 digest; and installs <code>dinero-miner</code> to <code>~/.local/bin</code>. Both macOS builds are Developer ID signed by DineroLabs LLC and accepted by Apple’s notarization service. On a Chromebook, enable Linux (Settings → Advanced → Developers → “Linux development environment”), open Terminal, and paste the same command.</p>
             <div class="filename">curl -fsSL https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install.sh | sh</div>
             <div class="actions">
@@ -675,7 +676,7 @@
           </article>
 
           <article class="card">
-            <h3>Windows · PowerShell</h3>
+            <h3>CPU miner · Windows PowerShell</h3>
             <p class="meta">Same flow for Windows x64: resolves the latest miner release, verifies the SHA-256 digest, installs <code>dinero-miner.exe</code> under <code>%LOCALAPPDATA%\DineroMiner\bin</code>, and adds it to your PATH. The binary is digitally signed (Authenticode, Microsoft-verified publisher), so Windows recognizes its publisher instead of flagging an unknown download. Open a new terminal after installing.</p>
             <div class="filename">irm https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install.ps1 | iex</div>
             <div class="actions">
@@ -691,10 +692,94 @@
           <div class="filename">cd "$HOME/.local/bin" &amp;&amp; ./dinero-miner --address "YOUR_DIN1_ADDRESS" --reward-mode shared --threads 2</div>
         </article>
 
+        <div class="two-col" style="margin-top: 14px;">
+          <article class="card">
+            <h3>GPU miner · macOS · Linux</h3>
+            <p class="meta">Installs <code>dinero-gpu-miner</code> beside the CPU miner &mdash; they do not replace each other. Uses <strong>Metal</strong> on macOS (Apple Silicon and Intel) and <strong>OpenCL</strong> on Linux x86_64. There is no GPU build for Linux aarch64; the script says so and points you at the CPU miner instead of failing on a missing download.</p>
+            <div class="filename">curl -fsSL https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install-gpu.sh | sh</div>
+            <div class="actions">
+              <a class="button" href="https://github.com/DineroLabs/dinero-sv2/blob/main/scripts/install-gpu.sh">View install script</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.8">v0.2.8 release</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>GPU miner · Windows PowerShell</h3>
+            <p class="meta">Installs <code>dinero-gpu-miner.exe</code> under <code>%LOCALAPPDATA%\DineroMiner\bin</code>, alongside the CPU miner, and adds it to your PATH. Uses <strong>OpenCL</strong> (or CUDA when an NVIDIA driver and runtime are present). Open a new terminal after installing.</p>
+            <div class="filename">irm https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install-gpu.ps1 | iex</div>
+            <div class="actions">
+              <a class="button" href="https://github.com/DineroLabs/dinero-sv2/blob/main/scripts/install-gpu.ps1">View install script</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/releases/tag/miner-v0.2.8">v0.2.8 release</a>
+            </div>
+          </article>
+        </div>
+
+        <article class="card" style="margin-top: 14px;">
+          <h3>Start shared GPU mining</h3>
+          <p class="meta">Note the command is <strong>not</strong> the same as the CPU one: the GPU miner has no <code>--threads</code>. It picks its backend automatically (<code>--backend auto</code>), so Metal on macOS, otherwise CUDA when available and OpenCL when not. Same reward address, same shared mode, same dashboard.</p>
+          <div class="filename">cd "$HOME/.local/bin" &amp;&amp; ./dinero-gpu-miner --address "YOUR_DIN1_ADDRESS" --reward-mode shared</div>
+          <div class="filename" style="margin-top: 8px;">cd "$env:LOCALAPPDATA\DineroMiner\bin"; .\dinero-gpu-miner.exe --address "YOUR_DIN1_ADDRESS" --reward-mode shared</div>
+        </article>
+
         <article class="card" style="margin-top: 14px;">
           <h3>Windows start command</h3>
           <p class="meta">After installing in PowerShell, open a new PowerShell window, replace the reward-address placeholder, and run:</p>
           <div class="filename">cd "$env:LOCALAPPDATA\DineroMiner\bin"; .\dinero-miner.exe --address "YOUR_DIN1_ADDRESS" --reward-mode shared --threads 2</div>
+        </article>
+      </div>
+    </section>
+
+    <section id="pool" aria-labelledby="pool-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="pool-title">Run a pool</h2>
+          <p>A Dinero pool pays every contributing miner <strong>directly in the block&rsquo;s coinbase</strong>, split by share weight, at the moment a block is found. There are no balances on an operator&rsquo;s books, no payout run, and no withdrawal queue &mdash; so a pool operator never holds anyone else&rsquo;s coins, and cannot lose or take them. The operator&rsquo;s fee is an output in the same block, which means any miner can verify what was taken by reading the chain instead of trusting a dashboard.</p>
+        </div>
+
+        <div class="two-col" style="margin-top: 14px;">
+          <article class="card">
+            <h3>Why host one</h3>
+            <p class="meta"><strong>You never hold your miners&rsquo; coins.</strong> Consensus pays them, in the block. <strong>Your fee is provable</strong> rather than asserted. <strong>You stop depending on someone else&rsquo;s server</strong>, and you choose which transactions go into the blocks you find. And you can <strong>pool with people who never have to trust you</strong> &mdash; sharing variance without anyone custodying anyone&rsquo;s funds.</p>
+            <p class="meta">The trade-off: every paid miner needs an output in every block, so this suits pools of tens of miners rather than thousands.</p>
+          </article>
+
+          <article class="card">
+            <h3>What you need</h3>
+            <p class="meta">A Linux server (x86_64 or aarch64) with a public IP, one open inbound port, a <code>din1p&hellip;</code> address for your fee, and <strong>a Dinero node on the same host</strong>. The node is not optional: the pool gets block templates from it and submits found blocks through it. That is the point &mdash; every pool operator is also a node operator.</p>
+            <p class="meta">Budget real time for the first sync. The snapshot the release ships an anchor for is behind the one the fleet publisher produces, so a fresh node still replays roughly 15,000 blocks &mdash; measured at about 8&ndash;9 blocks a minute on a 2-core VPS, or <strong>around 30 hours</strong> to reach the tip. It is unattended, but it is not a coffee break. Once a release carries a current anchor, the same install lands minutes from the tip.</p>
+          </article>
+        </div>
+
+        <article class="card" style="margin-top: 14px;">
+          <h3>Install the pool</h3>
+          <p class="meta">Downloads the current release, verifies its SHA-256 digest, generates your pool&rsquo;s Noise static key and an operator token, installs a systemd unit, and starts the service. It refuses to install if there is no node on the host, rather than leaving you a pool that starts, looks healthy, and serves nobody.</p>
+          <div class="filename">curl -fsSL https://raw.githubusercontent.com/DineroLabs/dinero-sv2/main/scripts/install-pool.sh | sudo sh -s -- --payout-address din1pYOURADDRESS</div>
+          <!-- .actions is a single-column grid site-wide, which reads well in the
+               narrow two-column cards but makes two full-bleed buttons in a
+               full-width card. Constrained here only. -->
+          <div class="actions" style="grid-template-columns: repeat(2, max-content);">
+            <a class="button" href="https://github.com/DineroLabs/dinero-sv2/blob/main/scripts/install-pool.sh">View install script</a>
+            <a class="button secondary" href="https://github.com/DineroLabs/dinero-sv2/blob/main/docs/RUN-A-POOL.md">Full guide</a>
+          </div>
+        </article>
+
+        <article class="card" style="margin-top: 14px;">
+          <h3>Give your miners the pool&rsquo;s public key</h3>
+          <p class="meta">This is the step people miss. The installer prints your pool&rsquo;s Noise public key; publish it somewhere your miners can check it against. Pinning that key is what stops anyone impersonating your pool. A miner that connects without it still works, but the connection is unpinned (trust-on-first-use) and the miner says so.</p>
+          <div class="filename">dinero-miner --address YOUR_DIN1_ADDRESS --reward-mode shared --pool your.host:4444 --server-pubkey YOUR_POOL_PUBKEY</div>
+        </article>
+
+        <article class="card" style="margin-top: 14px;">
+          <h3>Watch your pool</h3>
+          <p class="meta">The pool exposes a read-only status endpoint: connected miners, payout-window depth, template-producer health, share counters, and each contributor&rsquo;s share of the next block. It is <strong>loopback-only and plain HTTP by design</strong> &mdash; a process that handles money should not also carry a TLS stack &mdash; so reach it from another machine over an SSH tunnel, or put a reverse proxy in front of it.</p>
+          <div class="filename">ssh -N -L 4445:127.0.0.1:4445 you@your.host</div>
+          <div class="filename" style="margin-top: 8px;">curl -H "Authorization: Bearer $(cat /etc/dinero-sv2/ops-token)" http://127.0.0.1:4445/status</div>
+          <p class="meta" style="margin-top: 10px;">The Dinero desktop wallet reads the same endpoint in its <strong>Pool</strong> tab, and reads your fee earnings from the chain rather than from the pool &mdash; so the earnings figure keeps working even when the pool is down, which is when you most want to look.</p>
+        </article>
+
+        <article class="card" style="margin-top: 14px;">
+          <h3>What you actually earn</h3>
+          <p class="meta">Your fee is a percentage of the blocks <em>your</em> pool finds, so with no miners it is nothing, and on a network this size hosting a pool is not a business. The reasons to run one are that you stop depending on somebody else&rsquo;s server, you choose your own transaction selection, and you can mine alongside people without any of you holding the others&rsquo; money.</p>
         </article>
       </div>
     </section>
