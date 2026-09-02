@@ -205,6 +205,14 @@ def main() -> None:
     )
 
     assert 'INCLUDE_PRERELEASE="${INCLUDE_PRERELEASE:-0}"' in installer
+    assert "https://seed3.dinerolabs.org/snapshot" in installer
+    assert "openssl pkeyutl -verify" in installer
+    assert "MCowBQYDK2VwAyEAlFOdW71hOC7Q5Y0bYRLDvyFtv8ddU9Tf4a8dbr1Y4Yw=" in installer
+    assert 'elif [ "$SNAP_URL" != "-" ]; then' in installer, (
+        "installer must retain the release snapshot as the live-mirror fallback"
+    )
+    assert 'SNAP_MANIFEST="$SNAP_PATH.manifest.json"' in installer
+    assert 'echo "assumeutxo_forward_connect=1"' in installer
     patterns = [
         re.compile(assignment(installer, name))
         for name in ("CORE_PATTERN", "CLI_PATTERN", "SNAPSHOT_PATTERN")
@@ -231,7 +239,8 @@ def main() -> None:
         f"PASS: {tag}; {len(linked_assets)} valid release links; "
         f"{len(checked_hashes)} matching hashes; DineroDPI {native_tag} has "
         f"{len(set(native_linked_assets))} valid links and {checked_native_hashes} "
-        "matching hash; installer selects core + CLI + snapshot"
+        "matching hash; installer selects core + CLI + release fallback and "
+        "prefers an Ed25519-authenticated daily snapshot"
     )
 
 

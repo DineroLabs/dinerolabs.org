@@ -16,10 +16,12 @@
 #               otherwise a full validate-from-genesis sync.
 #        full — always verify from genesis (safest, slowest).
 #        fast — force snapshot bootstrap (advanced; fresh datadir only).
-#      When fast runs, the node bootstraps from the AssumeUTXO snapshot (usable
-#      in minutes), verifies forward to the tip, and BACKGROUND-VALIDATES the
-#      pre-snapshot history; the snapshot is checked against a hash compiled
-#      into the binary, so a tampered file is rejected. (Back-compat:
+#      When fast runs, the installer prefers the fleet's signed daily
+#      AssumeUTXO snapshot and falls back to the release-bundled snapshot.
+#      The node becomes usable near tip while it BACKGROUND-VALIDATES the
+#      pre-snapshot history. The daily manifest is Ed25519-authenticated, its
+#      payload is SHA-256 checked, and dinerod binds the Utreexo root to its
+#      own PoW-validated header chain. (Back-compat:
 #      DINERO_FAST_SYNC=1 => fast, =0 => full.)
 #   7. Writes + enables a dinero.service systemd unit, starts it
 #   8. If ufw is active, opens inbound P2P port 20999/tcp; never exposes RPC
@@ -39,6 +41,7 @@ RELEASE_REPO="DineroLabs/dinero-v8"
 CORE_PATTERN='^(dinero-core-.*-linux-x86_64|dinero-linux-x86_64-.*)\.tar\.gz$'
 CLI_PATTERN='^(dinero-cli-.*-linux-x86_64|dinero-linux-x86_64-.*)\.tar\.gz$'
 SNAPSHOT_PATTERN='^(utxo-snapshot-[0-9]+|dinero-assumeutxo-[0-9]+-v[0-9]+)\.dat$'
+SNAPSHOT_MIRRORS="${SNAPSHOT_MIRRORS:-https://seed3.dinerolabs.org/snapshot https://seed.dinerolabs.org/snapshot https://seed2.dinerolabs.org/snapshot}"
 P2P_PORT=20999
 RPC_PORT=20998
 SERVICE_UNIT="dinero.service"
@@ -111,7 +114,7 @@ if [ "$ARCH" != "amd64" ]; then
   fail "x86_64 (amd64) required (detected: $ARCH). ARM64 Linux is not yet published."
 fi
 
-for cmd in curl python3 tar systemctl sha256sum install; do
+for cmd in curl openssl python3 tar systemctl sha256sum install; do
   command -v "$cmd" >/dev/null 2>&1 || fail "Missing required command: $cmd"
 done
 
@@ -205,6 +208,85 @@ dl_verify() {  # <name> <url> <digest> <out>
   fi
 }
 
+# Download the fleet's current snapshot only after authenticating the exact
+# manifest bytes with the dedicated snapshot-signing key. The daemon performs
+# the independent consensus check: the base must be on its PoW-validated header
+# chain and the snapshot's Utreexo root must equal that base header's root.
+# Arguments: <snapshot-out> <manifest-out>. Returns non-zero so callers can
+# fall back to the snapshot bundled with the selected release.
+fetch_live_snapshot() {
+  local snapshot_out="$1" manifest_out="$2"
+  local work="$TMP/live-snapshot" mirror metadata network height expected bytes actual
+  rm -rf "$work"
+  mkdir -p "$work"
+  cat >"$work/pub.pem" <<'PUBKEY'
+-----BEGIN PUBLIC KEY-----
+MCowBQYDK2VwAyEAlFOdW71hOC7Q5Y0bYRLDvyFtv8ddU9Tf4a8dbr1Y4Yw=
+-----END PUBLIC KEY-----
+PUBKEY
+
+  for mirror in $SNAPSHOT_MIRRORS; do
+    note "Trying signed daily snapshot: $mirror"
+    rm -f "$work/manifest.json" "$work/manifest.sig" "$work/snapshot.dat"
+    if ! curl -fsSL --retry 2 --connect-timeout 15 --max-time 30 \
+        -o "$work/manifest.json" "$mirror/manifest.json" ||
+       ! curl -fsSL --retry 2 --connect-timeout 15 --max-time 30 \
+        -o "$work/manifest.sig" "$mirror/manifest.sig"; then
+      warn "Daily snapshot manifest unavailable from $mirror"
+      continue
+    fi
+    if ! openssl pkeyutl -verify -pubin -inkey "$work/pub.pem" -rawin \
+        -in "$work/manifest.json" -sigfile "$work/manifest.sig" >/dev/null 2>&1; then
+      warn "Daily snapshot signature invalid from $mirror"
+      continue
+    fi
+
+    if ! metadata="$(python3 - "$work/manifest.json" <<'PYEOF'
+import json, sys
+m = json.load(open(sys.argv[1], "rb"))
+s = m.get("snapshot", m)
+network = m.get("network", "")
+height = s.get("height")
+sha = s.get("sha256", "")
+size = s.get("bytes")
+if network != "mainnet" or not isinstance(height, int) or height < 1:
+    raise SystemExit(1)
+if not isinstance(sha, str) or len(sha) != 64 or any(c not in "0123456789abcdef" for c in sha):
+    raise SystemExit(1)
+if not isinstance(size, int) or not 1048576 <= size <= 536870912:
+    raise SystemExit(1)
+print(network, height, sha, size, sep="\t")
+PYEOF
+    )"; then
+      warn "Daily snapshot manifest is malformed or outside safety limits"
+      continue
+    fi
+    IFS=$'\t' read -r network height expected bytes <<<"$metadata"
+
+    note "Signature verified: mainnet height $height; downloading ${bytes} bytes"
+    if ! curl -fsSL --retry 3 --connect-timeout 20 --max-time 600 \
+        -o "$work/snapshot.dat" "$mirror/snapshot.dat"; then
+      warn "Daily snapshot payload unavailable from $mirror"
+      continue
+    fi
+    actual="$(sha256sum "$work/snapshot.dat" | awk '{print $1}')"
+    if [ "$actual" != "$expected" ]; then
+      warn "Daily snapshot SHA256 mismatch from $mirror"
+      continue
+    fi
+    if [ "$(wc -c <"$work/snapshot.dat" | tr -d ' ')" != "$bytes" ]; then
+      warn "Daily snapshot byte count disagrees with its signed manifest"
+      continue
+    fi
+
+    mv "$work/snapshot.dat" "$snapshot_out"
+    mv "$work/manifest.json" "$manifest_out"
+    note "Signed daily snapshot verified at height $height (sha256:$actual)"
+    return 0
+  done
+  return 1
+}
+
 install_tarball_bin() {  # <tarball> <binary-basename>
   local tarball="$1" binname="$2" stage; stage="$(mktemp -d)"
   tar -xzf "$tarball" -C "$stage"
@@ -285,9 +367,7 @@ EFFECTIVE_SYNC=full
 if [ "$DINERO_SYNC_MODE" = "full" ]; then
   note "Sync mode: full — validate from genesis (no snapshot)"
 elif [ "$DINERO_SYNC_MODE" = "fast" ]; then
-  if [ "$SNAP_URL" = "-" ]; then
-    warn "Sync mode: fast requested but release $TAG ships no snapshot — using full"
-  elif [ "$FRESH_DATADIR" != "1" ]; then
+  if [ "$FRESH_DATADIR" != "1" ]; then
     warn "Sync mode: fast requested but datadir is not fresh — using full"
   else
     EFFECTIVE_SYNC=fast
@@ -296,7 +376,6 @@ elif [ "$DINERO_SYNC_MODE" = "fast" ]; then
 else  # auto
   reasons=""
   [ "$FRESH_DATADIR" = "1" ]  || reasons="${reasons}existing datadir; "
-  [ "$SNAP_URL" != "-" ]      || reasons="${reasons}release ships no snapshot; "
   tag_has_snapshot_fix "$TAG" || reasons="${reasons}release $TAG predates snapshot-load fix ($SNAPSHOT_FIX_MIN_TAG); "
   have_resources_for_fast     || reasons="${reasons}insufficient RAM/disk (need ${FASTSYNC_MIN_RAM_MB}MB RAM + ${FASTSYNC_MIN_DISK_MB}MB free); "
   if [ -z "$reasons" ]; then
@@ -309,11 +388,23 @@ fi
 
 SNAPSHOT_LINE=""
 if [ "$EFFECTIVE_SYNC" = "fast" ]; then
-  SNAP_PATH="$DATADIR/$SNAP_NAME"
-  dl_verify "$SNAP_NAME" "$SNAP_URL" "$SNAP_DIGEST" "$SNAP_PATH"
-  chown "$RUN_USER:$RUN_USER" "$SNAP_PATH"
-  SNAPSHOT_LINE="assumeutxo_snapshot=$SNAP_PATH"
-  note "Fast bootstrap from $SNAP_NAME (verified vs the binary's built-in trust anchor), then forward + background validation."
+  SNAP_PATH="$DATADIR/dinero-assumeutxo-live.dat"
+  SNAP_MANIFEST="$SNAP_PATH.manifest.json"
+  if fetch_live_snapshot "$SNAP_PATH" "$SNAP_MANIFEST"; then
+    chown "$RUN_USER:$RUN_USER" "$SNAP_PATH" "$SNAP_MANIFEST"
+    SNAPSHOT_LINE="assumeutxo_snapshot=$SNAP_PATH"
+    note "Fast bootstrap will use the signed daily snapshot, then forward + background validation."
+  elif [ "$SNAP_URL" != "-" ]; then
+    warn "Signed daily snapshot unavailable — falling back to $SNAP_NAME from $TAG"
+    SNAP_PATH="$DATADIR/$SNAP_NAME"
+    dl_verify "$SNAP_NAME" "$SNAP_URL" "$SNAP_DIGEST" "$SNAP_PATH"
+    chown "$RUN_USER:$RUN_USER" "$SNAP_PATH"
+    SNAPSHOT_LINE="assumeutxo_snapshot=$SNAP_PATH"
+    note "Fast bootstrap will use the release snapshot, then forward + background validation."
+  else
+    warn "No verifiable daily or release snapshot is available — using full validation"
+    EFFECTIVE_SYNC=full
+  fi
 fi
 
 # ---------------------------------------------------------------------------

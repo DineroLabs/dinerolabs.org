@@ -746,7 +746,7 @@
           <article class="card">
             <h3>What you need</h3>
             <p class="meta">A Linux server (x86_64 or aarch64) with a public IP, one open inbound port, a <code>din1p&hellip;</code> address for your fee, and <strong>a Dinero node on the same host</strong>. The node is not optional: the pool gets block templates from it and submits found blocks through it. That is the point &mdash; every pool operator is also a node operator.</p>
-            <p class="meta">Budget real time for the first sync. The snapshot the release ships an anchor for is behind the one the fleet publisher produces, so a fresh node still replays roughly 15,000 blocks &mdash; measured at about 8&ndash;9 blocks a minute on a 2-core VPS, or <strong>around 30 hours</strong> to reach the tip. It is unattended, but it is not a coffee break. Once a release carries a current anchor, the same install lands minutes from the tip.</p>
+            <p class="meta">Fresh installs prefer the fleet&rsquo;s signed daily snapshot and retain the release snapshot as an automatic fallback. The installer verifies the daily Ed25519 manifest and payload hash; the node then binds its Utreexo state to its own proof-of-work-validated header chain and validates earlier history in the background.</p>
           </article>
         </div>
 
@@ -963,7 +963,7 @@
 
           <article class="card">
             <h3>Linux systemd installer</h3>
-            <p class="meta">Ubuntu 24.04+ x86_64 install script. Discovers the current stable release, downloads the core, CLI, and snapshot assets, verifies GitHub digests, creates the <code>dinero</code> system user, writes <code>dinero.service</code>, and starts the node under <code>/var/lib/dinero</code>.</p>
+            <p class="meta">Ubuntu 24.04+ x86_64 install script. Discovers the current stable release, verifies the core and CLI assets, prefers the signed daily snapshot with the release snapshot as fallback, creates the <code>dinero</code> system user, writes <code>dinero.service</code>, and starts the node under <code>/var/lib/dinero</code>.</p>
             <div class="filename">curl -fsSL https://dinerolabs.org/install.sh | sudo bash</div>
             <a class="button" href="install.sh">View install.sh</a>
           </article>
@@ -1050,7 +1050,7 @@
 
         <article class="card" style="margin-top: 14px;">
           <h3>Fast-sync snapshot</h3>
-          <p class="meta">v8.1.9 publishes a height-84,131 <strong>V4</strong> fast-sync snapshot carrying the UTXO set, Utreexo forest, and shielded state. Its SHA-256, base block, chainwork, and UTXO count are compiled into the daemon. Older exact snapshot files remain restart fallbacks only; fresh installs select 84,131.</p>
+          <p class="meta">v8.1.9 publishes a height-84,131 <strong>V4</strong> fast-sync snapshot carrying the UTXO set, Utreexo forest, and shielded state. It remains an offline and mirror-failure fallback. The public Linux installer prefers the newer signed daily snapshot; the daemon requires its base on the proof-of-work-validated header chain and verifies the Utreexo root against that header.</p>
           <div class="filename">dinero-assumeutxo-84131-v4.dat</div>
           <div class="actions">
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.9/dinero-assumeutxo-84131-v4.dat">Download snapshot</a>
@@ -1323,7 +1323,7 @@ cd dinero-operator-v8.1.9-macOS-arm64
             <ul class="list">
               <li>The v8.1.9 Windows installers are Authenticode-signed (Microsoft-verified publisher: Mirsad Hajdarevic). SmartScreen may still show a new-publisher prompt until the certificate builds download reputation; verify the SHA256 above and, if prompted, click "More info" → "Run anyway".</li>
               <li>The published v8.1.9 binaries carry the consensus rules required at block 100,000. Verify the runtime consensus checksum with <code>dinero-cli getconsensusinfo</code> before activation.</li>
-              <li>Linux v8.1.9 ships verified graphical AppImage, Debian/Ubuntu, and portable Qt packages alongside the headless operator bundle. The node installer continues to extract <code>dinerod</code> and <code>dinero-cli</code> from the operator archive and selects the newest available snapshot.</li>
+              <li>Linux v8.1.9 ships verified graphical AppImage, Debian/Ubuntu, and portable Qt packages alongside the headless operator bundle. The node installer extracts <code>dinerod</code> and <code>dinero-cli</code> from the operator archive, prefers the signed daily snapshot, and falls back to the newest snapshot bundled with the release.</li>
               <li>Dynamic P2P is active in conservative slow-churn mode. It is designed to improve peer diversity gradually, not churn aggressively.</li>
               <li>Relay/NAT traversal is useful infrastructure, but the long-term goal is broader community-run peers and relays, not dependence on Dinero Labs bootstrap nodes.</li>
             </ul>
