@@ -14,7 +14,12 @@ import urllib.request
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
 INSTALLER = ROOT / "install.sh"
-CORE_RELEASES_API = "https://api.github.com/repos/DineroLabs/dinero-v8/releases?per_page=10"
+# per_page must stay large enough to contain BOTH the newest stable core
+# release and the newest dinerodpi-v* release. At per_page=10 the DineroDPI
+# entry fell out of the window when v8.1.10 shipped, and this script began
+# raising StopIteration on every run — site CI was red for ten days for a
+# reason unrelated to the page. 100 is the GitHub maximum.
+CORE_RELEASES_API = "https://api.github.com/repos/DineroLabs/dinero-v8/releases?per_page=100"
 
 
 def fetch_json(url: str) -> object:
@@ -125,6 +130,11 @@ def main() -> None:
     required_assets = {
         linux_asset,
         f"Dinero-Server-{version}-windows-x86_64-Setup.exe",
+        # The dinero-qt wallet installer is the primary Windows download and
+        # the page publishes its digest, so it belongs in the required set.
+        # It was checked (it is a release asset) but never required, which
+        # made the page-vs-required equality below reject it as "extra".
+        f"Dinero-{version}-windows-x86_64-Setup.exe",
         f"Dinero-v{version}-macOS-arm64.dmg",
         f"Dinero-v{version}-macOS-arm64-qt.zip",
         f"Dinero-v{version}-macOS-x86_64.dmg",
