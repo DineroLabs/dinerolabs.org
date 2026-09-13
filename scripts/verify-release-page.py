@@ -14,7 +14,12 @@ import urllib.request
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
 INSTALLER = ROOT / "install.sh"
-CORE_RELEASES_API = "https://api.github.com/repos/DineroLabs/dinero-v8/releases?per_page=10"
+# per_page must stay large enough to contain BOTH the newest stable core
+# release and the newest dinerodpi-v* release. At per_page=10 the DineroDPI
+# entry fell out of the window when v8.1.10 shipped, and this script began
+# raising StopIteration on every run — site CI was red for ten days for a
+# reason unrelated to the page. 100 is the GitHub maximum.
+CORE_RELEASES_API = "https://api.github.com/repos/DineroLabs/dinero-v8/releases?per_page=100"
 
 
 def fetch_json(url: str) -> object:
@@ -122,11 +127,25 @@ def main() -> None:
         snapshot_assets,
         key=lambda name: int(re.search(r"(?:snapshot-|assumeutxo-)([0-9]+)", name).group(1)),
     )
+    # v8.1.12 superseded its original Apple Silicon Qt build with a
+    # "-metal-fix1" correction (the original omitted the Metal mining
+    # backend). When a release ships the corrected assets, the page must
+    # link and hash those, not the superseded originals.
+    arm64_dmg = f"Dinero-v{version}-macOS-arm64-metal-fix1.dmg"
+    arm64_zip = f"Dinero-v{version}-macOS-arm64-metal-fix1-qt.zip"
+    if arm64_dmg not in assets or arm64_zip not in assets:
+        arm64_dmg = f"Dinero-v{version}-macOS-arm64.dmg"
+        arm64_zip = f"Dinero-v{version}-macOS-arm64-qt.zip"
     required_assets = {
         linux_asset,
         f"Dinero-Server-{version}-windows-x86_64-Setup.exe",
-        f"Dinero-v{version}-macOS-arm64.dmg",
-        f"Dinero-v{version}-macOS-arm64-qt.zip",
+        # The dinero-qt wallet installer is the primary Windows download and
+        # the page publishes its digest, so it belongs in the required set.
+        # It was checked (it is a release asset) but never required, which
+        # made the page-vs-required equality below reject it as "extra".
+        f"Dinero-{version}-windows-x86_64-Setup.exe",
+        arm64_dmg,
+        arm64_zip,
         f"Dinero-v{version}-macOS-x86_64.dmg",
         f"Dinero-v{version}-macOS-x86_64-qt.zip",
         f"dinero-v{version}-linux-x86_64.AppImage",
