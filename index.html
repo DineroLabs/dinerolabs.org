@@ -6,7 +6,7 @@
   <title>Dinero Labs · Dinero (DIN)</title>
   <meta name="description" content="Dinero Labs ships Dinero (DIN). Download the current v8.1.12 wallet and node software for macOS, Windows, and Linux, verify official releases, and help grow the peer-to-peer network.">
   <meta property="og:title" content="Dinero Labs · Dinero (DIN)">
-  <meta property="og:description" content="Dinero Labs — building Dinero (DIN). v8.1.12 wallet and node software, signed installers on every platform, recovery hardening, relay/NAT traversal, and Dynamic P2P.">
+  <meta property="og:description" content="Dinero Labs — building Dinero (DIN). v8.1.12 wallet and node software, signed installers on every platform, CTV/CCV and shielded-auth activations live on mainnet, and a height-99,677 fast-sync snapshot.">
   <meta property="og:url" content="https://dinerolabs.org/">
   <meta property="og:image" content="https://github.com/DineroLabs.png?size=320">
   <meta property="og:type" content="website">
@@ -631,9 +631,9 @@
         <div>
           <div class="eyebrow">Dinero v8.1.12 — current release</div>
           <h1 id="hero-title">Run Dinero. Own your money. Mine DIN.</h1>
-          <p class="lead">Dinero v8.1.12 is the current stability release. Nodes now recover on their own from missing block bodies — a lifecycle-safe convergence driver fetches canonical bodies from capable peers, activates them in strict height order, and keeps mining on the last fully validated tip while it works. Connectivity opens up too: dynamic peers, feelers, gossip, DNS bootstrap, Tor v3, and an encrypted Dinero relay fallback for CGNAT nodes can all run at once. Consensus rules are unchanged, preserving the block-100,000 CTV and CCV activation rules and the verified height-84,131 V4 fast-sync snapshot.</p>
+          <p class="lead">Dinero v8.1.12 is the current release and the one every node should run. Three activations shipped across v8.1.10–v8.1.12 and are now live on mainnet: CTV and CCV covenants at block 100,000, the shielded Auth and private-covenant epoch reset at 110,000, and DNRS state commitments with contextual transaction-lock enforcement at 111,000. v8.1.11 added the verified height-99,677 V4 fast-sync snapshot and restart-safe snapshot bootstrap; v8.1.12 adds the Apple Silicon Metal mining correction, macOS 13 Ventura Intel builds, and convergence and QUIC fixes.</p>
           <div class="hero-actions">
-            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.12/Dinero-v8.1.12-macOS-arm64.dmg">macOS · Apple Silicon</a>
+            <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.12/Dinero-v8.1.12-macOS-arm64-metal-fix1.dmg">macOS · Apple Silicon</a>
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.12/Dinero-v8.1.12-macOS-x86_64.dmg">macOS · Intel</a>
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.12/Dinero-8.1.12-windows-x86_64-Setup.exe">Download Windows wallet</a>
             <a class="button secondary" href="#miner">Start mining in one minute</a>
@@ -643,7 +643,7 @@
         <div class="quick" aria-label="Current recommendations">
           <div class="quick-card">
             <strong>Desktop users</strong>
-            <span>Use the signed v8.1.12 macOS wallet or DineroDPI Native 1.3.5. Fresh nodes can fast-sync from the V4 AssumeUTXO snapshot at height 84,131 and validate earlier history in the background.</span>
+            <span>Use the signed v8.1.12 macOS wallet (Apple Silicon: the <code>metal-fix1</code> build) or DineroDPI Native 1.3.5. Fresh nodes can fast-sync from the V4 AssumeUTXO snapshot at height 99,677 and validate earlier history in the background.</span>
           </div>
           <div class="quick-card">
             <strong>Node operators</strong>
@@ -651,7 +651,7 @@
           </div>
           <div class="quick-card">
             <strong>Network status</strong>
-            <span>v8.1.12 keeps the v8.1.1 consensus checksum <code>68e0a997…e960a</code>; it is a resilience and mining-continuity release, not a new activation — nodes repair missing block bodies automatically, reach the network over more paths, and never mine on an unvalidated header, but consensus rules are unchanged.</span>
+            <span>v8.1.10–v8.1.12 are consensus releases, not drop-in maintenance: CTV/CCV (block 100,000), the shielded Auth epoch reset (110,000), and DNRS commitments plus contextual transaction locks (111,000) have all activated on mainnet. Operators and miners must run compatible software to validate past those heights — upgrade to v8.1.12 and confirm with <code>dinero-cli getblockchaininfo</code> (<code>contextual_locks_active: true</code>). The Auth reset does not preserve spendability of pre-reset shielded notes.</span>
           </div>
         </div>
       </div>
@@ -801,12 +801,12 @@
               <div class="platform">macOS Wallet · dinero-qt</div>
               <span class="pill">Stable</span>
             </div>
-            <p class="meta">Signed, Apple-notarized, and stapled builds for Apple Silicon and Intel Macs. <strong>Requires macOS 14 (Sonoma) or newer</strong> — the bundled Qt 6.11 frameworks do not run on Ventura or older. Intel Macs capped on macOS 13 (Ventura) now have dedicated builds — see the Ventura downloads below — so the DineroDPI route is no longer the only option. The <a href="https://github.com/DineroLabs/dinero-v8/releases/download/dinerodpi-v1.3.5-intel/DineroDPI-1.3.5-Intel.dmg">DineroDPI Native Intel build</a> remains available as a full wallet, node, and miner, as does the headless operator tarball plus the Dinero miner. Drag <code>dinero-qt.app</code> to Applications and launch. Bundles the wallet, embedded daemon, CLI tools, seeder, and miner helpers.</p>
-            <div class="filename">Dinero-v8.1.12-macOS-arm64.dmg / macOS-x86_64.dmg</div>
+            <p class="meta">Signed, Apple-notarized, and stapled builds for Apple Silicon and Intel Macs. Apple Silicon downloads are the <code>metal-fix1</code> correction: the original v8.1.12 ARM build omitted the embedded Metal mining backend and misreported the active GPU backend, and is superseded. <strong>Requires macOS 14 (Sonoma) or newer</strong> — the bundled Qt 6.11 frameworks do not run on Ventura or older. Intel Macs capped on macOS 13 (Ventura) now have dedicated builds — see the Ventura downloads below — so the DineroDPI route is no longer the only option. The <a href="https://github.com/DineroLabs/dinero-v8/releases/download/dinerodpi-v1.3.5-intel/DineroDPI-1.3.5-Intel.dmg">DineroDPI Native Intel build</a> remains available as a full wallet, node, and miner, as does the headless operator tarball plus the Dinero miner. Drag <code>dinero-qt.app</code> to Applications and launch. Bundles the wallet, embedded daemon, CLI tools, seeder, and miner helpers.</p>
+            <div class="filename">Dinero-v8.1.12-macOS-arm64-metal-fix1.dmg / macOS-x86_64.dmg</div>
             <div class="actions">
-              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.12/Dinero-v8.1.12-macOS-arm64.dmg">Apple Silicon .dmg</a>
+              <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.12/Dinero-v8.1.12-macOS-arm64-metal-fix1.dmg">Apple Silicon .dmg</a>
               <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.12/Dinero-v8.1.12-macOS-x86_64.dmg">Intel .dmg</a>
-              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.12/Dinero-v8.1.12-macOS-arm64-qt.zip">Apple Silicon .zip</a>
+              <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.12/Dinero-v8.1.12-macOS-arm64-metal-fix1-qt.zip">Apple Silicon .zip</a>
               <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.12/Dinero-v8.1.12-macOS-x86_64-qt.zip">Intel .zip</a>
               <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.12/Dinero-v8.1.12-ventura-macOS-x86_64.dmg">Intel · Ventura .dmg</a>
               <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.12/Dinero-v8.1.12-ventura-macOS-x86_64-qt.zip">Intel · Ventura .zip</a>
@@ -852,7 +852,7 @@
               <div class="platform">Windows Node</div>
               <span class="pill">Stable</span>
             </div>
-            <p class="meta">The v8.1.12 headless Windows node installer, digitally signed (Authenticode, Microsoft-verified publisher). It registers <code>dinerod</code> as a restartable Windows Service, includes the height-84,131 snapshot, and preserves chain and wallet data across upgrades and uninstall.</p>
+            <p class="meta">The v8.1.12 headless Windows node installer, digitally signed (Authenticode, Microsoft-verified publisher). It registers <code>dinerod</code> as a restartable Windows Service, includes the height-99,677 snapshot, and preserves chain and wallet data across upgrades and uninstall.</p>
             <div class="filename">Dinero-Server-8.1.12-windows-x86_64-Setup.exe</div>
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.12/Dinero-Server-8.1.12-windows-x86_64-Setup.exe">Download installer</a>
@@ -931,8 +931,8 @@
               <div class="platform">Docker</div>
               <span class="pill">Stable</span>
             </div>
-            <p class="meta">Official container image for x86_64 Linux hosts, published to GitHub Container Registry alongside each release. Runs the same verified <code>dinerod</code> as the Linux bundle, with the fast-sync snapshot flow built in.</p>
-            <div class="filename">docker run -d --name dinero -v dinero-data:/data -p 20999:20999 ghcr.io/dinerolabs/dinero-v8:8.1.12</div>
+            <p class="meta">Official container image for x86_64 Linux hosts, published to GitHub Container Registry alongside each release. Runs the same verified <code>dinerod</code> as the Linux bundle, with the fast-sync snapshot flow built in. The newest published image tag is <code>8.1.11</code>; a v8.1.12 image has not been pushed yet.</p>
+            <div class="filename">docker run -d --name dinero -v dinero-data:/data -p 20999:20999 ghcr.io/dinerolabs/dinero-v8:8.1.11</div>
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-v8/pkgs/container/dinero-v8">ghcr.io image</a>
               <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.1.12">Release notes</a>
@@ -972,7 +972,7 @@
 
           <article class="card">
             <h3>Linux server daemon (v8.1.12)</h3>
-            <p class="meta">Current <strong>v8.1.12</strong> server-safe bundle. It carries the consensus rules required for block 100,000, the height-84,131 AssumeUTXO trust anchor, and the recovery fixes in this release. Extract, verify the digest, and run under systemd.</p>
+            <p class="meta">Current <strong>v8.1.12</strong> server-safe bundle. It carries the block-100,000 covenant, block-110,000 shielded Auth, and block-111,000 contextual-lock rules, the height-99,677 AssumeUTXO snapshot, and the restart-safe snapshot bootstrap from v8.1.11. Extract, verify the digest, and run under systemd.</p>
             <div class="filename">dinero-linux-x86_64-8.1.12.tar.gz</div>
             <div class="actions">
               <a class="button" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.12/dinero-linux-x86_64-8.1.12.tar.gz">Download v8.1.12 bundle</a>
@@ -1006,7 +1006,7 @@
 
           <article class="card">
             <h3>Release notes</h3>
-            <p class="meta">Performance and peer-discovery release preserving the block-100,000 covenant activation and the height-84,131 V4 trust anchor; heavy blocks connect in a fraction of the previous time.</p>
+            <p class="meta">Consensus and reliability releases: CTV/CCV activated at block 100,000 (v8.1.10), the height-99,677 V4 snapshot and restart-safe fast-sync (v8.1.11), and the shielded Auth reset at 110,000, DNRS commitments and transaction locks at 111,000, and the Apple Silicon Metal correction (v8.1.12).</p>
             <div class="filename">Dinero v8.1.12</div>
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/tag/v8.1.12">Open v8.1.12 release</a>
           </article>
@@ -1014,45 +1014,47 @@
 
         <div class="section-head" style="margin-top: 28px;">
           <h2>What's in v8.1.12</h2>
-          <p>v8.1.12 is a network-resilience, mining-continuity, and desktop-usability release. It keeps the v8.1.1 consensus rules — CTV and CCV activate at mainnet block 100,000 — and the height-84,131 fast-sync anchor, while teaching nodes to repair their own chain gaps and to reach the network over far more paths than the bootstrap anchors.</p>
+          <p>v8.1.12 closes out a three-release consensus and reliability series. v8.1.10 was the mandatory readiness release for the coupled CTV/CCV covenant profile at block 100,000; v8.1.11 bundled the verified height-99,677 V4 snapshot and made fresh fast-sync datadirs restart safely; v8.1.12 activates the shielded Auth epoch reset at 110,000 and DNRS state commitments with contextual transaction locks at 111,000, and corrects the Apple Silicon Metal miner. All three heights have passed on mainnet.</p>
         </div>
 
         <div class="two-col" style="margin-top: 14px;">
           <article class="card">
-            <h3>Mining continuity and chain convergence</h3>
-            <p class="meta">A lifecycle-safe recurring driver closes transient gaps between the best accepted header and the fully validated active tip, so a node repairs itself instead of stalling.</p>
+            <h3>Consensus activations — now live</h3>
+            <p class="meta">Operators and miners must run compatible software before validating each height; v8.1.12 carries all three rule sets.</p>
             <ul class="list">
-              <li><strong>Self-healing bodies:</strong> canonical block bodies are requested from the announcing peer, retried through bounded alternate-peer rotation, persisted, and activated in strict height order.</li>
-              <li><strong>Restart-safe:</strong> already stored bodies are adopted without re-downloading, and recovery resumes after a restart from persisted header/body metadata.</li>
-              <li><strong>Never mines blind:</strong> mining continues only on the last fully validated tip while recovery proceeds — never on an unvalidated header — and every safety gate stays a hard stop.</li>
+              <li><strong>Block 100,000</strong> (v8.1.10): <code>OP_CHECKTEMPLATEVERIFY</code> and Dinero's <code>OP_CHECKCONTRACTVERIFY</code> activated atomically under a shared constant. <code>OP_CHECKSIGFROMSTACK</code> and <code>OP_TXHASH</code> stay dormant.</li>
+              <li><strong>Block 110,000</strong> (v8.1.12): shielded Auth and private-covenant epoch reset. It does not preserve spendability of pre-reset shielded notes.</li>
+              <li><strong>Block 111,000</strong> (v8.1.12): DNRS state commitments and absolute/relative transaction-lock enforcement across admission, mining, validation, and replay.</li>
+              <li><strong>Operator check</strong>: <code>dinero-cli getblockchaininfo</code> reports <code>contextual_locks_active: true</code>; verify the consensus checksum from the release readiness evidence with <code>dinero-cli getconsensusinfo</code>.</li>
             </ul>
           </article>
 
           <article class="card">
-            <h3>Decentralized connectivity</h3>
-            <p class="meta">Dynamic AddrMan peers, feelers, peer gossip, persisted addresses, direct IPv4/IPv6, DNS bootstrap, explicit emergency peers, relay hints, and Tor v3 can now all operate at the same time.</p>
+            <h3>Snapshot and restart reliability</h3>
+            <p class="meta">v8.1.11 bundles the verified mainnet height-99,677 V4 snapshot across Qt, macOS, Linux, and Windows; v8.1.12 adds DNRS-bound v5 snapshot support while the bundled snapshots remain legacy v4.</p>
             <ul class="list">
-              <li><strong>Behind CGNAT:</strong> nodes gain an encrypted Dinero relay fallback, and reachable nodes can offer a bounded Dinero-only relay service with conservative automatic limits.</li>
-              <li><strong>Tor on macOS:</strong> Dinero Qt can run a pinned, verified Tor component privately for Dinero P2P. Tor failure never disables ordinary P2P, and no wallet RPC credentials or onion private keys are exposed. Linux and Windows keep ordinary P2P plus external-Tor support.</li>
-              <li><strong>Simple controls:</strong> Overview carries plain Tor and relay toggles plus a read-only public onion address; Command-K stays a keyboard-only diagnostics panel.</li>
+              <li><strong>Restart-safe fast-sync:</strong> the verified snapshot base header is persisted and restored, so a fresh fast-sync datadir restarts without a populated height index.</li>
+              <li><strong>Header-first rows:</strong> header-first database rows are distinguished from legacy metadata when the full base block arrives; the older lifecycle fallback for interrupted upgrades is retained.</li>
+              <li><strong>Authenticated snapshots:</strong> the Linux installer prefers the Ed25519-signed daily snapshot and falls back to the release snapshot. Forged v5 snapshots are rejected; publisher signatures remain mandatory for legacy v4 snapshots.</li>
+              <li><strong>Publisher pipeline:</strong> a candidate is retained until burial, validated with a real node, then published atomically. Automatic publisher discovery is not included.</li>
             </ul>
           </article>
 
           <article class="card">
-            <h3>CTV + CCV activation (unchanged)</h3>
-            <p class="meta">Both covenant opcodes activate together at block 100,000. Installing v8.1.12 early does not activate them early.</p>
+            <h3>Wallet, mining, and platforms</h3>
+            <p class="meta">Wallet recovery, shielded state, and cross-platform work from v8.1.10 and v8.1.12, plus the Apple Silicon mining correction.</p>
             <ul class="list">
-              <li><strong>CTV</strong>: <code>OP_CHECKTEMPLATEVERIFY</code>, compatible with BIP-119 semantics, activates at block 100,000.</li>
-              <li><strong>CCV</strong>: Dinero's <code>OP_CHECKCONTRACTVERIFY</code> activates at the same height. A shared activation constant prevents the two rules from drifting apart.</li>
-              <li><strong>Still dormant</strong>: <code>OP_CHECKSIGFROMSTACK</code> and <code>OP_TXHASH</code> are not activated by this release.</li>
-              <li><strong>Operator check</strong>: <code>dinero-cli getconsensusinfo</code> must report <code>68e0a99766e8ab1224ee040ec715bbbd0a544a59d4b3a96025dd35f77f4e960a</code>.</li>
+              <li><strong>Apple Silicon Metal (metal-fix1):</strong> the original v8.1.12 ARM Qt build omitted the embedded Metal mining backend and displayed "Metal active" while falling back to CPU. The corrected build enables Metal and reports the actual runtime backend, including fallback and stopped states. Every Apple Silicon link on this page points to the corrected build.</li>
+              <li><strong>Wallet recovery:</strong> persistent shielded anchor history across restart and reorg, stronger mnemonic import/rebinding and zero-watch-script recovery, consolidation single-flight protections, and improved QR URI interoperability.</li>
+              <li><strong>Platforms:</strong> dedicated macOS 13 Ventura Intel builds on Qt 6.5, Windows installers with CUDA 12.2 support (physical GPU qualification remains open), and Qt covenant navigation, miner/Core version display, and pool accounting presentation.</li>
+              <li><strong>Networking:</strong> convergence and QUIC fixes with regression coverage; the release notes do not claim every historical intermittent issue is closed.</li>
             </ul>
           </article>
         </div>
 
         <article class="card" style="margin-top: 14px;">
           <h3>Fast-sync snapshot</h3>
-          <p class="meta">v8.1.12 publishes a height-84,131 <strong>V4</strong> fast-sync snapshot carrying the UTXO set, Utreexo forest, and shielded state. It remains an offline and mirror-failure fallback. The public Linux installer prefers the newer signed daily snapshot; the daemon requires its base on the proof-of-work-validated header chain and verifies the Utreexo root against that header.</p>
+          <p class="meta">v8.1.12 bundles the preferred height-99,677 <strong>V4</strong> fast-sync snapshot with its normalized daemon manifest, publisher manifest, and Ed25519 signature, plus a height-73,035 compatibility fallback; both are legacy v4. The release snapshot remains an offline and mirror-failure fallback. The public Linux installer prefers the newer signed daily snapshot; the daemon requires its base on the proof-of-work-validated header chain and verifies the Utreexo root against that header.</p>
           <div class="filename">dinero-assumeutxo-99677-v4.dat</div>
           <div class="actions">
             <a class="button secondary" href="https://github.com/DineroLabs/dinero-v8/releases/download/v8.1.12/dinero-assumeutxo-99677-v4.dat">Download snapshot</a>
@@ -1155,7 +1157,7 @@ be4e3cdde524e261c43cd78a0a757cfa32e8387b037dc036e44431c00a11d46a</code></pre>
           </div>
 
           <div class="card">
-            <h3>Height-84,131 V4 snapshot</h3>
+            <h3>Height-99,677 V4 snapshot</h3>
             <pre><code>shasum -a 256 dinero-assumeutxo-99677-v4.dat
 # Expected:
 d4b8d88c2fe765aa627ed0bc12205b2cfba6e4fa50aeb72fd9924990e83c29fd</code></pre>
@@ -1177,16 +1179,16 @@ source=Notarized Developer ID</code></pre>
 
           <div class="card">
             <h3>dinero-qt macOS DMG</h3>
-            <pre><code>shasum -a 256 Dinero-v8.1.12-macOS-arm64.dmg
+            <pre><code>shasum -a 256 Dinero-v8.1.12-macOS-arm64-metal-fix1.dmg
 # Expected:
-26ed9bf526c9cbd3a2998eb0bd122db39d8648e596e049313b8712523ac72777</code></pre>
+ecebcf3420488eda75e461dfa5bab65a5ab0bf348a946aba8118a7188fccb7aa</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS app zip</h3>
-            <pre><code>shasum -a 256 Dinero-v8.1.12-macOS-arm64-qt.zip
+            <pre><code>shasum -a 256 Dinero-v8.1.12-macOS-arm64-metal-fix1-qt.zip
 # Expected:
-ade352641826505ebb431a3b1e262a154842a46609bd6eef6dcab11bec67a1b9</code></pre>
+750163896b2f063001ce800c18cd7c46fa60ba23c5df71acc05110242ece0b50</code></pre>
           </div>
 
           <div class="card">
@@ -1245,7 +1247,7 @@ shasum -a 256 -c SHA256SUMS-macos-x86_64-desktop-8.1.12</code></pre>
 
           <div class="card">
             <h3>macOS notarization</h3>
-            <pre><code>spctl --assess --type open --context context:primary-signature -vv Dinero-v8.1.12-macOS-arm64.dmg
+            <pre><code>spctl --assess --type open --context context:primary-signature -vv Dinero-v8.1.12-macOS-arm64-metal-fix1.dmg
 # Expected:
 accepted
 source=Notarized Developer ID</code></pre>
@@ -1324,7 +1326,7 @@ cd dinero-operator-v8.1.12-macOS-arm64
             <h3>Good to know</h3>
             <ul class="list">
               <li>The v8.1.12 Windows installers are Authenticode-signed (Microsoft-verified publisher: Mirsad Hajdarevic). SmartScreen may still show a new-publisher prompt until the certificate builds download reputation; verify the SHA256 above and, if prompted, click "More info" → "Run anyway".</li>
-              <li>The published v8.1.12 binaries carry the consensus rules required at block 100,000. Verify the runtime consensus checksum with <code>dinero-cli getconsensusinfo</code> before activation.</li>
+              <li>The published v8.1.12 binaries carry the consensus rules for blocks 100,000, 110,000, and 111,000, all of which have activated on mainnet. Verify the runtime consensus checksum with <code>dinero-cli getconsensusinfo</code> against the release readiness evidence before starting the daemon.</li>
               <li>Linux v8.1.12 ships verified graphical AppImage, Debian/Ubuntu, and portable Qt packages alongside the headless operator bundle. The node installer extracts <code>dinerod</code> and <code>dinero-cli</code> from the operator archive, prefers the signed daily snapshot, and falls back to the newest snapshot bundled with the release.</li>
               <li>Dynamic P2P is active in conservative slow-churn mode. It is designed to improve peer diversity gradually, not churn aggressively.</li>
               <li>Relay/NAT traversal is useful infrastructure, but the long-term goal is broader community-run peers and relays, not dependence on Dinero Labs bootstrap nodes.</li>

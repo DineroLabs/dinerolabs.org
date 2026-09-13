@@ -127,6 +127,15 @@ def main() -> None:
         snapshot_assets,
         key=lambda name: int(re.search(r"(?:snapshot-|assumeutxo-)([0-9]+)", name).group(1)),
     )
+    # v8.1.12 superseded its original Apple Silicon Qt build with a
+    # "-metal-fix1" correction (the original omitted the Metal mining
+    # backend). When a release ships the corrected assets, the page must
+    # link and hash those, not the superseded originals.
+    arm64_dmg = f"Dinero-v{version}-macOS-arm64-metal-fix1.dmg"
+    arm64_zip = f"Dinero-v{version}-macOS-arm64-metal-fix1-qt.zip"
+    if arm64_dmg not in assets or arm64_zip not in assets:
+        arm64_dmg = f"Dinero-v{version}-macOS-arm64.dmg"
+        arm64_zip = f"Dinero-v{version}-macOS-arm64-qt.zip"
     required_assets = {
         linux_asset,
         f"Dinero-Server-{version}-windows-x86_64-Setup.exe",
@@ -135,8 +144,8 @@ def main() -> None:
         # It was checked (it is a release asset) but never required, which
         # made the page-vs-required equality below reject it as "extra".
         f"Dinero-{version}-windows-x86_64-Setup.exe",
-        f"Dinero-v{version}-macOS-arm64.dmg",
-        f"Dinero-v{version}-macOS-arm64-qt.zip",
+        arm64_dmg,
+        arm64_zip,
         f"Dinero-v{version}-macOS-x86_64.dmg",
         f"Dinero-v{version}-macOS-x86_64-qt.zip",
         f"dinero-v{version}-linux-x86_64.AppImage",
