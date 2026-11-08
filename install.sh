@@ -38,8 +38,9 @@ set -euo pipefail
 # Configuration
 # ---------------------------------------------------------------------------
 RELEASE_REPO="DineroLabs/dinero-v8"
-CORE_PATTERN='^(dinero-core-.*-linux-x86_64|dinero-linux-x86_64-.*)\.tar\.gz$'
-CLI_PATTERN='^(dinero-cli-.*-linux-x86_64|dinero-linux-x86_64-.*)\.tar\.gz$'
+# Match runnable versioned archives, not the separate -debug-symbols tarball.
+CORE_PATTERN='^(dinero-core-[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?-linux-x86_64|dinero-linux-x86_64-[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?)\.tar\.gz$'
+CLI_PATTERN='^(dinero-cli-[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?-linux-x86_64|dinero-linux-x86_64-[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?)\.tar\.gz$'
 SNAPSHOT_PATTERN='^(utxo-snapshot-[0-9]+|dinero-assumeutxo-[0-9]+-v[0-9]+)\.dat$'
 SNAPSHOT_MIRRORS="${SNAPSHOT_MIRRORS:-https://seed3.dinerolabs.org/snapshot https://seed.dinerolabs.org/snapshot https://seed2.dinerolabs.org/snapshot}"
 P2P_PORT=20999
