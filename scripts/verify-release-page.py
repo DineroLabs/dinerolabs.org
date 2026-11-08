@@ -50,9 +50,7 @@ def main() -> None:
     releases = fetch_json(CORE_RELEASES_API)
     assert isinstance(releases, list)
 
-    core_asset_re = re.compile(
-        r"^(?:dinero-core-.*-linux-x86_64|dinero-linux-x86_64-.*)\.tar\.gz$"
-    )
+    core_asset_re = re.compile(assignment(installer, "CORE_PATTERN"))
 
     stable = next(
         release
@@ -106,7 +104,8 @@ def main() -> None:
         html,
     )
     linked_assets = [
-        urllib.parse.unquote(url.rsplit("/", 1)[-1]) for url in current_urls
+        urllib.parse.unquote(urllib.parse.urlsplit(url).path.rsplit("/", 1)[-1])
+        for url in current_urls
     ]
     missing = sorted(set(linked_assets) - assets.keys())
     assert not missing, f"download links reference missing {tag} assets: {missing}"
@@ -153,6 +152,11 @@ def main() -> None:
         f"dinero-qt-desktop_{version}-1_amd64.deb",
         f"dinero-operator-v{version}-macOS-arm64.tar.gz",
         f"dinero-operator-v{version}-macOS-x86_64.tar.gz",
+        f"dinero-v{version}-windows-x86_64-msvc.zip",
+        f"dinero-core_{version}-1_amd64.deb",
+        f"Dinero-v{version}-ventura-qt6.5-macOS-x86_64.dmg",
+        f"Dinero-v{version}-ventura-qt6.5-macOS-x86_64-qt.zip",
+        f"dinero-operator-v{version}-ventura-macOS-x86_64.tar.gz",
         latest_snapshot,
     }
     absent_required = sorted(required_assets - assets.keys())
@@ -179,7 +183,8 @@ def main() -> None:
         html,
     )
     native_linked_assets = [
-        urllib.parse.unquote(url.rsplit("/", 1)[-1]) for url in native_urls
+        urllib.parse.unquote(urllib.parse.urlsplit(url).path.rsplit("/", 1)[-1])
+        for url in native_urls
     ]
     missing_native = sorted(set(native_linked_assets) - native_assets.keys())
     assert not missing_native, (
