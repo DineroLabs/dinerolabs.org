@@ -42,8 +42,9 @@ RELEASE_REPO="DineroLabs/dinero-v8"
 # Match runnable versioned archives, not the separate -debug-symbols tarball.
 CORE_PATTERN='^(dinero-core-[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?-linux-x86_64|dinero-linux-x86_64-[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?)\.tar\.gz$'
 CLI_PATTERN='^(dinero-cli-[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?-linux-x86_64|dinero-linux-x86_64-[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?)\.tar\.gz$'
-SNAPSHOT_PATTERN='^(utxo-snapshot-[0-9]+|dinero-assumeutxo-[0-9]+-v[0-9]+)\.dat$'
+SNAPSHOT_PATTERN='^(utxo-snapshot-[0-9]+|dinero-assumeutxo-[0-9]+-v[0-9]+(-full)?)\.dat$'
 SNAPSHOT_MIRRORS="${SNAPSHOT_MIRRORS:-https://seed3.dinerolabs.org/snapshot https://seed.dinerolabs.org/snapshot https://seed2.dinerolabs.org/snapshot}"
+FULL_V6_SNAPSHOT_MIRRORS="${FULL_V6_SNAPSHOT_MIRRORS:-https://seed3.dinerolabs.org/snapshot/full-v6 https://seed.dinerolabs.org/snapshot/full-v6 https://seed2.dinerolabs.org/snapshot/full-v6}"
 P2P_PORT=20999
 RPC_PORT=20998
 SERVICE_UNIT="dinero.service"
@@ -155,8 +156,16 @@ def find(assets, rx):
         matches[0],
     )
 
-def newest_snapshot(assets):
+def needs_full_v6(tag):
+    match = re.fullmatch(r"v([0-9]+)\.([0-9]+)\.([0-9]+)", tag)
+    return match is not None and tuple(map(int, match.groups())) >= (8, 2, 3)
+
+def newest_snapshot(assets, tag):
     candidates = [a for a in assets if snap_re.match(a["name"])]
+    if needs_full_v6(tag):
+        candidates = [a for a in candidates if re.fullmatch(
+            r"dinero-assumeutxo-[0-9]+-v6-full\.dat", a["name"]
+        )]
     if not candidates:
         return None
     def height(asset):
@@ -174,7 +183,7 @@ for rel in data:
     if not core:
         continue  # this release has no Linux daemon archive; try older
     cli = find(assets, cli_re)
-    snap = newest_snapshot(assets)
+    snap = newest_snapshot(assets, rel["tag_name"])
     snap_manifest = next((a for a in assets if snap and a["name"] == snap["name"] + ".manifest.json"), None)
     print(rel["tag_name"])
     for a in (core, cli, snap, snap_manifest):
@@ -228,11 +237,11 @@ snapshot_release_pair_has_digests() {  # <payload-digest> <manifest-digest>
 
 # Download a recent signed snapshot no older than the selected release base.
 # The daemon independently binds its Utreexo root to its PoW-validated headers.
-# Arguments: <snapshot-out> <manifest-out> <minimum-height>. The signed
-# publisher bytes remain separate from the normalized runtime manifest,
+# Arguments: <snapshot-out> <manifest-out> <minimum-height> <profile> <mirrors>.
+# Signed publisher bytes remain separate from the normalized runtime manifest,
 # whose snapshot_file must match the installed filename.
 fetch_live_snapshot() {
-  local snapshot_out="$1" manifest_out="$2" minimum_height="$3"
+  local snapshot_out="$1" manifest_out="$2" minimum_height="$3" profile="$4" mirrors="$5"
   local work="$TMP/live-snapshot" mirror metadata network height expected bytes actual
   rm -rf "$work"
   mkdir -p "$work"
@@ -242,8 +251,12 @@ MCowBQYDK2VwAyEAlFOdW71hOC7Q5Y0bYRLDvyFtv8ddU9Tf4a8dbr1Y4Yw=
 -----END PUBLIC KEY-----
 PUBKEY
 
-  for mirror in $SNAPSHOT_MIRRORS; do
-    note "Trying signed daily snapshot: $mirror"
+  for mirror in $mirrors; do
+    case "$mirror" in
+      https://*) : ;;
+      *) warn "Snapshot mirror must use HTTPS: $mirror"; continue ;;
+    esac
+    note "Trying signed $profile snapshot: $mirror"
     rm -f "$work/manifest.json" "$work/manifest.sig" "$work/snapshot.dat"
     if ! curl -fsSL --retry 2 --connect-timeout 15 --max-time 30 \
         -o "$work/manifest.json" "$mirror/manifest.json" ||
@@ -258,7 +271,7 @@ PUBKEY
       continue
     fi
 
-    if ! metadata="$(python3 - "$work/manifest.json" "$minimum_height" <<'PYEOF'
+    if ! metadata="$(python3 - "$work/manifest.json" "$minimum_height" "$profile" <<'PYEOF'
 import datetime, json, sys
 m = json.load(open(sys.argv[1], "rb"))
 s = m.get("snapshot", m)
@@ -274,7 +287,13 @@ if type(size) is not int or not 1048576 <= size <= 536870912:
     raise SystemExit(1)
 if s.get("snapshot_file") != "snapshot.dat":
     raise SystemExit(1)
-if m.get("format_version") not in (4, 5) or m.get("snapshot_profile") not in (None, "legacy"):
+if sys.argv[3] == "full-v6":
+    if m.get("format_version") != 6 or m.get("snapshot_profile") != "full":
+        raise SystemExit(1)
+elif sys.argv[3] == "legacy":
+    if m.get("format_version") not in (4, 5) or m.get("snapshot_profile") not in (None, "legacy"):
+        raise SystemExit(1)
+else:
     raise SystemExit(1)
 try:
     generated = datetime.datetime.strptime(m["generated_at"], "%Y%m%dT%H%M%SZ").replace(tzinfo=datetime.timezone.utc)
@@ -286,7 +305,7 @@ if age < datetime.timedelta(minutes=-30) or age > datetime.timedelta(days=7):
 print(network, height, sha, size, sep="\t")
 PYEOF
     )"; then
-      warn "Signed snapshot is stale or older than the release base"
+      warn "Signed snapshot is stale, older than the release base, or has the wrong profile"
       continue
     fi
     IFS=$'\t' read -r network height expected bytes <<<"$metadata"
@@ -324,7 +343,7 @@ PYEOF
     mv "$work/runtime.manifest.json" "$manifest_out"
     mv "$work/manifest.json" "$snapshot_out.publisher.manifest.json"
     mv "$work/manifest.sig" "$snapshot_out.publisher.manifest.sig"
-    note "Signed daily snapshot verified at height $height (sha256:$actual)"
+    note "Signed $profile snapshot verified at height $height (sha256:$actual)"
     return 0
   done
   return 1
@@ -390,6 +409,13 @@ tag_has_snapshot_fix() {  # <tag>
   [ "$(printf '%s\n%s\n' "$tag" "$SNAPSHOT_FIX_MIN_TAG" | sort -V | head -1)" = "$SNAPSHOT_FIX_MIN_TAG" ]
 }
 
+# v8.2.3 is the first release with a full-profile v6 desktop snapshot.
+release_uses_full_v6() {  # <tag>
+  local tag="$1"
+  case "$tag" in *-*) return 1 ;; esac
+  [ "$(printf '%s\n%s\n' v8.2.3 "$tag" | sort -V | head -1)" = v8.2.3 ]
+}
+
 # True if the host has enough RAM + free disk for a safe fast bootstrap.
 have_resources_for_fast() {
   local ram_mb disk_mb
@@ -433,20 +459,32 @@ SNAPSHOT_LINE=""
 if [ "$EFFECTIVE_SYNC" = "fast" ]; then
   SNAP_PATH="$DATADIR/dinero-assumeutxo-live.dat"
   SNAP_MANIFEST="$SNAP_PATH.manifest.json"
-  if [ "$SNAP_HEIGHT" -gt 0 ] &&
-     fetch_live_snapshot "$SNAP_PATH" "$SNAP_MANIFEST" "$SNAP_HEIGHT"; then
+  SNAP_PROFILE=legacy
+  ACTIVE_SNAPSHOT_MIRRORS="$SNAPSHOT_MIRRORS"
+  if release_uses_full_v6 "$TAG"; then
+    SNAP_PROFILE=full-v6
+    ACTIVE_SNAPSHOT_MIRRORS="$FULL_V6_SNAPSHOT_MIRRORS"
+    if [ "$SNAP_HEIGHT" -lt 150000 ] ||
+       [ "$SNAP_NAME" != "dinero-assumeutxo-${SNAP_HEIGHT}-v6-full.dat" ]; then
+      warn "$TAG has no full-profile v6 release snapshot — using full validation"
+      EFFECTIVE_SYNC=full
+    fi
+  fi
+  if [ "$EFFECTIVE_SYNC" = "fast" ] && [ "$SNAP_HEIGHT" -gt 0 ] &&
+     fetch_live_snapshot "$SNAP_PATH" "$SNAP_MANIFEST" "$SNAP_HEIGHT" "$SNAP_PROFILE" "$ACTIVE_SNAPSHOT_MIRRORS"; then
     chown "$RUN_USER:$RUN_USER" "$SNAP_PATH" "$SNAP_MANIFEST" \
       "$SNAP_PATH.publisher.manifest.json" "$SNAP_PATH.publisher.manifest.sig"
     SNAPSHOT_LINE="assumeutxo_snapshot=$SNAP_PATH"
-    note "Fast bootstrap will use the signed daily snapshot, then forward + background validation."
-  elif [ "$SNAP_URL" != "-" ] && [ "$SNAP_MANIFEST_URL" != "-" ] &&
+    note "Fast bootstrap will use the signed $SNAP_PROFILE snapshot, then forward + background validation."
+  elif [ "$EFFECTIVE_SYNC" = "fast" ] && [ "$SNAP_URL" != "-" ] &&
+       [ "$SNAP_MANIFEST_URL" != "-" ] &&
        snapshot_release_pair_has_digests "$SNAP_DIGEST" "$SNAP_MANIFEST_DIGEST"; then
-    warn "No admissible signed daily snapshot — falling back to $SNAP_NAME from $TAG"
+    warn "No admissible signed mirror snapshot — falling back to $SNAP_NAME from $TAG"
     SNAP_PATH="$DATADIR/$SNAP_NAME"
     dl_verify "$SNAP_NAME" "$SNAP_URL" "$SNAP_DIGEST" "$SNAP_PATH"
     SNAP_MANIFEST="$SNAP_PATH.manifest.json"
     dl_verify "$SNAP_MANIFEST_NAME" "$SNAP_MANIFEST_URL" "$SNAP_MANIFEST_DIGEST" "$SNAP_MANIFEST"
-    python3 - "$SNAP_PATH" "$SNAP_MANIFEST" "$SNAP_HEIGHT" <<'PYEOF'
+    python3 - "$SNAP_PATH" "$SNAP_MANIFEST" "$SNAP_HEIGHT" "$SNAP_PROFILE" <<'PYEOF'
 import hashlib, json, pathlib, sys
 payload = pathlib.Path(sys.argv[1])
 manifest = json.loads(pathlib.Path(sys.argv[2]).read_text(encoding="utf-8"))
@@ -455,8 +493,11 @@ if not isinstance(snapshot, dict) or manifest.get("network") != "mainnet":
     raise SystemExit("release snapshot manifest is malformed")
 if snapshot.get("snapshot_file") != payload.name or snapshot.get("height") != int(sys.argv[3]):
     raise SystemExit("release snapshot manifest identity differs from the selected asset")
-if manifest.get("format_version") not in (4, 5):
-    raise SystemExit("release snapshot has an unexpected format")
+if sys.argv[4] == "full-v6":
+    if manifest.get("format_version") != 6 or manifest.get("snapshot_profile") != "full":
+        raise SystemExit("release snapshot is not full-profile v6")
+elif manifest.get("format_version") not in (4, 5):
+    raise SystemExit("legacy release snapshot has an unexpected format")
 if snapshot.get("bytes") != payload.stat().st_size:
     raise SystemExit("release snapshot length differs from its manifest")
 with payload.open("rb") as stream:
@@ -467,8 +508,8 @@ PYEOF
     chown "$RUN_USER:$RUN_USER" "$SNAP_PATH" "$SNAP_MANIFEST"
     SNAPSHOT_LINE="assumeutxo_snapshot=$SNAP_PATH"
     note "Fast bootstrap will use the release snapshot, then forward + background validation."
-  else
-    warn "No admissible signed daily or digest-authenticated release snapshot is available — using full validation"
+  elif [ "$EFFECTIVE_SYNC" = "fast" ]; then
+    warn "No admissible signed mirror or digest-authenticated release snapshot is available — using full validation"
     EFFECTIVE_SYNC=full
   fi
 fi
