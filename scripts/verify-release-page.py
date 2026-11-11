@@ -117,7 +117,7 @@ def main() -> None:
         name
         for name in assets
         if re.match(
-            r"^(?:utxo-snapshot-[0-9]+|dinero-assumeutxo-[0-9]+-v[0-9]+)\.dat$",
+            r"^(?:utxo-snapshot-[0-9]+|dinero-assumeutxo-[0-9]+-v[0-9]+(?:-full)?)\.dat$",
             name,
         )
     ]
@@ -126,6 +126,13 @@ def main() -> None:
         snapshot_assets,
         key=lambda name: int(re.search(r"(?:snapshot-|assumeutxo-)([0-9]+)", name).group(1)),
     )
+    if tuple(int(part) for part in version.split(".")) >= (8, 2, 3):
+        assert latest_snapshot.endswith("-v6-full.dat"), (
+            f"{tag} must include a full-profile v6 fresh-install snapshot"
+        )
+        assert "FULL_V6_SNAPSHOT_MIRRORS=" in installer, (
+            "installer lacks the separate full-v6 mirror route"
+        )
     # v8.1.12 superseded its original Apple Silicon Qt build with a
     # "-metal-fix1" correction (the original omitted the Metal mining
     # backend). When a release ships the corrected assets, the page must
@@ -235,7 +242,7 @@ def main() -> None:
     assert 'snapshot_release_pair_has_digests "$SNAP_DIGEST" "$SNAP_MANIFEST_DIGEST"; then' in installer, (
         "installer must require SHA-256 digests for both release snapshot assets"
     )
-    assert 'fetch_live_snapshot "$SNAP_PATH" "$SNAP_MANIFEST" "$SNAP_HEIGHT"' in installer
+    assert 'fetch_live_snapshot "$SNAP_PATH" "$SNAP_MANIFEST" "$SNAP_HEIGHT" "$SNAP_PROFILE" "$ACTIVE_SNAPSHOT_MIRRORS"' in installer
     assert '"$SNAP_PATH.publisher.manifest.json"' in installer
     assert 'SNAP_MANIFEST="$SNAP_PATH.manifest.json"' in installer
     assert 'echo "assumeutxo_forward_connect=1"' in installer

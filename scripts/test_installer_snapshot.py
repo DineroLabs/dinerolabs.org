@@ -6,7 +6,9 @@ from __future__ import annotations
 import datetime
 import hashlib
 import json
+import os
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 import unittest
@@ -47,10 +49,11 @@ class InstallerSnapshotTest(unittest.TestCase):
             },
         }
 
-    def check_metadata(self, manifest: dict, minimum_height: int = 148375) -> subprocess.CompletedProcess[str]:
+    def check_metadata(self, manifest: dict, minimum_height: int = 148375,
+                       profile: str = "legacy") -> subprocess.CompletedProcess[str]:
         self.manifest.write_text(json.dumps(manifest))
         return subprocess.run(
-            ["python3", "-", str(self.manifest), str(minimum_height)],
+            ["python3", "-", str(self.manifest), str(minimum_height), profile],
             input=self.metadata_script, text=True, capture_output=True,
             check=False,
         )
@@ -92,6 +95,58 @@ class InstallerSnapshotTest(unittest.TestCase):
         self.assertEqual(normalized, original)
         self.assertIn('mv "$work/manifest.sig" "$snapshot_out.publisher.manifest.sig"', INSTALLER)
 
+    def test_full_v6_mirror_requires_full_profile(self) -> None:
+        marker = "release_uses_full_v6() {"
+        start = INSTALLER.index(marker)
+        end = INSTALLER.index("\n}", start) + 2
+        function = INSTALLER[start:end]
+        def has_full_v6(tag: str) -> bool:
+            result = subprocess.run(
+                ["bash", "-c", function + '\nrelease_uses_full_v6 "$1"', "_", tag],
+                text=True, capture_output=True, check=False,
+            )
+            return result.returncode == 0
+        self.assertFalse(has_full_v6("v8.2.2"))
+        self.assertTrue(has_full_v6("v8.2.3"))
+        self.assertTrue(has_full_v6("v8.2.4"))
+        self.assertFalse(has_full_v6("v8.2.3-rc1"))
+        full = self.publisher_manifest(height=150521)
+        full["format_version"] = 6
+        full["snapshot_profile"] = "full"
+        self.assertEqual(self.check_metadata(full, 150521, "full-v6").returncode, 0)
+        self.assertNotEqual(self.check_metadata(full, 150521, "legacy").returncode, 0)
+        full["snapshot_profile"] = "compact"
+        self.assertNotEqual(self.check_metadata(full, 150521, "full-v6").returncode, 0)
+        self.assertIn('/snapshot/full-v6', INSTALLER)
+        pattern = re.search(r"^SNAPSHOT_PATTERN='([^']+)'$", INSTALLER, re.MULTILINE)
+        self.assertIsNotNone(pattern)
+        self.assertIsNotNone(re.fullmatch(pattern.group(1), "dinero-assumeutxo-150521-v6-full.dat"))
+        self.assertIsNone(re.fullmatch(pattern.group(1), "dinero-assumeutxo-150521-v6-compact.dat"))
+
+    def test_full_v6_release_selects_full_asset_even_with_newer_legacy_asset(self) -> None:
+        discovery = python_after('python3 - "$RELEASES_JSON" >"$PICK"')
+        assets = [
+            {"name": "dinero-core-8.2.3-linux-x86_64.tar.gz", "browser_download_url": "https://example.test/core"},
+            {"name": "dinero-assumeutxo-150521-v6-full.dat", "browser_download_url": "https://example.test/full"},
+            {"name": "dinero-assumeutxo-150700-v5.dat", "browser_download_url": "https://example.test/legacy"},
+        ]
+        releases = self.root / "releases.json"
+        releases.write_text(json.dumps([{
+            "tag_name": "v8.2.3", "draft": False, "prerelease": False, "assets": assets,
+        }]))
+        env = os.environ.copy()
+        for key in ("CORE_PATTERN", "CLI_PATTERN", "SNAPSHOT_PATTERN"):
+            match = re.search(r"^" + key + r"='([^']+)'$", INSTALLER, re.MULTILINE)
+            self.assertIsNotNone(match)
+            env[key] = match.group(1)
+        env["INCLUDE_PRERELEASE"] = "0"
+        result = subprocess.run(
+            ["python3", "-", str(releases)], input=discovery,
+            text=True, capture_output=True, check=False, env=env,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout.splitlines()[7], "dinero-assumeutxo-150521-v6-full.dat")
+
     def test_release_fallback_requires_matching_payload_and_manifest(self) -> None:
         payload = self.root / "dinero-assumeutxo-148375-v5.dat"
         payload.write_bytes(b"snapshot payload")
@@ -103,11 +158,11 @@ class InstallerSnapshotTest(unittest.TestCase):
         sidecar = self.root / (payload.name + ".manifest.json")
         sidecar.write_text(json.dumps(manifest))
         check = python_after(
-            'python3 - "$SNAP_PATH" "$SNAP_MANIFEST" "$SNAP_HEIGHT"'
+            'python3 - "$SNAP_PATH" "$SNAP_MANIFEST" "$SNAP_HEIGHT" "$SNAP_PROFILE"'
         )
         def run() -> subprocess.CompletedProcess[str]:
             return subprocess.run(
-                ["python3", "-", str(payload), str(sidecar), "148375"],
+                ["python3", "-", str(payload), str(sidecar), "148375", "legacy"],
                 input=check, text=True, capture_output=True, check=False,
             )
         self.assertEqual(run().returncode, 0)
@@ -116,6 +171,32 @@ class InstallerSnapshotTest(unittest.TestCase):
         self.assertNotEqual(run().returncode, 0)
         manifest["snapshot"]["snapshot_file"] = payload.name
         manifest["snapshot"]["sha256"] = "0" * 64
+        sidecar.write_text(json.dumps(manifest))
+        self.assertNotEqual(run().returncode, 0)
+
+    def test_full_v6_release_fallback_refuses_compact_profile(self) -> None:
+        payload = self.root / "dinero-assumeutxo-150521-v6-full.dat"
+        payload.write_bytes(b"full-v6 snapshot payload")
+        manifest = self.publisher_manifest(height=150521)
+        manifest["format_version"] = 6
+        manifest["snapshot_profile"] = "full"
+        manifest["snapshot"].update(
+            snapshot_file=payload.name,
+            bytes=payload.stat().st_size,
+            sha256=hashlib.sha256(payload.read_bytes()).hexdigest(),
+        )
+        sidecar = self.root / (payload.name + ".manifest.json")
+        checker = python_after(
+            'python3 - "$SNAP_PATH" "$SNAP_MANIFEST" "$SNAP_HEIGHT" "$SNAP_PROFILE"'
+        )
+        def run() -> subprocess.CompletedProcess[str]:
+            return subprocess.run(
+                ["python3", "-", str(payload), str(sidecar), "150521", "full-v6"],
+                input=checker, text=True, capture_output=True, check=False,
+            )
+        sidecar.write_text(json.dumps(manifest))
+        self.assertEqual(run().returncode, 0)
+        manifest["snapshot_profile"] = "compact"
         sidecar.write_text(json.dumps(manifest))
         self.assertNotEqual(run().returncode, 0)
 
