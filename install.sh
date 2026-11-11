@@ -16,8 +16,9 @@
 #               otherwise a full validate-from-genesis sync.
 #        full — always verify from genesis (safest, slowest).
 #        fast — force snapshot bootstrap (advanced; fresh datadir only).
-#      When fast runs, the installer prefers the fleet's signed daily
-#      AssumeUTXO snapshot and falls back to the release-bundled snapshot.
+#      When fast runs, the installer prefers a recent signed snapshot at
+#      least as new as the release's bundled base, then falls back to that
+#      bundled snapshot and its manifest.
 #      The node becomes usable near tip while it BACKGROUND-VALIDATES the
 #      pre-snapshot history. The daily manifest is Ed25519-authenticated, its
 #      payload is SHA-256 checked, and dinerod binds the Utreexo root to its
@@ -132,7 +133,8 @@ curl -fsSL -H 'Accept: application/vnd.github+json' \
 
 # Pick the newest non-draft release (honoring INCLUDE_PRERELEASE) whose assets
 # contain a Linux daemon archive (split or combined), and emit name/url/digest for each asset of
-# interest (core, cli, snapshot). One line per field; "-" when absent.
+# interest (core, cli, snapshot, snapshot manifest). One line per field;
+# "-" when absent.
 PICK="$TMP/pick.txt"
 CORE_PATTERN="$CORE_PATTERN" CLI_PATTERN="$CLI_PATTERN" \
 SNAPSHOT_PATTERN="$SNAPSHOT_PATTERN" INCLUDE_PRERELEASE="$INCLUDE_PRERELEASE" \
@@ -173,8 +175,9 @@ for rel in data:
         continue  # this release has no Linux daemon archive; try older
     cli = find(assets, cli_re)
     snap = newest_snapshot(assets)
+    snap_manifest = next((a for a in assets if snap and a["name"] == snap["name"] + ".manifest.json"), None)
     print(rel["tag_name"])
-    for a in (core, cli, snap):
+    for a in (core, cli, snap, snap_manifest):
         if a:
             print(a["name"]); print(a["browser_download_url"]); print(a.get("digest", "") or "-")
         else:
@@ -188,6 +191,13 @@ TAG="${P[0]:-}"
 CORE_NAME="${P[1]:-}";  CORE_URL="${P[2]:-}";  CORE_DIGEST="${P[3]:-}"
 CLI_NAME="${P[4]:-}";   CLI_URL="${P[5]:-}";   CLI_DIGEST="${P[6]:-}"
 SNAP_NAME="${P[7]:-}";  SNAP_URL="${P[8]:-}";  SNAP_DIGEST="${P[9]:-}"
+SNAP_MANIFEST_NAME="${P[10]:-}"; SNAP_MANIFEST_URL="${P[11]:-}"; SNAP_MANIFEST_DIGEST="${P[12]:-}"
+SNAP_HEIGHT="$(python3 - "$SNAP_NAME" <<'PYEOF'
+import re, sys
+match = re.search(r"(?:snapshot-|assumeutxo-)([0-9]+)", sys.argv[1])
+print(match.group(1) if match else "0")
+PYEOF
+)"
 
 [ -n "$TAG" ] && [ "$CORE_URL" != "-" ] || fail "Could not resolve a Linux release from the GitHub API"
 note "Selected release: $TAG"
@@ -209,14 +219,13 @@ dl_verify() {  # <name> <url> <digest> <out>
   fi
 }
 
-# Download the fleet's current snapshot only after authenticating the exact
-# manifest bytes with the dedicated snapshot-signing key. The daemon performs
-# the independent consensus check: the base must be on its PoW-validated header
-# chain and the snapshot's Utreexo root must equal that base header's root.
-# Arguments: <snapshot-out> <manifest-out>. Returns non-zero so callers can
-# fall back to the snapshot bundled with the selected release.
+# Download a recent signed snapshot no older than the selected release base.
+# The daemon independently binds its Utreexo root to its PoW-validated headers.
+# Arguments: <snapshot-out> <manifest-out> <minimum-height>. The signed
+# publisher bytes remain separate from the normalized runtime manifest,
+# whose snapshot_file must match the installed filename.
 fetch_live_snapshot() {
-  local snapshot_out="$1" manifest_out="$2"
+  local snapshot_out="$1" manifest_out="$2" minimum_height="$3"
   local work="$TMP/live-snapshot" mirror metadata network height expected bytes actual
   rm -rf "$work"
   mkdir -p "$work"
@@ -242,24 +251,35 @@ PUBKEY
       continue
     fi
 
-    if ! metadata="$(python3 - "$work/manifest.json" <<'PYEOF'
-import json, sys
+    if ! metadata="$(python3 - "$work/manifest.json" "$minimum_height" <<'PYEOF'
+import datetime, json, sys
 m = json.load(open(sys.argv[1], "rb"))
 s = m.get("snapshot", m)
 network = m.get("network", "")
 height = s.get("height")
 sha = s.get("sha256", "")
 size = s.get("bytes")
-if network != "mainnet" or not isinstance(height, int) or height < 1:
+if network != "mainnet" or type(height) is not int or height < int(sys.argv[2]):
     raise SystemExit(1)
 if not isinstance(sha, str) or len(sha) != 64 or any(c not in "0123456789abcdef" for c in sha):
     raise SystemExit(1)
-if not isinstance(size, int) or not 1048576 <= size <= 536870912:
+if type(size) is not int or not 1048576 <= size <= 536870912:
+    raise SystemExit(1)
+if s.get("snapshot_file") != "snapshot.dat":
+    raise SystemExit(1)
+if m.get("format_version") not in (4, 5) or m.get("snapshot_profile") not in (None, "legacy"):
+    raise SystemExit(1)
+try:
+    generated = datetime.datetime.strptime(m["generated_at"], "%Y%m%dT%H%M%SZ").replace(tzinfo=datetime.timezone.utc)
+except (KeyError, TypeError, ValueError):
+    raise SystemExit(1)
+age = datetime.datetime.now(datetime.timezone.utc) - generated
+if age < datetime.timedelta(minutes=-30) or age > datetime.timedelta(days=7):
     raise SystemExit(1)
 print(network, height, sha, size, sep="\t")
 PYEOF
     )"; then
-      warn "Daily snapshot manifest is malformed or outside safety limits"
+      warn "Signed snapshot is stale or older than the release base"
       continue
     fi
     IFS=$'\t' read -r network height expected bytes <<<"$metadata"
@@ -280,8 +300,23 @@ PYEOF
       continue
     fi
 
+    if ! python3 - "$work/manifest.json" "$work/runtime.manifest.json" "$(basename "$snapshot_out")" <<'PYEOF'
+import json, sys
+with open(sys.argv[1], "rb") as source:
+    manifest = json.load(source)
+manifest["snapshot"]["snapshot_file"] = sys.argv[3]
+with open(sys.argv[2], "w", encoding="utf-8") as output:
+    json.dump(manifest, output, indent=2)
+    output.write("\n")
+PYEOF
+    then
+      warn "Could not prepare the runtime snapshot manifest"
+      continue
+    fi
     mv "$work/snapshot.dat" "$snapshot_out"
-    mv "$work/manifest.json" "$manifest_out"
+    mv "$work/runtime.manifest.json" "$manifest_out"
+    mv "$work/manifest.json" "$snapshot_out.publisher.manifest.json"
+    mv "$work/manifest.sig" "$snapshot_out.publisher.manifest.sig"
     note "Signed daily snapshot verified at height $height (sha256:$actual)"
     return 0
   done
@@ -391,19 +426,41 @@ SNAPSHOT_LINE=""
 if [ "$EFFECTIVE_SYNC" = "fast" ]; then
   SNAP_PATH="$DATADIR/dinero-assumeutxo-live.dat"
   SNAP_MANIFEST="$SNAP_PATH.manifest.json"
-  if fetch_live_snapshot "$SNAP_PATH" "$SNAP_MANIFEST"; then
-    chown "$RUN_USER:$RUN_USER" "$SNAP_PATH" "$SNAP_MANIFEST"
+  if [ "$SNAP_HEIGHT" -gt 0 ] &&
+     fetch_live_snapshot "$SNAP_PATH" "$SNAP_MANIFEST" "$SNAP_HEIGHT"; then
+    chown "$RUN_USER:$RUN_USER" "$SNAP_PATH" "$SNAP_MANIFEST" \
+      "$SNAP_PATH.publisher.manifest.json" "$SNAP_PATH.publisher.manifest.sig"
     SNAPSHOT_LINE="assumeutxo_snapshot=$SNAP_PATH"
     note "Fast bootstrap will use the signed daily snapshot, then forward + background validation."
-  elif [ "$SNAP_URL" != "-" ]; then
-    warn "Signed daily snapshot unavailable — falling back to $SNAP_NAME from $TAG"
+  elif [ "$SNAP_URL" != "-" ] && [ "$SNAP_MANIFEST_URL" != "-" ]; then
+    warn "No admissible signed daily snapshot — falling back to $SNAP_NAME from $TAG"
     SNAP_PATH="$DATADIR/$SNAP_NAME"
     dl_verify "$SNAP_NAME" "$SNAP_URL" "$SNAP_DIGEST" "$SNAP_PATH"
-    chown "$RUN_USER:$RUN_USER" "$SNAP_PATH"
+    SNAP_MANIFEST="$SNAP_PATH.manifest.json"
+    dl_verify "$SNAP_MANIFEST_NAME" "$SNAP_MANIFEST_URL" "$SNAP_MANIFEST_DIGEST" "$SNAP_MANIFEST"
+    python3 - "$SNAP_PATH" "$SNAP_MANIFEST" "$SNAP_HEIGHT" <<'PYEOF'
+import hashlib, json, pathlib, sys
+payload = pathlib.Path(sys.argv[1])
+manifest = json.loads(pathlib.Path(sys.argv[2]).read_text(encoding="utf-8"))
+snapshot = manifest.get("snapshot")
+if not isinstance(snapshot, dict) or manifest.get("network") != "mainnet":
+    raise SystemExit("release snapshot manifest is malformed")
+if snapshot.get("snapshot_file") != payload.name or snapshot.get("height") != int(sys.argv[3]):
+    raise SystemExit("release snapshot manifest identity differs from the selected asset")
+if manifest.get("format_version") not in (4, 5):
+    raise SystemExit("release snapshot has an unexpected format")
+if snapshot.get("bytes") != payload.stat().st_size:
+    raise SystemExit("release snapshot length differs from its manifest")
+with payload.open("rb") as stream:
+    digest = hashlib.file_digest(stream, "sha256").hexdigest()
+if snapshot.get("sha256") != digest:
+    raise SystemExit("release snapshot checksum differs from its manifest")
+PYEOF
+    chown "$RUN_USER:$RUN_USER" "$SNAP_PATH" "$SNAP_MANIFEST"
     SNAPSHOT_LINE="assumeutxo_snapshot=$SNAP_PATH"
     note "Fast bootstrap will use the release snapshot, then forward + background validation."
   else
-    warn "No verifiable daily or release snapshot is available — using full validation"
+    warn "No admissible signed daily or complete release snapshot is available — using full validation"
     EFFECTIVE_SYNC=full
   fi
 fi

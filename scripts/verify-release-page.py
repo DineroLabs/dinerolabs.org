@@ -232,9 +232,11 @@ def main() -> None:
     assert "https://seed3.dinerolabs.org/snapshot" in installer
     assert "openssl pkeyutl -verify" in installer
     assert "MCowBQYDK2VwAyEAlFOdW71hOC7Q5Y0bYRLDvyFtv8ddU9Tf4a8dbr1Y4Yw=" in installer
-    assert 'elif [ "$SNAP_URL" != "-" ]; then' in installer, (
-        "installer must retain the release snapshot as the live-mirror fallback"
+    assert 'elif [ "$SNAP_URL" != "-" ] && [ "$SNAP_MANIFEST_URL" != "-" ]; then' in installer, (
+        "installer must require the release manifest as the live-mirror fallback"
     )
+    assert 'fetch_live_snapshot "$SNAP_PATH" "$SNAP_MANIFEST" "$SNAP_HEIGHT"' in installer
+    assert '"$SNAP_PATH.publisher.manifest.json"' in installer
     assert 'SNAP_MANIFEST="$SNAP_PATH.manifest.json"' in installer
     assert 'echo "assumeutxo_forward_connect=1"' in installer
     patterns = [

@@ -19,3 +19,5 @@ jobs:
         run: python3 scripts/verify-release-page.py
       - name: Check installer syntax
         run: bash -n install.sh
+      - name: Check snapshot installer admission and manifest identity
+        run: python3 -m unittest discover -s scripts -p 'test_*.py'
