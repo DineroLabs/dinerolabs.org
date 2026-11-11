@@ -219,6 +219,13 @@ dl_verify() {  # <name> <url> <digest> <out>
   fi
 }
 
+# The GitHub release is the fallback trust source, so both snapshot assets
+# must carry API SHA-256 digests. The generic binary downloader tolerates older
+# releases without digests; the snapshot pair does not.
+snapshot_release_pair_has_digests() {  # <payload-digest> <manifest-digest>
+  [[ "$1" =~ ^sha256:[0-9a-f]{64}$ ]] && [[ "$2" =~ ^sha256:[0-9a-f]{64}$ ]]
+}
+
 # Download a recent signed snapshot no older than the selected release base.
 # The daemon independently binds its Utreexo root to its PoW-validated headers.
 # Arguments: <snapshot-out> <manifest-out> <minimum-height>. The signed
@@ -432,7 +439,8 @@ if [ "$EFFECTIVE_SYNC" = "fast" ]; then
       "$SNAP_PATH.publisher.manifest.json" "$SNAP_PATH.publisher.manifest.sig"
     SNAPSHOT_LINE="assumeutxo_snapshot=$SNAP_PATH"
     note "Fast bootstrap will use the signed daily snapshot, then forward + background validation."
-  elif [ "$SNAP_URL" != "-" ] && [ "$SNAP_MANIFEST_URL" != "-" ]; then
+  elif [ "$SNAP_URL" != "-" ] && [ "$SNAP_MANIFEST_URL" != "-" ] &&
+       snapshot_release_pair_has_digests "$SNAP_DIGEST" "$SNAP_MANIFEST_DIGEST"; then
     warn "No admissible signed daily snapshot — falling back to $SNAP_NAME from $TAG"
     SNAP_PATH="$DATADIR/$SNAP_NAME"
     dl_verify "$SNAP_NAME" "$SNAP_URL" "$SNAP_DIGEST" "$SNAP_PATH"
@@ -460,7 +468,7 @@ PYEOF
     SNAPSHOT_LINE="assumeutxo_snapshot=$SNAP_PATH"
     note "Fast bootstrap will use the release snapshot, then forward + background validation."
   else
-    warn "No admissible signed daily or complete release snapshot is available — using full validation"
+    warn "No admissible signed daily or digest-authenticated release snapshot is available — using full validation"
     EFFECTIVE_SYNC=full
   fi
 fi

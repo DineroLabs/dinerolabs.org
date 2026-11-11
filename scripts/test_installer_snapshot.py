@@ -119,6 +119,29 @@ class InstallerSnapshotTest(unittest.TestCase):
         sidecar.write_text(json.dumps(manifest))
         self.assertNotEqual(run().returncode, 0)
 
+    def test_release_fallback_refuses_missing_either_asset_digest(self) -> None:
+        marker = "snapshot_release_pair_has_digests() {"
+        start = INSTALLER.index(marker)
+        end = INSTALLER.index("\n}", start) + 2
+        function = INSTALLER[start:end]
+        self.assertIn(
+            'snapshot_release_pair_has_digests "$SNAP_DIGEST" "$SNAP_MANIFEST_DIGEST"',
+            INSTALLER,
+        )
+        valid = "sha256:" + "a" * 64
+        def accepts(payload_digest: str, manifest_digest: str) -> bool:
+            result = subprocess.run(
+                ["bash", "-c", function + '\nsnapshot_release_pair_has_digests "$1" "$2"',
+                 "_", payload_digest, manifest_digest],
+                text=True, capture_output=True, check=False,
+            )
+            return result.returncode == 0
+        self.assertTrue(accepts(valid, valid))
+        self.assertFalse(accepts("-", valid))
+        self.assertFalse(accepts(valid, "-"))
+        self.assertFalse(accepts("a" * 64, valid))
+        self.assertFalse(accepts(valid, "sha256:" + "0" * 63))
+
 
 if __name__ == "__main__":
     unittest.main()

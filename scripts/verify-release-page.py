@@ -232,8 +232,8 @@ def main() -> None:
     assert "https://seed3.dinerolabs.org/snapshot" in installer
     assert "openssl pkeyutl -verify" in installer
     assert "MCowBQYDK2VwAyEAlFOdW71hOC7Q5Y0bYRLDvyFtv8ddU9Tf4a8dbr1Y4Yw=" in installer
-    assert 'elif [ "$SNAP_URL" != "-" ] && [ "$SNAP_MANIFEST_URL" != "-" ]; then' in installer, (
-        "installer must require the release manifest as the live-mirror fallback"
+    assert 'snapshot_release_pair_has_digests "$SNAP_DIGEST" "$SNAP_MANIFEST_DIGEST"; then' in installer, (
+        "installer must require SHA-256 digests for both release snapshot assets"
     )
     assert 'fetch_live_snapshot "$SNAP_PATH" "$SNAP_MANIFEST" "$SNAP_HEIGHT"' in installer
     assert '"$SNAP_PATH.publisher.manifest.json"' in installer
