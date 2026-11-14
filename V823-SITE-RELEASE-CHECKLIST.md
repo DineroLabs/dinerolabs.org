@@ -14,9 +14,12 @@ push or deploy it until the release is public and the checks below pass.
    Never reuse a v8.2.2 hash for a v8.2.3 filename.
 4. Keep the Docker text at the latest independently verified published image
    version. It currently says 8.2.1; update it only after the new image exists.
-5. Run `python3 scripts/test_installer_snapshot.py` and
+5. Run `python3 scripts/test_installer_snapshot.py`,
+   `python3 scripts/test_release_snapshot_selection.py`, and
    `python3 scripts/verify-release-page.py`. The latter must pass against the
-   public GitHub release before publishing this site change.
+   public GitHub release before publishing this site change. The installer
+   tests cover a signed full-v6 publisher manifest, H152700-v6-full over the
+   older V5 release asset, and a digest-checked full-v6 release fallback.
 6. Compare the installed download page with the candidate after deployment.
 
 The independent DineroDPI Native 1.3.5 links stay unchanged. The Intel Ventura

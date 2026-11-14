@@ -20,6 +20,21 @@ INSTALLER = ROOT / "install.sh"
 # raising StopIteration on every run — site CI was red for ten days for a
 # reason unrelated to the page. 100 is the GitHub maximum.
 CORE_RELEASES_API = "https://api.github.com/repos/DineroLabs/dinero-v8/releases?per_page=100"
+SNAPSHOT_ASSET_RE = re.compile(
+    r"^(?:utxo-snapshot-[0-9]+|dinero-assumeutxo-[0-9]+-v[0-9]+(?:-full)?)\.dat$"
+)
+
+
+def newest_snapshot_asset(asset_names: list[str] | set[str]) -> str:
+    candidates = [name for name in asset_names if SNAPSHOT_ASSET_RE.fullmatch(name)]
+    if not candidates:
+        raise AssertionError("release has no snapshot asset")
+    return max(
+        candidates,
+        key=lambda name: int(
+            re.search(r"(?:snapshot-|assumeutxo-)([0-9]+)", name).group(1)
+        ),
+    )
 
 
 def fetch_json(url: str) -> object:
@@ -113,19 +128,7 @@ def main() -> None:
     combined_linux = f"dinero-linux-x86_64-{version}.tar.gz"
     split_linux = f"dinero-core-{version}-linux-x86_64.tar.gz"
     linux_asset = combined_linux if combined_linux in assets else split_linux
-    snapshot_assets = [
-        name
-        for name in assets
-        if re.match(
-            r"^(?:utxo-snapshot-[0-9]+|dinero-assumeutxo-[0-9]+-v[0-9]+)\.dat$",
-            name,
-        )
-    ]
-    assert snapshot_assets, f"{tag} has no snapshot asset"
-    latest_snapshot = max(
-        snapshot_assets,
-        key=lambda name: int(re.search(r"(?:snapshot-|assumeutxo-)([0-9]+)", name).group(1)),
-    )
+    latest_snapshot = newest_snapshot_asset(set(assets))
     # v8.1.12 superseded its original Apple Silicon Qt build with a
     # "-metal-fix1" correction (the original omitted the Metal mining
     # backend). When a release ships the corrected assets, the page must
