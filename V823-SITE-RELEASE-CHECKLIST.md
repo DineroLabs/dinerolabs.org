@@ -1,7 +1,8 @@
 # v8.2.3 site candidate — local hold
 
-This branch prepares the download page for the planned v8.2.3 release. Do not
-push or deploy it until the release is public and the checks below pass.
+This branch prepares the download page for the planned v8.2.3 release. A draft
+PR can run checks early; do not merge or deploy it until the release is public
+and the checks below pass.
 
 1. Confirm the final full-v6 snapshot base. This candidate links H152700. If
    release qualification selects H153051, update all H152700 links and copy.
