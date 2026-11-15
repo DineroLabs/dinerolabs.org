@@ -152,8 +152,8 @@ class InstallerSnapshotTest(unittest.TestCase):
             "dinero-linux-x86_64-8.2.3.tar.gz",
             "dinero-assumeutxo-148375-v5.dat",
             "dinero-assumeutxo-148375-v5.dat.manifest.json",
-            "dinero-assumeutxo-152700-v6-full.dat",
-            "dinero-assumeutxo-152700-v6-full.dat.manifest.json",
+            "dinero-assumeutxo-153578-v6-full.dat",
+            "dinero-assumeutxo-153578-v6-full.dat.manifest.json",
             "dinero-assumeutxo-153999-v6-bad.dat",
         ]
         release.write_text(json.dumps([{
@@ -182,9 +182,9 @@ class InstallerSnapshotTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         fields = result.stdout.splitlines()
         self.assertEqual(fields[0], "v8.2.3")
-        self.assertEqual(fields[7], "dinero-assumeutxo-152700-v6-full.dat")
+        self.assertEqual(fields[7], "dinero-assumeutxo-153578-v6-full.dat")
         self.assertEqual(
-            fields[10], "dinero-assumeutxo-152700-v6-full.dat.manifest.json"
+            fields[10], "dinero-assumeutxo-153578-v6-full.dat.manifest.json"
         )
 
     def test_full_v6_uses_signed_full_mirrors_and_admits_only_full_profile(self) -> None:
@@ -198,28 +198,28 @@ class InstallerSnapshotTest(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             return result.stdout.split()
-        self.assertEqual(len(mirrors("dinero-assumeutxo-152700-v6-full.dat")), 3)
+        self.assertEqual(len(mirrors("dinero-assumeutxo-153578-v6-full.dat")), 3)
         self.assertTrue(all(
             url.endswith("/snapshot/full-v6")
-            for url in mirrors("dinero-assumeutxo-152700-v6-full.dat")
+            for url in mirrors("dinero-assumeutxo-153578-v6-full.dat")
         ))
         self.assertTrue(all(
             url.endswith("/snapshot")
             for url in mirrors("dinero-assumeutxo-148375-v5.dat")
         ))
-        full = self.publisher_manifest(height=152700)
+        full = self.publisher_manifest(height=153578)
         full.update(format_version=6, snapshot_profile="full")
-        full_name = "dinero-assumeutxo-152700-v6-full.dat"
+        full_name = "dinero-assumeutxo-153578-v6-full.dat"
         accepted = self.check_metadata(
-            full, minimum_height=152700, release_name=full_name
+            full, minimum_height=153578, release_name=full_name
         )
         self.assertEqual(accepted.returncode, 0, accepted.stderr)
-        self.assertEqual(accepted.stdout.split("\t")[1], "152700")
+        self.assertEqual(accepted.stdout.split("\t")[1], "153578")
         for profile in ("compact", "legacy", None):
             invalid = dict(full, snapshot_profile=profile)
             self.assertNotEqual(
                 self.check_metadata(
-                    invalid, minimum_height=152700, release_name=full_name
+                    invalid, minimum_height=153578, release_name=full_name
                 ).returncode,
                 0,
             )
@@ -230,10 +230,10 @@ class InstallerSnapshotTest(unittest.TestCase):
         self.assertIn('openssl pkeyutl -verify -pubin -inkey "$work/pub.pem" -rawin', INSTALLER)
 
     def test_full_v6_release_fallback_requires_exact_identity_and_payload(self) -> None:
-        payload = self.root / "dinero-assumeutxo-152700-v6-full.dat"
+        payload = self.root / "dinero-assumeutxo-153578-v6-full.dat"
         payload.write_bytes(b"full-v6 snapshot payload")
         digest = hashlib.sha256(payload.read_bytes()).hexdigest()
-        manifest = self.publisher_manifest(height=152700)
+        manifest = self.publisher_manifest(height=153578)
         manifest.update(format_version=6, snapshot_profile="full")
         manifest["snapshot"].update(
             snapshot_file=payload.name,
@@ -245,7 +245,7 @@ class InstallerSnapshotTest(unittest.TestCase):
         def run() -> subprocess.CompletedProcess[str]:
             sidecar.write_text(json.dumps(manifest))
             return subprocess.run(
-                ["python3", "-", str(payload), str(sidecar), "152700"],
+                ["python3", "-", str(payload), str(sidecar), "153578"],
                 input=check, text=True, capture_output=True, check=False,
             )
         self.assertEqual(run().returncode, 0, run().stderr)
