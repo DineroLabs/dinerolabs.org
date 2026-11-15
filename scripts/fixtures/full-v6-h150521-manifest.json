@@ -1,0 +1,14 @@
+{
+  "snapshot": {
+    "sha256": "16f66f67a814b6626481ab083aebbee7252a5d9f8381d08ed8c2d645c48175be",
+    "height": 150521,
+    "block_hash": "00000003d288d8f065b63e51f83b10dcb2e2c73ddb7f90943f565d72b414fb75",
+    "bytes": 140788569,
+    "snapshot_file": "snapshot.dat"
+  },
+  "network": "mainnet",
+  "generated_at": "20261111T211806Z",
+  "format_version": 6,
+  "snapshot_profile": "full",
+  "source": "EU1 full-v6 export at H150521; release qualification is recorded separately"
+}

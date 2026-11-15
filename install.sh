@@ -42,8 +42,10 @@ RELEASE_REPO="DineroLabs/dinero-v8"
 # Match runnable versioned archives, not the separate -debug-symbols tarball.
 CORE_PATTERN='^(dinero-core-[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?-linux-x86_64|dinero-linux-x86_64-[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?)\.tar\.gz$'
 CLI_PATTERN='^(dinero-cli-[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?-linux-x86_64|dinero-linux-x86_64-[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?)\.tar\.gz$'
-SNAPSHOT_PATTERN='^(utxo-snapshot-[0-9]+|dinero-assumeutxo-[0-9]+-v[0-9]+)\.dat$'
-SNAPSHOT_MIRRORS="${SNAPSHOT_MIRRORS:-https://seed3.dinerolabs.org/snapshot https://seed.dinerolabs.org/snapshot https://seed2.dinerolabs.org/snapshot}"
+SNAPSHOT_PATTERN='^(utxo-snapshot-[0-9]+|dinero-assumeutxo-[0-9]+-v[0-9]+(-full)?)\.dat$'
+# Set the default after selecting the release snapshot: a full-v6 release
+# needs the signed full-v6 mirror, while older releases keep their legacy path.
+SNAPSHOT_MIRRORS="${SNAPSHOT_MIRRORS:-}"
 P2P_PORT=20999
 RPC_PORT=20998
 SERVICE_UNIT="dinero.service"
@@ -199,6 +201,18 @@ print(match.group(1) if match else "0")
 PYEOF
 )"
 
+default_snapshot_mirrors() {  # <release-snapshot-name>
+  case "$1" in
+    *-v6-full.dat)
+      printf '%s\n' 'https://seed3.dinerolabs.org/snapshot/full-v6 https://seed.dinerolabs.org/snapshot/full-v6 https://seed2.dinerolabs.org/snapshot/full-v6' ;;
+    *)
+      printf '%s\n' 'https://seed3.dinerolabs.org/snapshot https://seed.dinerolabs.org/snapshot https://seed2.dinerolabs.org/snapshot' ;;
+  esac
+}
+if [ -z "$SNAPSHOT_MIRRORS" ]; then
+  SNAPSHOT_MIRRORS="$(default_snapshot_mirrors "$SNAP_NAME")"
+fi
+
 [ -n "$TAG" ] && [ "$CORE_URL" != "-" ] || fail "Could not resolve a Linux release from the GitHub API"
 note "Selected release: $TAG"
 
@@ -258,7 +272,7 @@ PUBKEY
       continue
     fi
 
-    if ! metadata="$(python3 - "$work/manifest.json" "$minimum_height" <<'PYEOF'
+    if ! metadata="$(python3 - "$work/manifest.json" "$minimum_height" "$SNAP_NAME" <<'PYEOF'
 import datetime, json, sys
 m = json.load(open(sys.argv[1], "rb"))
 s = m.get("snapshot", m)
@@ -274,7 +288,14 @@ if type(size) is not int or not 1048576 <= size <= 536870912:
     raise SystemExit(1)
 if s.get("snapshot_file") != "snapshot.dat":
     raise SystemExit(1)
-if m.get("format_version") not in (4, 5) or m.get("snapshot_profile") not in (None, "legacy"):
+version = m.get("format_version")
+profile = m.get("snapshot_profile")
+release_is_full_v6 = sys.argv[3].endswith("-v6-full.dat")
+if release_is_full_v6:
+    valid_profile = version == 6 and profile == "full"
+else:
+    valid_profile = version in (4, 5) and profile in (None, "legacy")
+if not valid_profile:
     raise SystemExit(1)
 try:
     generated = datetime.datetime.strptime(m["generated_at"], "%Y%m%dT%H%M%SZ").replace(tzinfo=datetime.timezone.utc)
@@ -455,7 +476,13 @@ if not isinstance(snapshot, dict) or manifest.get("network") != "mainnet":
     raise SystemExit("release snapshot manifest is malformed")
 if snapshot.get("snapshot_file") != payload.name or snapshot.get("height") != int(sys.argv[3]):
     raise SystemExit("release snapshot manifest identity differs from the selected asset")
-if manifest.get("format_version") not in (4, 5):
+version = manifest.get("format_version")
+profile = manifest.get("snapshot_profile")
+if payload.name.endswith("-v6-full.dat"):
+    valid_profile = version == 6 and profile == "full"
+else:
+    valid_profile = version in (4, 5) and profile in (None, "legacy")
+if not valid_profile:
     raise SystemExit("release snapshot has an unexpected format")
 if snapshot.get("bytes") != payload.stat().st_size:
     raise SystemExit("release snapshot length differs from its manifest")
