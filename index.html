@@ -1114,9 +1114,8 @@
       </div>
     </section>
 
-    <!-- HOLD v8.2.3 site publication: the verification cards below still
-         contain v8.2.2 filenames and digests. Replace them from the actual
-         published v8.2.3 assets, then pass verify-release-page.py before merge. -->
+    <!-- Keep this candidate unpublished until all v8.2.3 release assets are
+         public and verify-release-page.py passes against their GitHub digests. -->
     <section id="verify" aria-labelledby="verify-title">
       <div class="wrap">
         <div class="section-head">
@@ -1127,128 +1126,128 @@
         <div class="verify-grid">
           <div class="card">
             <h3>Windows wallet installer</h3>
-            <pre><code>certutil -hashfile Dinero-8.2.2-windows-x86_64-Setup.exe SHA256
+            <pre><code>certutil -hashfile Dinero-8.2.3-windows-x86_64-Setup.exe SHA256
 # Expected:
-8208a5726183bb5ca9c5a32a627babe0f42b8be62e4f4e51d2d72e1adf09bdd9</code></pre>
+dfcc2e67cb3009e0b8bbd3a865a907eca0f2c1cdee1038282b2b227bad4ac32c</code></pre>
           </div>
 
           <div class="card">
             <h3>Windows Server installer</h3>
-            <pre><code>certutil -hashfile Dinero-Server-8.2.2-windows-x86_64-Setup.exe SHA256
+            <pre><code>certutil -hashfile Dinero-Server-8.2.3-windows-x86_64-Setup.exe SHA256
 # Expected:
-96ca6e8fb66548731994cb9ae691d78d10f619978622b8260f04cee3e4502a39</code></pre>
+345ec83bac65de5e6ccf3613e1d8094d4a00f081ea771b92434365ee2f5fdc8a</code></pre>
           </div>
 
           <div class="card">
             <h3>Windows portable archive</h3>
-            <pre><code>certutil -hashfile dinero-v8.2.2-windows-x86_64-msvc.zip SHA256
+            <pre><code>certutil -hashfile dinero-v8.2.3-windows-x86_64-msvc.zip SHA256
 # Expected:
-473eb96574bd0d2f33cf3ed715148bf2301cd90a08a03e11ed2d64093f4929b1</code></pre>
+05a3b9933ac93d2168cafc6505fac0b9d5db683d0ee75f51b62e597052736ab0</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux x86_64 bundle</h3>
-            <pre><code>shasum -a 256 dinero-linux-x86_64-8.2.2.tar.gz
+            <pre><code>shasum -a 256 dinero-linux-x86_64-8.2.3.tar.gz
 # Expected:
-18c35345bb3744fd4d599bc25ec3ce28cde17f32297ab83b05a764960f85d9f4</code></pre>
+c9eb43c2798bf07d296990a1667d25e93e683b3bb662c12376fe83d75343959e</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux server package</h3>
-            <pre><code>shasum -a 256 dinero-core_8.2.2-1_amd64.deb
+            <pre><code>shasum -a 256 dinero-core_8.2.3-1_amd64.deb
 # Expected:
-bea9b0ef29680ace8c34ad65b383ed2c17d23a650b620c0d1827c5e8575bcaa8</code></pre>
+c862dee68f2f3b408c23da4917c9a76c00f2ff0c3dcf7cc23eed04fa8fbddf24</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux desktop AppImage</h3>
-            <pre><code>shasum -a 256 dinero-v8.2.2-linux-x86_64.AppImage
+            <pre><code>shasum -a 256 dinero-v8.2.3-linux-x86_64.AppImage
 # Expected:
-19b8d3bbdcd77df6f8a79cd136fc8222a8e9347e1ed4486ff6fb07e64114463f</code></pre>
+22f501805f9b5ef43b4326f56cdc561b5dc0d69b3ddc45d93c2816f7f0fc3001</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux desktop package</h3>
-            <pre><code>shasum -a 256 dinero-qt-desktop_8.2.2-1_amd64.deb
+            <pre><code>shasum -a 256 dinero-qt-desktop_8.2.3-1_amd64.deb
 # Expected:
-86d46186a3cfbe4076e8d5b5171818b2f0e35c93aec14fd769127a42a082aa65</code></pre>
+5b3a95cbed84fc1513fb66840c327daf2bba91086b7b353961f60e8491e574d2</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux portable Qt archive</h3>
-            <pre><code>shasum -a 256 dinero-v8.2.2-linux-x86_64-qt.tar.gz
+            <pre><code>shasum -a 256 dinero-v8.2.3-linux-x86_64-qt.tar.gz
 # Expected:
-56ec1600baab3079074ea51a9a8329284e17bb136841684613254adeabf42ef5</code></pre>
+9e8414355d48d79fe5e1945abecf55d1a4366aa0c7369fb5e125f926e100ab35</code></pre>
           </div>
 
           <div class="card">
-            <h3>Height-148,375 V5 snapshot</h3>
-            <pre><code>shasum -a 256 dinero-assumeutxo-148375-v5.dat
+            <h3>Height-153,578 full-v6 snapshot</h3>
+            <pre><code>shasum -a 256 dinero-assumeutxo-153578-v6-full.dat
 # Expected:
-41b4bb8ee5b1b4a354b0d3bdd03b7dee4372cfecd1a8ef1bf5c01bff0ed991e7</code></pre>
+3bb6185106744297a8ae0e6f51c0f734aab8a70eaa7044d8d5dc1880b1cf57cd</code></pre>
           </div>
 
           <div class="card">
             <h3>dinero-qt Apple Silicon DMG</h3>
-            <pre><code>shasum -a 256 Dinero-v8.2.2-macOS-arm64.dmg
+            <pre><code>shasum -a 256 Dinero-v8.2.3-macOS-arm64.dmg
 # Expected:
-f3ca09c8d5e5c19c71cc223c63573c1e836d746cb35a6d9abdb287e9657f4d97</code></pre>
+1e74516a97e61d2927a095269f2592f8bff47b76f2682b93a90de097b5274d79</code></pre>
           </div>
 
           <div class="card">
             <h3>Apple Silicon app zip</h3>
-            <pre><code>shasum -a 256 Dinero-v8.2.2-macOS-arm64-qt.zip
+            <pre><code>shasum -a 256 Dinero-v8.2.3-macOS-arm64-qt.zip
 # Expected:
-16da65546b4fcd9e5db82bd9b856dc38e2d2b015063b6536b7b629b392fcd834</code></pre>
+6fd6b231c294b0cdd927d80017dacf2955f2181247f25ca5382b602753a1031c</code></pre>
           </div>
 
           <div class="card">
             <h3>dinero-qt Intel DMG</h3>
-            <pre><code>shasum -a 256 Dinero-v8.2.2-macOS-x86_64.dmg
+            <pre><code>shasum -a 256 Dinero-v8.2.3-macOS-x86_64.dmg
 # Expected:
-a7920ab8e3cb3498d4fc15a734513bf0ee31cfc100eb59dc4f385b629b8c2ee0</code></pre>
+ed97f180a0098a5c3cef00f0054525050b49f1314674be52375b23cc3fc1505e</code></pre>
           </div>
 
           <div class="card">
             <h3>Intel app zip</h3>
-            <pre><code>shasum -a 256 Dinero-v8.2.2-macOS-x86_64-qt.zip
+            <pre><code>shasum -a 256 Dinero-v8.2.3-macOS-x86_64-qt.zip
 # Expected:
-a406d6a01c3d3bd27cf1ef5cf5b313a4ee321a415268bfed7030235b3f2eef27</code></pre>
+97270886334e7d43040c5b2681b88b1a0b7050c69426b50cebf79ae84c24615d</code></pre>
           </div>
 
           <div class="card">
             <h3>dinero-qt Intel Ventura DMG · Qt 6.5.3</h3>
-            <pre><code>shasum -a 256 Dinero-v8.2.2-ventura-qt6.5-macOS-x86_64.dmg
+            <pre><code>shasum -a 256 Dinero-v8.2.3-ventura-qt6.5-macOS-x86_64.dmg
 # Expected:
-280bc2e98b770485e39e39b768a828eef036106b4b55fee99a5cf6195e5f34bc</code></pre>
+a585f1cf6b43f880f25bf37eb82db6cfef2246c0dd21160da72093466f9e2164</code></pre>
           </div>
 
           <div class="card">
             <h3>Intel Ventura app zip · Qt 6.5.3</h3>
-            <pre><code>shasum -a 256 Dinero-v8.2.2-ventura-qt6.5-macOS-x86_64-qt.zip
+            <pre><code>shasum -a 256 Dinero-v8.2.3-ventura-qt6.5-macOS-x86_64-qt.zip
 # Expected:
-b32c1c1d09af8893a45f8a69777db8d500c68210ddfb75c16f1ec9856aa8f16a</code></pre>
+c26028354e50c5cae006193345e2d76c65026fb5a07f0f7f414a78a38331548c</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS operator archive — Apple Silicon</h3>
-            <pre><code>shasum -a 256 dinero-operator-v8.2.2-macOS-arm64.tar.gz
+            <pre><code>shasum -a 256 dinero-operator-v8.2.3-macOS-arm64.tar.gz
 # Expected:
-9ed847712af414ad0843a89e89ae7621eaebd15cbbd0a0705d127ad100d7f7b9</code></pre>
+f2bfa694de15ed96b7622b3dba2ea6490e06b92f3c1d5252a7cf315ed440a104</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS operator archive — Intel</h3>
-            <pre><code>shasum -a 256 dinero-operator-v8.2.2-macOS-x86_64.tar.gz
+            <pre><code>shasum -a 256 dinero-operator-v8.2.3-macOS-x86_64.tar.gz
 # Expected:
-efd0e9f821e38788ce94cb759aaf9d100fe6de2cf7ab58c471a39513a50a8f0f</code></pre>
+4bde54e218e44d8915ef2a39efb9d328b764ece85b2eeffc298f8e8a6a237385</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS operator archive — Intel Ventura</h3>
-            <pre><code>shasum -a 256 dinero-operator-v8.2.2-ventura-macOS-x86_64.tar.gz
+            <pre><code>shasum -a 256 dinero-operator-v8.2.3-ventura-macOS-x86_64.tar.gz
 # Expected:
-934730fc8ddaea8dc5aec18d4613909fa8a8cfb1b3c0cae9db6b61520f45cb82</code></pre>
+659951c95a9797f8f21b2a5f679b292610da892ca1b726a82383f9d3f85ac4ae</code></pre>
           </div>
 
           <div class="card">
@@ -1267,31 +1266,31 @@ source=Notarized Developer ID</code></pre>
         <div class="verify-grid" style="margin-top: 14px;">
           <div class="card">
             <h3>macOS checksum file</h3>
-            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.2.2/SHA256SUMS-macos-8.2.2
-shasum -a 256 -c SHA256SUMS-macos-8.2.2</code></pre>
+            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.2.3/SHA256SUMS-macos-8.2.3
+shasum -a 256 -c SHA256SUMS-macos-8.2.3</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux checksum file</h3>
-            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.2.2/SHA256SUMS-linux-x86_64-8.2.2
-shasum -a 256 -c SHA256SUMS-linux-x86_64-8.2.2</code></pre>
+            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.2.3/SHA256SUMS-linux-x86_64-8.2.3
+shasum -a 256 -c SHA256SUMS-linux-x86_64-8.2.3</code></pre>
           </div>
 
           <div class="card">
             <h3>Linux desktop checksum file</h3>
-            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.2.2/SHA256SUMS-linux-x86_64-desktop-8.2.2
-shasum -a 256 -c SHA256SUMS-linux-x86_64-desktop-8.2.2</code></pre>
+            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.2.3/SHA256SUMS-linux-x86_64-desktop-8.2.3
+shasum -a 256 -c SHA256SUMS-linux-x86_64-desktop-8.2.3</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS Intel desktop checksum file</h3>
-            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.2.2/SHA256SUMS-macos-x86_64-desktop-8.2.2
-shasum -a 256 -c SHA256SUMS-macos-x86_64-desktop-8.2.2</code></pre>
+            <pre><code>wget https://github.com/DineroLabs/dinero-v8/releases/download/v8.2.3/SHA256SUMS-macos-x86_64-desktop-8.2.3
+shasum -a 256 -c SHA256SUMS-macos-x86_64-desktop-8.2.3</code></pre>
           </div>
 
           <div class="card">
             <h3>macOS notarization</h3>
-            <pre><code>spctl --assess --type open --context context:primary-signature -vv Dinero-v8.2.2-macOS-arm64.dmg
+            <pre><code>spctl --assess --type open --context context:primary-signature -vv Dinero-v8.2.3-macOS-arm64.dmg
 # Expected:
 accepted
 source=Notarized Developer ID</code></pre>

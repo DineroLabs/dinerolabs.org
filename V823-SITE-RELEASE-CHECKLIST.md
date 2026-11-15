@@ -11,10 +11,10 @@ and the checks below pass.
 2. Check the published v8.2.3 release has every linked asset. The 34 links on
    this page currently name 25 distinct assets, all present in the planned
    68-asset release inventory after H153578 substitution.
-3. In the `#verify` section of `index.html`, replace every remaining v8.2.2
-   filename and SHA-256 digest with the *published* v8.2.3 asset's filename
-   and GitHub digest. Confirm the snapshot card still names the final base.
-   Never reuse a v8.2.2 hash for a v8.2.3 filename.
+3. The `#verify` section now has 18 v8.2.3 package and snapshot SHA-256
+   values rehashed from the locally staged exact-source artifacts. After the
+   release is public, compare every value with the published GitHub digest.
+   The snapshot card names H153578 full-v6. Do not reuse a v8.2.2 hash.
 4. Keep the Docker text at the latest independently verified published image
    version. It currently says 8.2.1; update it only after the new image exists.
 5. Run `python3 scripts/test_installer_snapshot.py`,
