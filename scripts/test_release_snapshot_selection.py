@@ -35,13 +35,15 @@ class ReleaseSnapshotSelectionTest(unittest.TestCase):
         snapshot = verifier.newest_snapshot_asset({
             "dinero-assumeutxo-148375-v5.dat",
             "dinero-assumeutxo-153578-v6-full.dat",
+            "dinero-assumeutxo-155650-v6-full.dat",
+            "dinero-assumeutxo-163965-v6-full.dat",
         })
         html = (ROOT / "index.html").read_text()
         self.assertIn(
-            f"/releases/download/v8.2.3/{snapshot}?download=1", html
+            f"/releases/download/v8.2.5/{snapshot}?download=1", html
         )
         self.assertIn(
-            f"/releases/download/v8.2.3/SHA256SUMS-assumeutxo-153578?download=1",
+            f"/releases/download/v8.2.5/SHA256SUMS-assumeutxo-163965?download=1",
             html,
         )
 
